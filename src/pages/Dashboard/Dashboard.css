@@ -1,0 +1,13 @@
+.dashboard-page {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    gap: 0;
+    position: relative;
+}
+
+.dashboard__main {
+    height: 100%;
+    display: flex;
+}
