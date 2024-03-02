@@ -8,8 +8,9 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
+import { MapInfoInterface } from "../types";
 
-const PlacesAutocomplete = ({ setMapInfo }) => {
+const PlacesAutocomplete = ({ setMapInfo }: { setMapInfo: React.Dispatch<React.SetStateAction<MapInfoInterface>> }) => {
   const {
     ready,
     value,
@@ -19,11 +20,11 @@ const PlacesAutocomplete = ({ setMapInfo }) => {
     debounce: 300,
   });
 
-  const handleInput = (e) => {
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
 
-  const handleSelect = (description) => {
+  const handleSelect = (description: string) => {
     setValue(description, false);
     getGeocode({ address: description })
     .then(results => getLatLng(results[0]))

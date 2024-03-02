@@ -1,18 +1,27 @@
-import { useEffect, useState } from "react"
-import "./Drawer.css"
-import "./DrawerRight.css"
+import { useEffect, useState } from "react";
+import "../Drawer.css";
+import "./DrawerRight.css";
+import { PinInfoInterface } from "../../../../../types";
 
-const DrawerRight = ({ assets, selected }) => {
-
-  const [target, setTarget] = useState({})
+const DrawerRight = ({
+  targets,
+  selected,
+}: {
+  targets: PinInfoInterface[];
+  selected: { asset: string };
+}) => {
+  const [target, setTarget] = useState<PinInfoInterface | null>(null);
 
   useEffect(() => {
     setTarget(() => {
-      return assets.filter(asset => 
-        selected.asset === `${asset.loc.lng} ${asset.loc.lat}`
-      )?.[0] || {}
-    })
-  }, [selected, target])
+      return (
+        targets.filter(
+          (target: PinInfoInterface) =>
+            selected.asset === `${target.loc.lng} ${target.loc.lat}`,
+        )?.[0] || {}
+      );
+    });
+  }, [selected, target]);
 
   return (
     <div className="drawer right">
@@ -22,9 +31,9 @@ const DrawerRight = ({ assets, selected }) => {
           <div className="line" />
         </div>
         <div className="content">
-          {
-            !Object.keys(target).length ? 
-            <small className="na">Nothing to show.</small> :
+          {!target ? (
+            <small className="na">Nothing to show.</small>
+          ) : (
             <form className="drawer__form">
               <label>
                 Title
@@ -44,7 +53,7 @@ const DrawerRight = ({ assets, selected }) => {
               </label>
               <button hidden>Submit</button>
             </form>
-          }
+          )}
         </div>
       </main>
       <div className="landscape__container">
@@ -54,7 +63,7 @@ const DrawerRight = ({ assets, selected }) => {
         </label>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default DrawerRight
+export default DrawerRight;
