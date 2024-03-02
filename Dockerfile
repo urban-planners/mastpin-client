@@ -1,6 +1,6 @@
-FROM node:latest
+FROM node:20.11.1-alpine
 
-WORKDIR /app/client
+WORKDIR /app
 
 COPY . .
 
