@@ -23,6 +23,11 @@ jobs:
           npm install -g prettier
           yarn install
 
+      - name: Set Git user
+        run: |
+          git config --global user.email "youremail@example.com"
+          git config --global user.name "Your Name"
+
       - name: Format JavaScript/TypeScript files
         run: |
           prettier --write "**/*.js" "**/*.jsx" "**/*.ts" "**/*.tsx" || true
