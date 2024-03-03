@@ -24,12 +24,9 @@ jobs:
           yarn install
 
       - name: Set Git user
-        env:
-          USERNAME: ${{ secrets.USERNAME }}
-          EMAIL: ${{ secrets.EMAIL }}
         run: |
-          git config --global user.email $EMAIL
-          git config --global user.name $USERNAME
+          git config --global user.email "benedictgabriel73@gmail.com"
+          git config --global user.name "Benedict Gabriel"
 
       - name: Format JavaScript/TypeScript files
         run: |
