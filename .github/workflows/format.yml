@@ -24,9 +24,12 @@ jobs:
           yarn install
 
       - name: Set Git user
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          EMAIL: ${{ secrets.EMAIL }}
         run: |
-          git config --global user.email "benedictgabriel73@gmail.com"
-          git config --global user.name "Benhexie"
+          git config --global user.email $EMAIL
+          git config --global user.name $USERNAME
 
       - name: Format JavaScript/TypeScript files
         run: |
@@ -45,6 +48,9 @@ jobs:
           prettier --write "**/*.md" || true
 
       - name: Commit formatted files
+        env:
+          USERNAME: ${{ secrets.USERNAME }}
+          TOKEN: ${{ secrets.TOKEN }}
         run: |
           git add .
-          git diff-index --quiet HEAD || git commit -m "Auto-format code" && git push origin HEAD:main
+          git diff-index --quiet HEAD || git commit -m "Auto-format code" && git push https://$USERNAME:$TOKEN@github.com/urban-planners/mastpin-client/ HEAD:main
