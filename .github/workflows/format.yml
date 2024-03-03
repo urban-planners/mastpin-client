@@ -25,19 +25,19 @@ jobs:
 
       - name: Format JavaScript/TypeScript files
         run: |
-          prettier --write "**/*.js" "**/*.jsx" "**/*.ts" "**/*.tsx"
+          prettier --write "**/*.js" "**/*.jsx" "**/*.ts" "**/*.tsx" || true
 
       - name: Format CSS files
         run: |
-          prettier --write "**/*.css" "**/*.scss" "**/*.sass" "**/*.less"
+          prettier --write "**/*.css" "**/*.scss" "**/*.sass" "**/*.less" || true
 
       - name: Format JSON files
         run: |
-          prettier --write "**/*.json"
+          prettier --write "**/*.json" || true
 
       - name: Format Markdown files
         run: |
-          prettier --write "**/*.md"
+          prettier --write "**/*.md" || true
 
       - name: Commit formatted files
         run: |
