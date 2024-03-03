@@ -3,12 +3,16 @@ import "../Drawer.css";
 import "./DrawerLeft.css";
 import { PinInfoInterface } from "../../../../../types";
 
-const DrawerLeft = ({ targets = [], selected, setSelected }: {
+const DrawerLeft = ({
+  targets = [],
+  selected,
+  setSelected,
+}: {
   targets: PinInfoInterface[];
   selected: { asset: string };
   setSelected: React.Dispatch<React.SetStateAction<{ asset: string }>>;
 }) => {
-  const pinClicked = (pin : PinInfoInterface) => {
+  const pinClicked = (pin: PinInfoInterface) => {
     setSelected((prev) => ({
       ...prev,
       asset: `${pin.loc.lng} ${pin.loc.lat}`,

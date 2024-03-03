@@ -1,9 +1,9 @@
 .map-page {
-    flex: 1;
-    position: relative;
+  flex: 1;
+  position: relative;
 }
 
 .map__container {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }

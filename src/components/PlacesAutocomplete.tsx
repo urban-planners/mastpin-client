@@ -1,5 +1,8 @@
-import "./PlacesAutocomplete.css"
-import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
+import "./PlacesAutocomplete.css";
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+} from "use-places-autocomplete";
 import {
   Combobox,
   ComboboxInput,
@@ -10,7 +13,11 @@ import {
 import "@reach/combobox/styles.css";
 import { MapInfoInterface } from "../types";
 
-const PlacesAutocomplete = ({ setMapInfo }: { setMapInfo: React.Dispatch<React.SetStateAction<MapInfoInterface>> }) => {
+const PlacesAutocomplete = ({
+  setMapInfo,
+}: {
+  setMapInfo: React.Dispatch<React.SetStateAction<MapInfoInterface>>;
+}) => {
   const {
     ready,
     value,
@@ -27,28 +34,30 @@ const PlacesAutocomplete = ({ setMapInfo }: { setMapInfo: React.Dispatch<React.S
   const handleSelect = (description: string) => {
     setValue(description, false);
     getGeocode({ address: description })
-    .then(results => getLatLng(results[0]))
-    .then(({ lng, lat }) => {
-      setMapInfo(prev => ({
-        ...prev,
-        center: {lng, lat}
-      }));
-    })
-    .catch(error => {
-      console.log("😱 Error: ", error);
-    });
+      .then((results) => getLatLng(results[0]))
+      .then(({ lng, lat }) => {
+        setMapInfo((prev) => ({
+          ...prev,
+          center: { lng, lat },
+        }));
+      })
+      .catch((error) => {
+        console.log("😱 Error: ", error);
+      });
   };
 
   return (
-    <Combobox 
-      onSelect={handleSelect} 
+    <Combobox
+      onSelect={handleSelect}
       aria-labelledby="demo"
-      className="combobox">
-      <ComboboxInput 
-        value={value} 
-        onChange={handleInput} 
+      className="combobox"
+    >
+      <ComboboxInput
+        value={value}
+        onChange={handleInput}
         disabled={!ready}
-        placeholder="Babcock University" />
+        placeholder="Babcock University"
+      />
       <ComboboxPopover>
         <ComboboxList>
           {status === "OK" &&
