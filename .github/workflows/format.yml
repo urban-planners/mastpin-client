@@ -1,0 +1,45 @@
+name: Auto-format Code
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          npm install -g prettier
+          yarn install
+
+      - name: Format JavaScript/TypeScript files
+        run: |
+          prettier --write "**/*.js" "**/*.jsx" "**/*.ts" "**/*.tsx"
+
+      - name: Format CSS files
+        run: |
+          prettier --write "**/*.css" "**/*.scss" "**/*.sass" "**/*.less"
+
+      - name: Format JSON files
+        run: |
+          prettier --write "**/*.json"
+
+      - name: Format Markdown files
+        run: |
+          prettier --write "**/*.md"
+
+      - name: Commit formatted files
+        run: |
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Auto-format code" && git push origin HEAD:main
