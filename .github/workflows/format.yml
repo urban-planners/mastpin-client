@@ -20,7 +20,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install -g prettier
           yarn install
 
       - name: Set Git user
@@ -28,21 +27,9 @@ jobs:
           git config --global user.email "benedictgabriel73@gmail.com"
           git config --global user.name "Benhexie"
 
-      - name: Format JavaScript/TypeScript files
+      - name: Format All files
         run: |
-          prettier --write "**/*.js" "**/*.jsx" "**/*.ts" "**/*.tsx" || true
-
-      - name: Format CSS files
-        run: |
-          prettier --write "**/*.css" "**/*.scss" "**/*.sass" "**/*.less" || true
-
-      - name: Format JSON files
-        run: |
-          prettier --write "**/*.json" || true
-
-      - name: Format Markdown files
-        run: |
-          prettier --write "**/*.md" || true
+          yarn format
 
       - name: Commit formatted files
         run: |
