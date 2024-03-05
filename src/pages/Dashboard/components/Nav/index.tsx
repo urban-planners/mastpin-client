@@ -2,13 +2,7 @@ import PlacesAutocomplete from "../../../../components/PlacesAutocomplete";
 import { MapInfoInterface } from "../../../../types";
 import "./Nav.css";
 
-const Nav = ({
-  isLoaded,
-  setMapInfo,
-}: {
-  isLoaded: boolean;
-  setMapInfo: React.Dispatch<React.SetStateAction<MapInfoInterface>>;
-}) => {
+const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
   return (
     <nav className="dashboard__nav">
       <div className="drawer project-name__container">
@@ -18,7 +12,7 @@ const Nav = ({
         </label>
       </div>
       <div className="search__container">
-        {isLoaded && <PlacesAutocomplete setMapInfo={setMapInfo} />}
+        {isLoaded && <PlacesAutocomplete />}
       </div>
       <div className="drawer switch__container"></div>
     </nav>

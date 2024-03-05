@@ -12,12 +12,12 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 import { MapInfoInterface } from "../types";
+import { useDispatch } from "react-redux";
+import { updateMapCenter } from "../redux/actions";
 
-const PlacesAutocomplete = ({
-  setMapInfo,
-}: {
-  setMapInfo: React.Dispatch<React.SetStateAction<MapInfoInterface>>;
-}) => {
+const PlacesAutocomplete = () => {
+  const dispatch = useDispatch();
+
   const {
     ready,
     value,
@@ -36,10 +36,7 @@ const PlacesAutocomplete = ({
     getGeocode({ address: description })
       .then((results) => getLatLng(results[0]))
       .then(({ lng, lat }) => {
-        setMapInfo((prev) => ({
-          ...prev,
-          center: { lng, lat },
-        }));
+        dispatch(updateMapCenter({ lat, lng }));
       })
       .catch((error) => {
         console.log("😱 Error: ", error);

@@ -1,7 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { mapReducer } from "./reducers";
 
 const store = configureStore({
-  reducer: {},
+  reducer: combineReducers({
+    map: mapReducer,
+  }),
 });
 
 export default store;

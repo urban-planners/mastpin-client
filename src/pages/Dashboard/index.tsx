@@ -7,18 +7,14 @@ import DrawerLeft from "./components/Drawer/DrawerLeft";
 import DrawerRight from "./components/Drawer/DrawerRight";
 import Nav from "./components/Nav";
 import { MapInfoInterface, PinInfoInterface } from "../../types";
+import { useSelector } from "react-redux";
 
 const MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
 
 const Dashboard = () => {
-  const [targets, setTargets] = useState<PinInfoInterface[]>([]);
-  const [mapInfo, setMapInfo] = useState<MapInfoInterface>({
-    zoom: 15,
-    center: {
-      lng: 3.7181452,
-      lat: 6.8920758,
-    },
-  });
+  const mapInfo = useSelector(
+    (state: any) => state.map.mapInfo,
+  ) as MapInfoInterface;
   const [counter, setCounter] = useState<{ pin: number }>({
     pin: 1,
   });
@@ -38,43 +34,25 @@ const Dashboard = () => {
     document
       .querySelector("body")
       ?.addEventListener("keydown", (e: KeyboardEvent) => {
-        switch (e.key) {
-          case "Escape":
-            setSelected({
-              asset: "",
-            });
-            break;
-          case "/":
-            setFullScreen((prev) => !prev);
+        if (e.key === "Escape") {
+          return setSelected({
+            asset: "",
+          });
+        }
+        if (e.ctrlKey && e.key === "/") {
+          e.preventDefault();
+          return setFullScreen((prev) => !prev);
         }
       });
   }, []);
 
   return (
     <div className="dashboard-page">
-      {!fullScreen && <Nav isLoaded={isLoaded} setMapInfo={setMapInfo} />}
+      {!fullScreen && <Nav isLoaded={isLoaded} />}
       <main className="dashboard__main">
-        {!fullScreen && (
-          <DrawerLeft
-            targets={targets}
-            selected={selected}
-            setSelected={setSelected}
-          />
-        )}
-        {!isLoaded ? (
-          <Loading />
-        ) : (
-          <CustomMap
-            mapInfo={mapInfo}
-            setMapInfo={setMapInfo}
-            targets={targets}
-            setTargets={setTargets}
-            counter={counter}
-            setCounter={setCounter}
-            setSelected={setSelected}
-          />
-        )}
-        {!fullScreen && <DrawerRight targets={targets} selected={selected} />}
+        {!fullScreen && <DrawerLeft />}
+        {!isLoaded ? <Loading /> : <CustomMap mapInfo={mapInfo} />}
+        {!fullScreen && <DrawerRight />}
       </main>
     </div>
   );

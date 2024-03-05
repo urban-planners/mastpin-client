@@ -1,51 +1,66 @@
-import { nanoid } from "nanoid";
 import "../Drawer.css";
 import "./DrawerLeft.css";
-import { PinInfoInterface } from "../../../../../types";
+import { nanoid } from "nanoid";
+import { PinInfoInterface, RegionInterface } from "../../../../../types";
+import Title from "../components/Title";
+import Content from "../components/Content";
+import { FiPlus } from "react-icons/fi";
+import SmartIcon from "../../../../../components/SmartIcon";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addRegion,
+  selectPin,
+  selectRegion,
+} from "../../../../../redux/actions";
 
-const DrawerLeft = ({
-  targets = [],
-  selected,
-  setSelected,
-}: {
-  targets: PinInfoInterface[];
-  selected: { asset: string };
-  setSelected: React.Dispatch<React.SetStateAction<{ asset: string }>>;
-}) => {
-  const pinClicked = (pin: PinInfoInterface) => {
-    setSelected((prev) => ({
-      ...prev,
-      asset: `${pin.loc.lng} ${pin.loc.lat}`,
-    }));
-  };
+const DrawerLeft = () => {
+  const dispatch = useDispatch();
+  const regions = useSelector(
+    (state: any) => state.map.regions,
+  ) as RegionInterface[];
+  const selectedRegion = useSelector(
+    (state: any) => state.map.selectedRegion,
+  ) as RegionInterface;
+  const pins = useSelector(
+    (state: any) => state.map.pins,
+  ) as PinInfoInterface[];
+  const selectedPin = useSelector(
+    (state: any) => state.map.selectedPin,
+  ) as PinInfoInterface;
 
   return (
     <div className="drawer left">
-      <div className="title">
-        <small>targets</small>
-        <div className="line" />
-      </div>
-      <div className="content">
-        <ul>
-          {!targets.length ? (
-            <small className="na">Nothing to show.</small>
-          ) : (
-            targets.map((asset) => (
-              <li
-                key={nanoid()}
-                onClick={() => pinClicked(asset)}
-                className={`${
-                  selected.asset === `${asset.loc.lng} ${asset.loc.lat}`
-                    ? "selected"
-                    : ""
-                }`}
-              >
-                {asset.title}
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
+      <Title title="Regions">
+        <SmartIcon
+          description="Add new region"
+          onClick={() => dispatch(addRegion())}
+        >
+          <FiPlus />
+        </SmartIcon>
+      </Title>
+      <Content emptyText="No regions to show.">
+        {regions.map((region) => (
+          <li
+            key={nanoid()}
+            onClick={() => dispatch(selectRegion(region))}
+            className={`${selectedRegion.title === region.title ? "selected" : ""}`}
+          >
+            <p>{region.title}</p>
+          </li>
+        ))}
+      </Content>
+      <Title title="Targets" />
+      <Content emptyText="No targets to show.">
+        {pins.map((pin) => (
+          <li
+            key={nanoid()}
+            onClick={() => dispatch(selectPin(pin.title))}
+            className={`${selectedPin.title === pin.title ? "selected" : ""}`}
+          >
+            <p>{pin.title}</p>
+          </li>
+        ))}
+      </Content>
     </div>
   );
 };

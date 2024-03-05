@@ -5,6 +5,7 @@
   --asset-selected: var(--primary-color);
   --gray-dark: rgb(37, 37, 37);
   --gray-light: rgb(92, 92, 92);
+  --offwhite: rgb(250, 250, 250);
 
   /* STYLES */
   --border-radius: 5px;
