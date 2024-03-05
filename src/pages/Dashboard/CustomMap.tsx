@@ -2,7 +2,6 @@ import "./CustomMap.css";
 import { GoogleMap, Marker, Polygon } from "@react-google-maps/api";
 import pin from "../../assets/svgs/pin.svg";
 import modalPin from "../../assets/svgs/modal-pin.svg";
-import { nanoid } from "nanoid";
 import { Fragment, useState } from "react";
 import {
   MapInfoInterface,
