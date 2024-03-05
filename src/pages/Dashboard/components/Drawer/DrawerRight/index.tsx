@@ -7,7 +7,9 @@ import Content from "../components/Content";
 import { useDispatch, useSelector } from "react-redux";
 
 const DrawerRight = () => {
-  const selectedPin = useSelector((state: any) => state.map.selectedPin) as PinInfoInterface;
+  const selectedPin = useSelector(
+    (state: any) => state.map.selectedPin,
+  ) as PinInfoInterface;
 
   return (
     <div className="drawer right">
