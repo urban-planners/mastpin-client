@@ -29,12 +29,17 @@ export const selectPin = (pinTitle: string) => ({
   payload: pinTitle,
 });
 
-export const updateMapZoom = (zoom: number) => ({
-  type: "UPDATE_MAP_ZOOM",
-  payload: zoom,
+export const updatePin = (pin: PinInfoInterface) => ({
+  type: "UPDATE_PIN",
+  payload: pin,
 });
 
-export const updateMapCenter = (center: google.maps.LatLngLiteral) => ({
+export const updateMapZoom = (mapZoom: number) => ({
+  type: "UPDATE_MAP_ZOOM",
+  payload: mapZoom,
+});
+
+export const updateMapCenter = (mapCenter: google.maps.LatLngLiteral) => ({
   type: "UPDATE_MAP_CENTER",
-  payload: center,
+  payload: mapCenter,
 });

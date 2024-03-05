@@ -10,7 +10,12 @@ import {
   RegionInterface,
 } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { addPin, removePin, updateMapZoom } from "../../redux/actions";
+import {
+  addPin,
+  removePin,
+  updateMapZoom,
+  updatePin,
+} from "../../redux/actions";
 
 const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
   const [map, setMap] = useState<google.maps.Map>();
@@ -66,18 +71,40 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
             scaledSize: new window.google.maps.Size(60, 60),
           }}
           animation={window.google.maps.Animation.DROP}
-          draggable={true}
         />
-        {pins.map((pin) => {
+        {pins.map((pin, index) => {
           return (
             <Marker
-              key={nanoid()}
+              key={index}
               position={pin.loc}
               icon={{
                 url: modalPin,
-                scaledSize: new window.google.maps.Size(40, 40),
+                scaledSize: new window.google.maps.Size(25, 25),
               }}
               onClick={() => dispatch(removePin(pin.title))}
+              draggable={true}
+              onDrag={(e) => {
+                dispatch(
+                  updatePin({
+                    ...pin,
+                    loc: {
+                      lat: e.latLng?.lat() as number,
+                      lng: e.latLng?.lng() as number,
+                    },
+                  }),
+                );
+              }}
+              onDragEnd={(e) => {
+                dispatch(
+                  updatePin({
+                    ...pin,
+                    loc: {
+                      lat: e.latLng?.lat() as number,
+                      lng: e.latLng?.lng() as number,
+                    },
+                  }),
+                );
+              }}
             />
           );
         })}
