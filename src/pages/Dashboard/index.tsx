@@ -1,6 +1,6 @@
 import "./Dashboard.css";
 import { useLoadScript } from "@react-google-maps/api";
-import CustomMap from "../../components/CustomMap";
+import CustomMap from "./CustomMap";
 import Loading from "../Loading";
 import { useEffect, useState } from "react";
 import DrawerLeft from "./components/Drawer/DrawerLeft";

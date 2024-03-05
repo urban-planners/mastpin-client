@@ -1,0 +1,19 @@
+.map-page {
+  flex: 1;
+  position: relative;
+}
+
+.map__container {
+  width: 100%;
+  height: 100%;
+}
+
+.selected__region-title {
+  position: absolute;
+  background-color: #fff !important;
+  padding: 5px;
+  top: 60px;
+  left: 18px;
+  z-index: 100;
+  border-radius: 5px;
+}

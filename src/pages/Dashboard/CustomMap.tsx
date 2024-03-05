@@ -1,12 +1,16 @@
 import "./CustomMap.css";
 import { GoogleMap, Marker, Polygon } from "@react-google-maps/api";
-import pin from "../assets/svgs/pin.svg";
-import modalPin from "../assets/svgs/modal-pin.svg";
+import pin from "../../assets/svgs/pin.svg";
+import modalPin from "../../assets/svgs/modal-pin.svg";
 import { nanoid } from "nanoid";
 import { Fragment, useState } from "react";
-import { MapInfoInterface, PinInfoInterface, RegionInterface } from "../types";
+import {
+  MapInfoInterface,
+  PinInfoInterface,
+  RegionInterface,
+} from "../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { addPin, removePin, updateMapZoom } from "../redux/actions";
+import { addPin, removePin, updateMapZoom } from "../../redux/actions";
 
 const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
   const [map, setMap] = useState<google.maps.Map>();
@@ -44,6 +48,7 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
 
   return (
     <div className="map-page">
+      <span className="selected__region-title">{selectedRegion.title}</span>
       <GoogleMap
         zoom={mapInfo.zoom}
         center={mapInfo.center}
@@ -52,6 +57,7 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
         onLoad={(map: google.maps.Map) => setMap(map)}
         onClick={onClick}
         onZoomChanged={mapChanged.zoom}
+        clickableIcons={false}
       >
         <Marker
           position={mapInfo.center}
@@ -77,13 +83,14 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
         })}
         {pins.length > 0 && regions.length > 0 && (
           <Fragment>
-            {regions.map((region) => {
+            {regions.map((region, index) => {
               const regionPins = pins.filter(
                 (pin) => pin.region === region.title,
               );
               const hull = computeConvexHull(regionPins.map((pin) => pin.loc));
               return (
                 <Polygon
+                  key={index}
                   path={hull}
                   options={{
                     fillColor: region.fillColor,
