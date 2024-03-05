@@ -7,7 +7,8 @@ import DrawerLeft from "./components/Drawer/DrawerLeft";
 import DrawerRight from "./components/Drawer/DrawerRight";
 import Nav from "./components/Nav";
 import { MapInfoInterface, PinInfoInterface } from "../../types";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { showMapLabels } from "../../redux/actions";
 
 const MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
 
@@ -15,15 +16,11 @@ const Dashboard = () => {
   const mapInfo = useSelector(
     (state: any) => state.map.mapInfo,
   ) as MapInfoInterface;
-  const [counter, setCounter] = useState<{ pin: number }>({
-    pin: 1,
-  });
-  const [selected, setSelected] = useState<{
-    asset: string;
-  }>({
-    asset: "",
-  });
   const [fullScreen, setFullScreen] = useState(false);
+  const dispatch = useDispatch();
+  const showLabels = useSelector(
+    (state: any) => state.map.mapInfo.showLabels,
+  ) as boolean;
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: MAPS_API_KEY as string,
@@ -31,20 +28,26 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    document
-      .querySelector("body")
-      ?.addEventListener("keydown", (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-          return setSelected({
-            asset: "",
-          });
-        }
-        if (e.ctrlKey && e.key === "/") {
-          e.preventDefault();
-          return setFullScreen((prev) => !prev);
-        }
-      });
-  }, []);
+    const keyBindingsFtn = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+      }
+      if (e.ctrlKey && e.key === "/") {
+        e.preventDefault();
+        return setFullScreen((prev) => !prev);
+      }
+      if (e.ctrlKey && e.key === "l") {
+        e.preventDefault();
+        dispatch(showMapLabels(!showLabels));
+      }
+    };
+    document.querySelector("body")?.addEventListener("keydown", keyBindingsFtn);
+
+    return () => {
+      document
+        .querySelector("body")
+        ?.removeEventListener("keydown", keyBindingsFtn);
+    };
+  }, [showLabels]);
 
   return (
     <div className="dashboard-page">

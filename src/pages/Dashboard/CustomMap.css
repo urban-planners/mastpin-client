@@ -16,4 +16,24 @@
   left: 18px;
   z-index: 100;
   border-radius: 5px;
+  user-select: none;
+}
+
+.show__landmarks-label {
+  position: absolute;
+  background-color: #fff !important;
+  padding: 5px;
+  top: 60px;
+  right: 18px;
+  z-index: 100;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.show__landmarks-label input[type="checkbox"] {
+  width: 15px;
 }

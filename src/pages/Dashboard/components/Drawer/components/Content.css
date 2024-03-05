@@ -6,4 +6,5 @@
 
 .drawer .content .na {
   padding: 8px;
+  user-select: none;
 }

@@ -19,18 +19,22 @@ const initialState: {
       lng: 3.7181452,
       lat: 6.8920758,
     },
+    options: {
+      mapTypeId: "hybrid",
+    },
+    showLabels: true,
   },
   selectedRegion: {
     title: "",
     fillColor: "",
     strokeColor: "",
+    population: 0,
   },
   regions: [],
   pins: [],
   selectedPin: {
     region: "",
     title: "",
-    pop: 0,
     loc: {
       lat: 0,
       lng: 0,
@@ -59,13 +63,23 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
         },
       };
 
+    case "SHOW_MAP_LABELS":
+      return {
+        ...state,
+        mapInfo: {
+          ...state.mapInfo,
+          showLabels: action.payload,
+        },
+      };
+
     case "ADD_REGION":
-      const title = getRegionTitle(state.regions.length);
+      const title = getRegionTitle(state.regions);
       const { strokeColor, fillColor } = generateRegionColors(title);
       const newRegion: RegionInterface = {
         title,
         fillColor,
         strokeColor,
+        population: 0,
       };
       return {
         ...state,
@@ -87,12 +101,38 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
         selectedRegion: action.payload,
       };
 
+    case "UPDATE_REGION":
+      if (regionExists(state.regions, action.payload.title))
+        action.payload = {
+          ...action.payload,
+          title: state.selectedRegion.title,
+        };
+      return {
+        ...state,
+        selectedRegion: action.payload,
+        pins:
+          state.selectedRegion.title === action.payload.title
+            ? state.pins
+            : state.pins.map((pin) => {
+                if (pin.region === state.selectedRegion.title) {
+                  return {
+                    ...pin,
+                    region: action.payload.title,
+                  };
+                }
+                return pin;
+              }),
+        regions: state.regions.map((region) =>
+          region.title === state.selectedRegion.title ? action.payload : region,
+        ),
+      };
+
     case "ADD_PIN":
       if (state.selectedRegion.title === "") return state;
       const newCounter = state.pinCounter + 1;
       const newPin: PinInfoInterface = {
         ...action.payload,
-        title: `${action.payload.region.replace("Region ", "")} - ${newCounter}`,
+        title: getPinTitle(state.pins, state.selectedRegion.title, newCounter),
       };
       return {
         ...state,
@@ -128,10 +168,16 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
       };
 
     case "UPDATE_PIN":
+      if (pinExists(state.pins, action.payload.title))
+        action.payload = {
+          ...action.payload,
+          title: state.selectedPin.title,
+        };
       return {
         ...state,
+        selectedPin: action.payload,
         pins: state.pins.map((pin) =>
-          pin.title === action.payload.title ? action.payload : pin,
+          pin.title === state.selectedPin.title ? action.payload : pin,
         ),
       };
 
@@ -140,7 +186,34 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
   }
 };
 
-const getRegionTitle = (index: number) => {
+const pinExists = (pins: PinInfoInterface[], title: string): boolean => {
+  return pins.find((pin) => pin.title === title) ? true : false;
+};
+
+const regionExists = (regions: RegionInterface[], title: string): boolean => {
+  return regions.find((region) => region.title === title) ? true : false;
+};
+
+const getPinTitle = (
+  pins: PinInfoInterface[],
+  region: string,
+  counter: number,
+) => {
+  region = region.replace(/^Region /, "");
+  let title = `${region} - ${counter}`;
+  while (true) {
+    if (pins.find((pin) => pin.title === title)) {
+      counter++;
+      title = `${region} - ${counter}`;
+      continue;
+    }
+    break;
+  }
+  return title;
+};
+
+const getRegionTitle = (regions: RegionInterface[]) => {
+  const index = regions.length;
   let suffix = index + 1;
   let prefix = 0;
   if (suffix > 26) {
@@ -149,15 +222,29 @@ const getRegionTitle = (index: number) => {
   }
   const charPrefix = (() => {
     if (prefix === 0) return "";
-    let temp = "";
-    for (let i = 0; i < prefix; i++) {
-      temp += "A";
-    }
+    let temp = "A".repeat(prefix);
     return temp;
   })();
+
   const charSuffix = String.fromCharCode(65 + suffix - 1);
-  const alias = `${charPrefix}${charSuffix}`;
-  return `Region ${alias}`;
+  let regionTitle = `Region ${charPrefix}${charSuffix}`;
+
+  while (regions.find((region) => region.title === regionTitle)) {
+    suffix++;
+    if (suffix > 26) {
+      prefix = Math.floor(suffix / 26);
+      suffix = suffix % 26;
+    }
+    const charPrefix = (() => {
+      if (prefix === 0) return "";
+      let temp = "A".repeat(prefix);
+      return temp;
+    })();
+    const charSuffix = String.fromCharCode(65 + suffix - 1);
+    regionTitle = `Region ${charPrefix}${charSuffix}`;
+  }
+
+  return regionTitle;
 };
 
 const predefinedColors = [

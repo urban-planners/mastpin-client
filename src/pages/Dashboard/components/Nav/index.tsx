@@ -1,16 +1,27 @@
+import { useSelector } from "react-redux";
 import PlacesAutocomplete from "../../../../components/PlacesAutocomplete";
-import { MapInfoInterface } from "../../../../types";
 import "./Nav.css";
+import { ProjectDetailsInterface } from "../../../../types";
+import { useEffect, useState } from "react";
 
 const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
+  const projectDetails = useSelector(
+    (state: any) => state.project.details,
+  ) as ProjectDetailsInterface;
+  const [title, setTitle] = useState(projectDetails.projectName);
+
+  useEffect(() => {
+    setTitle(projectDetails.projectName);
+  }, [projectDetails.projectName]);
+
   return (
     <nav className="dashboard__nav">
-      <div className="drawer project-name__container">
+      <form className="drawer project-name__container">
         <label>
           <small>Project Name</small>
-          <input value="Untitled-1" disabled />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} />
         </label>
-      </div>
+      </form>
       <div className="search__container">
         {isLoaded && <PlacesAutocomplete />}
       </div>

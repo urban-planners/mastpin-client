@@ -2,7 +2,7 @@ import "./CustomMap.css";
 import { GoogleMap, Marker, Polygon } from "@react-google-maps/api";
 import pin from "../../assets/svgs/pin.svg";
 import modalPin from "../../assets/svgs/modal-pin.svg";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   MapInfoInterface,
   PinInfoInterface,
@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addPin,
   removePin,
+  showMapLabels,
   updateMapZoom,
   updatePin,
 } from "../../redux/actions";
@@ -28,6 +29,12 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
   const regions = useSelector(
     (state: any) => state.map.regions,
   ) as RegionInterface[];
+  const mapOptions = useSelector(
+    (state: any) => state.map.mapInfo.options,
+  ) as google.maps.MapOptions;
+  const showLabels = useSelector(
+    (state: any) => state.map.mapInfo.showLabels,
+  ) as boolean;
 
   const onClick = (e: google.maps.MapMouseEvent | undefined) => {
     if (!e) return;
@@ -35,7 +42,6 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
       addPin({
         region: selectedRegion.title,
         title: ``,
-        pop: 0,
         loc: {
           lat: e.latLng?.lat() as number,
           lng: e.latLng?.lng() as number,
@@ -52,7 +58,17 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
 
   return (
     <div className="map-page">
-      <span className="selected__region-title">{selectedRegion.title}</span>
+      {selectedRegion.title && (
+        <span className="selected__region-title">{selectedRegion.title}</span>
+      )}
+      <label className="show__landmarks-label">
+        Show Landmarks
+        <input
+          type="checkbox"
+          checked={showLabels}
+          onChange={() => dispatch(showMapLabels(!showLabels))}
+        />
+      </label>
       <GoogleMap
         zoom={mapInfo.zoom}
         center={mapInfo.center}
@@ -62,12 +78,24 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
         onClick={onClick}
         onZoomChanged={mapChanged.zoom}
         clickableIcons={false}
+        options={{
+          ...mapOptions,
+          styles: !showLabels
+            ? [
+                {
+                  featureType: "all",
+                  elementType: "labels",
+                  stylers: [{ visibility: "off" }],
+                },
+              ]
+            : undefined,
+        }}
       >
         <Marker
           position={mapInfo.center}
           icon={{
             url: pin,
-            scaledSize: new window.google.maps.Size(60, 60),
+            scaledSize: new window.google.maps.Size(showLabels ? 60 : 0, 60),
           }}
           animation={window.google.maps.Animation.DROP}
         />

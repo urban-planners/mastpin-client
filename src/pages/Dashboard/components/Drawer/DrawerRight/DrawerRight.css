@@ -15,6 +15,7 @@
   justify-content: center;
   align-items: center;
   flex-flow: column;
+  user-select: none;
 }
 
 label.landscape__container {
