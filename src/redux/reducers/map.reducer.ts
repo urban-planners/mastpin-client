@@ -181,6 +181,14 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
         ),
       };
 
+    case "UPDATE_PIN_LOCATION":
+      return {
+        ...state,
+        pins: state.pins.map((pin) =>
+          pin.title === action.payload.title ? action.payload : pin,
+        ),
+      };
+
     default:
       return state;
   }

@@ -39,6 +39,11 @@ export const updatePin = (pin: PinInfoInterface) => ({
   payload: pin,
 });
 
+export const updatePinLocation = (pin: PinInfoInterface) => ({
+  type: "UPDATE_PIN_LOCATION",
+  payload: pin,
+});
+
 export const updateMapZoom = (mapZoom: number) => ({
   type: "UPDATE_MAP_ZOOM",
   payload: mapZoom,

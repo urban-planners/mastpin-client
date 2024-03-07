@@ -2,7 +2,7 @@ import "./CustomMap.css";
 import { GoogleMap, Marker, Polygon } from "@react-google-maps/api";
 import pin from "../../assets/svgs/pin.svg";
 import modalPin from "../../assets/svgs/modal-pin.svg";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import {
   MapInfoInterface,
   PinInfoInterface,
@@ -14,7 +14,7 @@ import {
   removePin,
   showMapLabels,
   updateMapZoom,
-  updatePin,
+  updatePinLocation,
 } from "../../redux/actions";
 
 const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
@@ -41,7 +41,7 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
     dispatch(
       addPin({
         region: selectedRegion.title,
-        title: ``,
+        title: "",
         loc: {
           lat: e.latLng?.lat() as number,
           lng: e.latLng?.lng() as number,
@@ -112,7 +112,7 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
               draggable={true}
               onDrag={(e) => {
                 dispatch(
-                  updatePin({
+                  updatePinLocation({
                     ...pin,
                     loc: {
                       lat: e.latLng?.lat() as number,
@@ -123,7 +123,7 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
               }}
               onDragEnd={(e) => {
                 dispatch(
-                  updatePin({
+                  updatePinLocation({
                     ...pin,
                     loc: {
                       lat: e.latLng?.lat() as number,
