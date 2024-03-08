@@ -2,6 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from "react-toastify";
+import DrawerRight from "./pages/Dashboard/components/Drawer/DrawerRight";
 
 function App() {
   return (
@@ -20,7 +21,9 @@ function App() {
       />
       <Router>
         <Routes>
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard/:id" element={<Dashboard />}>
+            <Route index element={<DrawerRight />} />
+          </Route>
         </Routes>
       </Router>
     </div>

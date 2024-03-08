@@ -21,7 +21,7 @@ export interface RegionInterface {
   population: number;
 }
 
-export interface GenerateBoundaryInterface {
+export interface GeneratePinInterface {
   id: string;
   regionId: string;
   title: string;
@@ -32,6 +32,6 @@ export interface GenerateBoundaryInterface {
 
 export interface GenerateMapInterface {
   regions: RegionInterface[];
-  pins: GenerateBoundaryInterface[];
+  pins: GeneratePinInterface[];
   resolution: number;
 }

@@ -53,3 +53,8 @@ export const showMapLabels = (showLabels: boolean) => ({
   type: "SHOW_MAP_LABELS",
   payload: showLabels,
 });
+
+export const setMapResolution = (resolution: number) => ({
+  type: "SET_MAP_RESOLUTION",
+  payload: resolution,
+});

@@ -20,6 +20,7 @@ const initialState: {
   pins: PinInfoInterface[];
   selectedRegion: string;
   selectedPin: string;
+  resolution: number;
 } = {
   mapInfo: {
     zoom: 15,
@@ -33,9 +34,10 @@ const initialState: {
     showLabels: true,
   },
   selectedRegion: "",
+  selectedPin: "",
   regions: [],
   pins: [],
-  selectedPin: "",
+  resolution: 100,
 };
 
 export const mapReducer = (state = initialState, action: ActionInterface) => {
@@ -100,9 +102,9 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
       return {
         ...state,
         regions: state.regions.map((region) =>
-          region.id === state.selectedRegion
+          region.id === action.payload.id
             ? {
-                ...region,
+                ...action.payload,
                 title: regionExists(state.regions, action.payload.title)
                   ? region.title
                   : action.payload.title,
@@ -200,6 +202,12 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
           ),
         };
       })();
+
+    case "SET_MAP_RESOLUTION":
+      return {
+        ...state,
+        resolution: action.payload,
+      };
 
     default:
       return state;

@@ -2,7 +2,7 @@ import "./Nav.css";
 import { useDispatch, useSelector } from "react-redux";
 import PlacesAutocomplete from "../../../../components/PlacesAutocomplete";
 import {
-  GenerateBoundaryInterface,
+  GeneratePinInterface,
   GenerateMapInterface,
   PinInfoInterface,
   ProjectDetailsInterface,
@@ -43,7 +43,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     };
 
     try {
-      const response = await fetch(`${SERVER}/api/simulation`, {
+      const response = await fetch(`${SERVER}/api/simulate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,8 +106,8 @@ export default Nav;
 function assignRegionsToPins(
   pins: PinInfoInterface[],
   regions: RegionInterface[],
-): GenerateBoundaryInterface[] {
-  const result: GenerateBoundaryInterface[] = [];
+): GeneratePinInterface[] {
+  const result: GeneratePinInterface[] = [];
 
   pins.forEach((pin) => {
     const regionsContainingPin = regions

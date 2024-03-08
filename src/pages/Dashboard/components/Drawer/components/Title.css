@@ -5,6 +5,10 @@
   flex-flow: column;
   gap: 8px;
   user-select: none;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: white;
 }
 
 .drawer .title__content {

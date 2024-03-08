@@ -2,6 +2,7 @@
   flex-grow: 1;
   overflow-y: auto;
   position: relative;
+  min-height: 200px;
 }
 
 .drawer .content .na {
