@@ -11,7 +11,6 @@ export const switchTheme = () => {
     type: "SWITCH_THEME",
   };
 };
-<<<<<<< HEAD
 
 export const setConfiguration = (configuration: ConfigurationInterface) => {
   return {
@@ -19,5 +18,3 @@ export const setConfiguration = (configuration: ConfigurationInterface) => {
     payload: configuration,
   };
 };
-=======
->>>>>>> 3b92fe16dc81d59e7a3e6721f8ed7a8ba136c050
