@@ -20,13 +20,13 @@ const DrawerLeft = () => {
   ) as RegionInterface[];
   const selectedRegion = useSelector(
     (state: any) => state.map.selectedRegion,
-  ) as RegionInterface;
+  ) as string;
   const pins = useSelector(
     (state: any) => state.map.pins,
   ) as PinInfoInterface[];
   const selectedPin = useSelector(
     (state: any) => state.map.selectedPin,
-  ) as PinInfoInterface;
+  ) as string;
 
   return (
     <div className="drawer left">
@@ -42,8 +42,8 @@ const DrawerLeft = () => {
         {regions.map((region) => (
           <li
             key={nanoid()}
-            onClick={() => dispatch(selectRegion(region))}
-            className={`${selectedRegion.title === region.title ? "selected" : ""}`}
+            onClick={() => dispatch(selectRegion(region.id))}
+            className={`${selectedRegion === region.id ? "selected" : ""}`}
           >
             <p>{region.title}</p>
           </li>
@@ -54,8 +54,8 @@ const DrawerLeft = () => {
         {pins.map((pin) => (
           <li
             key={nanoid()}
-            onClick={() => dispatch(selectPin(pin.title))}
-            className={`${selectedPin.title === pin.title ? "selected" : ""}`}
+            onClick={() => dispatch(selectPin(pin.id))}
+            className={`${selectedPin === pin.id ? "selected" : ""}`}
           >
             <p>{pin.title}</p>
           </li>

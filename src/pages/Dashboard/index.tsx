@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import DrawerLeft from "./components/Drawer/DrawerLeft";
 import DrawerRight from "./components/Drawer/DrawerRight";
 import Nav from "./components/Nav";
-import { MapInfoInterface, PinInfoInterface } from "../../types";
+import { MapInfoInterface } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
 import { showMapLabels } from "../../redux/actions";
 

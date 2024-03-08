@@ -4,14 +4,14 @@ export const addRegion = () => ({
   type: "ADD_REGION",
 });
 
-export const removeRegion = (title: string) => ({
+export const removeRegion = (id: string) => ({
   type: "REMOVE_REGION",
-  payload: title,
+  payload: id,
 });
 
-export const selectRegion = (region: RegionInterface) => ({
+export const selectRegion = (id: string) => ({
   type: "SELECT_REGION",
-  payload: region,
+  payload: id,
 });
 
 export const updateRegion = (region: RegionInterface) => ({
@@ -24,23 +24,18 @@ export const addPin = (pin: PinInfoInterface) => ({
   payload: pin,
 });
 
-export const removePin = (pinTitle: string) => ({
+export const removePin = (id: string) => ({
   type: "REMOVE_PIN",
-  payload: pinTitle,
+  payload: id,
 });
 
-export const selectPin = (pinTitle: string) => ({
+export const selectPin = (id: string) => ({
   type: "SELECT_PIN",
-  payload: pinTitle,
+  payload: id,
 });
 
 export const updatePin = (pin: PinInfoInterface) => ({
   type: "UPDATE_PIN",
-  payload: pin,
-});
-
-export const updatePinLocation = (pin: PinInfoInterface) => ({
-  type: "UPDATE_PIN_LOCATION",
   payload: pin,
 });
 

@@ -6,14 +6,32 @@ export interface MapInfoInterface {
 }
 
 export interface PinInfoInterface {
-  region: string;
+  id: string;
+  regionId: string;
   title: string;
   loc: google.maps.LatLngLiteral;
 }
 
 export interface RegionInterface {
+  id: string;
   title: string;
+  bounds: google.maps.LatLngLiteral[];
   fillColor: string;
   strokeColor: string;
   population: number;
+}
+
+export interface GenerateBoundaryInterface {
+  id: string;
+  regionId: string;
+  title: string;
+  x: number;
+  y: number;
+  regions: string[];
+}
+
+export interface GenerateMapInterface {
+  regions: RegionInterface[];
+  pins: GenerateBoundaryInterface[];
+  resolution: number;
 }

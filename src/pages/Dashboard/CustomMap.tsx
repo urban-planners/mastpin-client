@@ -2,7 +2,7 @@ import "./CustomMap.css";
 import { GoogleMap, Marker, Polygon } from "@react-google-maps/api";
 import pin from "../../assets/svgs/pin.svg";
 import modalPin from "../../assets/svgs/modal-pin.svg";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   MapInfoInterface,
   PinInfoInterface,
@@ -14,8 +14,9 @@ import {
   removePin,
   showMapLabels,
   updateMapZoom,
-  updatePinLocation,
+  updatePin,
 } from "../../redux/actions";
+import { nanoid } from "nanoid";
 
 const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
   const [map, setMap] = useState<google.maps.Map>();
@@ -25,7 +26,7 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
   ) as PinInfoInterface[];
   const selectedRegion = useSelector(
     (state: any) => state.map.selectedRegion,
-  ) as RegionInterface;
+  ) as string;
   const regions = useSelector(
     (state: any) => state.map.regions,
   ) as RegionInterface[];
@@ -40,8 +41,9 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
     if (!e) return;
     dispatch(
       addPin({
-        region: selectedRegion.title,
         title: "",
+        id: nanoid(),
+        regionId: selectedRegion,
         loc: {
           lat: e.latLng?.lat() as number,
           lng: e.latLng?.lng() as number,
@@ -58,8 +60,10 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
 
   return (
     <div className="map-page">
-      {selectedRegion.title && (
-        <span className="selected__region-title">{selectedRegion.title}</span>
+      {selectedRegion && (
+        <span className="selected__region-title">
+          {regions.find((region) => region.id === selectedRegion)?.title}
+        </span>
       )}
       <label className="show__landmarks-label">
         Show Landmarks
@@ -108,11 +112,11 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
                 url: modalPin,
                 scaledSize: new window.google.maps.Size(25, 25),
               }}
-              onClick={() => dispatch(removePin(pin.title))}
+              onClick={() => dispatch(removePin(pin.id))}
               draggable={true}
               onDrag={(e) => {
                 dispatch(
-                  updatePinLocation({
+                  updatePin({
                     ...pin,
                     loc: {
                       lat: e.latLng?.lat() as number,
@@ -123,7 +127,7 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
               }}
               onDragEnd={(e) => {
                 dispatch(
-                  updatePinLocation({
+                  updatePin({
                     ...pin,
                     loc: {
                       lat: e.latLng?.lat() as number,
@@ -138,14 +142,10 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
         {pins.length > 0 && regions.length > 0 && (
           <Fragment>
             {regions.map((region, index) => {
-              const regionPins = pins.filter(
-                (pin) => pin.region === region.title,
-              );
-              const hull = computeConvexHull(regionPins.map((pin) => pin.loc));
               return (
                 <Polygon
                   key={index}
-                  path={hull}
+                  path={region.bounds}
                   options={{
                     fillColor: region.fillColor,
                     strokeColor: region.strokeColor,
@@ -164,51 +164,3 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
 };
 
 export default CustomMap;
-
-function computeConvexHull(
-  points: google.maps.LatLngLiteral[],
-): google.maps.LatLngLiteral[] {
-  if (points.length <= 3) {
-    return points;
-  }
-
-  const sortedPoints = points.sort((a, b) => a.lat - b.lat || a.lng - b.lng);
-
-  const getNextPointIndex = (current: number): number => {
-    let next = (current + 1) % points.length;
-    for (let i = 0; i < points.length; i++) {
-      if (
-        orientation(
-          sortedPoints[current],
-          sortedPoints[i],
-          sortedPoints[next],
-        ) === 2
-      ) {
-        next = i;
-      }
-    }
-    return next;
-  };
-
-  const hull: google.maps.LatLngLiteral[] = [];
-  let currentPoint = 0;
-  do {
-    hull.push(sortedPoints[currentPoint]);
-    currentPoint = getNextPointIndex(currentPoint);
-  } while (currentPoint !== 0);
-
-  return hull;
-}
-
-function orientation(
-  p: google.maps.LatLngLiteral,
-  q: google.maps.LatLngLiteral,
-  r: google.maps.LatLngLiteral,
-): number {
-  const val =
-    (q.lng - p.lng) * (r.lat - q.lat) - (q.lat - p.lat) * (r.lng - q.lng);
-  if (val === 0) {
-    return 0; // colinear
-  }
-  return val > 0 ? 1 : 2; // clock or counterclock wise
-}

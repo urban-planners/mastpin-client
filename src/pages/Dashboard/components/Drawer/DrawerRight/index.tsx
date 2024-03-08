@@ -9,41 +9,54 @@ import SubTitle from "../components/SubTitle";
 import { updatePin, updateRegion } from "../../../../../redux/actions";
 
 const DrawerRight = () => {
+  const dispatch = useDispatch();
+
   const selectedPin = useSelector(
     (state: any) => state.map.selectedPin,
-  ) as PinInfoInterface;
+  ) as string;
   const selectedRegion = useSelector(
     (state: any) => state.map.selectedRegion,
-  ) as RegionInterface;
-  const dispatch = useDispatch();
+  ) as string;
+
+  const regions = useSelector(
+    (state: any) => state.map.regions,
+  ) as RegionInterface[];
+  const pins = useSelector(
+    (state: any) => state.map.pins,
+  ) as PinInfoInterface[];
+
   const [region, setRegion] = useState<RegionInterface>({
-    title: selectedRegion.title,
-    population: selectedRegion.population,
-    fillColor: selectedRegion.fillColor,
-    strokeColor: selectedRegion.strokeColor,
+    id: "",
+    title: "",
+    bounds: [],
+    fillColor: "",
+    strokeColor: "",
+    population: 0,
   });
   const [pin, setPin] = useState<PinInfoInterface>({
-    title: selectedPin.title,
-    region: selectedPin.region,
-    loc: selectedPin.loc,
+    id: "",
+    regionId: "",
+    title: "",
+    loc: {
+      lat: 0,
+      lng: 0,
+    },
   });
 
   useEffect(() => {
-    setRegion({
-      title: selectedRegion.title,
-      population: selectedRegion.population,
-      fillColor: selectedRegion.fillColor,
-      strokeColor: selectedRegion.strokeColor,
-    });
-  }, [selectedRegion]);
+    if (selectedRegion)
+      setRegion(
+        regions.find((region) => region.id === selectedRegion) ||
+          ({} as RegionInterface),
+      );
+  }, [selectedRegion, regions]);
 
   useEffect(() => {
-    setPin({
-      title: selectedPin.title,
-      region: selectedPin.region,
-      loc: selectedPin.loc,
-    });
-  }, [selectedPin]);
+    if (selectedPin)
+      setPin(
+        pins.find((pin) => pin.id === selectedPin) || ({} as PinInfoInterface),
+      );
+  }, [selectedPin, pins]);
 
   const updateRegionHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,11 +76,11 @@ const DrawerRight = () => {
         <Title title="Properties" />
         <SubTitle text="Region Properties" />
         <Content emptyText="No properties to show.">
-          {region.title
+          {selectedRegion
             ? [
                 <form
                   className="drawer__form"
-                  key={selectedRegion.title}
+                  key={selectedRegion}
                   onSubmit={updateRegionHandler}
                 >
                   <label>
@@ -131,11 +144,11 @@ const DrawerRight = () => {
         </Content>
         <SubTitle text="Pin Properties" />
         <Content emptyText="No properties to show.">
-          {selectedPin.title
+          {selectedPin
             ? [
                 <form
                   className="drawer__form"
-                  key={selectedPin.title}
+                  key={selectedPin}
                   onSubmit={updatePinHandler}
                 >
                   <label>

@@ -1,17 +1,25 @@
+import { nanoid } from "nanoid";
 import {
   ActionInterface,
   MapInfoInterface,
   PinInfoInterface,
   RegionInterface,
 } from "../../types";
+import {
+  computeConvexHull,
+  generateRegionColors,
+  getPinTitle,
+  getRegionTitle,
+  pinExists,
+  regionExists,
+} from "../../utils";
 
 const initialState: {
   mapInfo: MapInfoInterface;
   regions: RegionInterface[];
   pins: PinInfoInterface[];
-  selectedRegion: RegionInterface;
-  selectedPin: PinInfoInterface;
-  pinCounter: number;
+  selectedRegion: string;
+  selectedPin: string;
 } = {
   mapInfo: {
     zoom: 15,
@@ -24,23 +32,10 @@ const initialState: {
     },
     showLabels: true,
   },
-  selectedRegion: {
-    title: "",
-    fillColor: "",
-    strokeColor: "",
-    population: 0,
-  },
+  selectedRegion: "",
   regions: [],
   pins: [],
-  selectedPin: {
-    region: "",
-    title: "",
-    loc: {
-      lat: 0,
-      lng: 0,
-    },
-  },
-  pinCounter: 0,
+  selectedPin: "",
 };
 
 export const mapReducer = (state = initialState, action: ActionInterface) => {
@@ -76,23 +71,23 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
       const title = getRegionTitle(state.regions);
       const { strokeColor, fillColor } = generateRegionColors(title);
       const newRegion: RegionInterface = {
+        id: nanoid(),
         title,
         fillColor,
         strokeColor,
         population: 0,
+        bounds: [],
       };
       return {
         ...state,
-        selectedRegion: newRegion,
+        selectedRegion: newRegion.id,
         regions: [newRegion, ...state.regions],
       };
 
     case "REMOVE_REGION":
       return {
         ...state,
-        regions: state.regions.filter(
-          (region) => region.title !== action.payload,
-        ),
+        regions: state.regions.filter((region) => region.id !== action.payload),
       };
 
     case "SELECT_REGION":
@@ -102,237 +97,111 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
       };
 
     case "UPDATE_REGION":
-      if (regionExists(state.regions, action.payload.title))
-        action.payload = {
-          ...action.payload,
-          title: state.selectedRegion.title,
-        };
       return {
         ...state,
-        selectedRegion: action.payload,
-        pins:
-          state.selectedRegion.title === action.payload.title
-            ? state.pins
-            : state.pins.map((pin) => {
-                if (pin.region === state.selectedRegion.title) {
-                  return {
-                    ...pin,
-                    region: action.payload.title,
-                  };
-                }
-                return pin;
-              }),
         regions: state.regions.map((region) =>
-          region.title === state.selectedRegion.title ? action.payload : region,
+          region.id === state.selectedRegion
+            ? {
+                ...region,
+                title: regionExists(state.regions, action.payload.title)
+                  ? region.title
+                  : action.payload.title,
+              }
+            : region,
+        ),
+      };
+
+    case "SET_REGION_BOUNDS":
+      return {
+        ...state,
+        regions: state.regions.map((region) =>
+          region.id === action.payload.id
+            ? { ...region, bounds: action.payload.bounds }
+            : region,
         ),
       };
 
     case "ADD_PIN":
-      if (state.selectedRegion.title === "") return state;
-      const newCounter = state.pinCounter + 1;
+      if (!state.selectedRegion) return state;
       const newPin: PinInfoInterface = {
         ...action.payload,
-        title: getPinTitle(state.pins, state.selectedRegion.title, newCounter),
+        title: getPinTitle(state.pins, state.regions, state.selectedRegion),
       };
       return {
         ...state,
-        pinCounter: newCounter,
-        selectedPin: newPin,
+        selectedPin: newPin.id,
         pins: [newPin, ...state.pins],
+        regions: state.regions.map((region) =>
+          region.id === newPin.regionId
+            ? {
+                ...region,
+                bounds: computeConvexHull([...region.bounds, newPin.loc]),
+              }
+            : region,
+        ),
       };
 
     case "REMOVE_PIN":
-      return {
-        ...state,
-        selectedPin:
-          state.selectedPin.title === action.payload
-            ? {
-                region: "",
-                title: "",
-                pop: 0,
-                loc: {
-                  lat: 0,
-                  lng: 0,
-                },
-              }
-            : state.selectedPin,
-        pins: state.pins.filter((pin) => pin.title !== action.payload),
-      };
+      return (() => {
+        const pins = state.pins.filter((pin) => pin.id !== action.payload);
+        const pinRegion = state.pins.find((pin) => pin.id === action.payload);
+        return {
+          ...state,
+          selectedPin:
+            state.selectedPin === action.payload ? "" : state.selectedPin,
+          pins,
+          regions: state.regions.map((region) =>
+            region.id === pinRegion?.regionId
+              ? {
+                  ...region,
+                  bounds: computeConvexHull(
+                    pins
+                      .filter((pin) => pin.regionId === region.id)
+                      .map((pin) => pin.loc),
+                  ),
+                }
+              : region,
+          ),
+        };
+      })();
 
     case "SELECT_PIN":
       return {
         ...state,
-        selectedPin: state.pins.find(
-          (pin) => pin.title === action.payload,
-        ) as PinInfoInterface,
+        selectedPin: action.payload,
       };
 
     case "UPDATE_PIN":
-      if (pinExists(state.pins, action.payload.title))
-        action.payload = {
-          ...action.payload,
-          title: state.selectedPin.title,
+      return (() => {
+        const pins = state.pins.map((pin) =>
+          pin.id === action.payload.id
+            ? {
+                ...action.payload,
+                title: pinExists(state.pins, action.payload.title)
+                  ? pin.title
+                  : action.payload.title,
+              }
+            : pin,
+        );
+        return {
+          ...state,
+          pins,
+          regions: state.regions.map((region) =>
+            region.id === action.payload.regionId
+              ? {
+                  ...region,
+                  bounds: computeConvexHull(
+                    pins
+                      .filter((pin) => pin.regionId === region.id)
+                      .map((pin) => pin.loc),
+                  ),
+                }
+              : region,
+          ),
         };
-      return {
-        ...state,
-        selectedPin: action.payload,
-        pins: state.pins.map((pin) =>
-          pin.title === state.selectedPin.title ? action.payload : pin,
-        ),
-      };
-
-    case "UPDATE_PIN_LOCATION":
-      return {
-        ...state,
-        pins: state.pins.map((pin) =>
-          pin.title === action.payload.title ? action.payload : pin,
-        ),
-      };
+      })();
 
     default:
       return state;
   }
 };
-
-const pinExists = (pins: PinInfoInterface[], title: string): boolean => {
-  return pins.find((pin) => pin.title === title) ? true : false;
-};
-
-const regionExists = (regions: RegionInterface[], title: string): boolean => {
-  return regions.find((region) => region.title === title) ? true : false;
-};
-
-const getPinTitle = (
-  pins: PinInfoInterface[],
-  region: string,
-  counter: number,
-) => {
-  region = region.replace(/^Region /, "");
-  let title = `${region} - ${counter}`;
-  while (true) {
-    if (pins.find((pin) => pin.title === title)) {
-      counter++;
-      title = `${region} - ${counter}`;
-      continue;
-    }
-    break;
-  }
-  return title;
-};
-
-const getRegionTitle = (regions: RegionInterface[]) => {
-  const index = regions.length;
-  let suffix = index + 1;
-  let prefix = 0;
-  if (suffix > 26) {
-    prefix = Math.floor(suffix / 26);
-    suffix = suffix % 26;
-  }
-  const charPrefix = (() => {
-    if (prefix === 0) return "";
-    let temp = "A".repeat(prefix);
-    return temp;
-  })();
-
-  const charSuffix = String.fromCharCode(65 + suffix - 1);
-  let regionTitle = `Region ${charPrefix}${charSuffix}`;
-
-  while (regions.find((region) => region.title === regionTitle)) {
-    suffix++;
-    if (suffix > 26) {
-      prefix = Math.floor(suffix / 26);
-      suffix = suffix % 26;
-    }
-    const charPrefix = (() => {
-      if (prefix === 0) return "";
-      let temp = "A".repeat(prefix);
-      return temp;
-    })();
-    const charSuffix = String.fromCharCode(65 + suffix - 1);
-    regionTitle = `Region ${charPrefix}${charSuffix}`;
-  }
-
-  return regionTitle;
-};
-
-const predefinedColors = [
-  "#1f77b4",
-  "#ff7f0e",
-  "#2ca02c",
-  "#d62728",
-  "#9467bd",
-  "#8c564b",
-  "#e377c2",
-  "#7f7f7f",
-  "#bcbd22",
-  "#17becf",
-];
-
-const usedColors: Set<string> = new Set();
-
-function generateRegionColors(regionId: string): {
-  strokeColor: string;
-  fillColor: string;
-} {
-  let strokeColor: string;
-  let fillColor: string;
-
-  // If there are available colors in the predefined palette
-  if (!usedColors.has(regionId) && usedColors.size < predefinedColors.length) {
-    strokeColor = predefinedColors[usedColors.size];
-    fillColor = lightenDarkenColor(strokeColor, 20);
-  } else {
-    // Use already used colors or cycle through used colors if palette is exhausted
-    if (usedColors.has(regionId)) {
-      strokeColor = regionId;
-    } else {
-      const usedColorIndex = usedColors.size % predefinedColors.length;
-      const usedColorArray = Array.from(usedColors);
-      strokeColor = usedColorArray[usedColorIndex];
-    }
-    fillColor = lightenDarkenColor(strokeColor, 20);
-  }
-
-  // Add used colors to the set
-  usedColors.add(regionId);
-
-  return { strokeColor, fillColor };
-}
-
-// Function to lighten or darken a color
-function lightenDarkenColor(color: string, amount: number): string {
-  let usePound = false;
-
-  if (color[0] === "#") {
-    color = color.slice(1);
-    usePound = true;
-  }
-
-  const num = parseInt(color, 16);
-
-  let r = (num >> 16) + amount;
-
-  if (r > 255) {
-    r = 255;
-  } else if (r < 0) {
-    r = 0;
-  }
-
-  let b = ((num >> 8) & 0x00ff) + amount;
-
-  if (b > 255) {
-    b = 255;
-  } else if (b < 0) {
-    b = 0;
-  }
-
-  let g = (num & 0x0000ff) + amount;
-
-  if (g > 255) {
-    g = 255;
-  } else if (g < 0) {
-    g = 0;
-  }
-
-  return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
-}
