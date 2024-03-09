@@ -174,7 +174,9 @@ const TechnicalDrawer = () => {
                       },
                     }))
                   }
-                  checked={optimizationCheckState.initParameters.velocityMagnitude}
+                  checked={
+                    optimizationCheckState.initParameters.velocityMagnitude
+                  }
                   onCheck={(e) =>
                     setOptimizationCheckState((prev) => ({
                       ...prev,
@@ -286,7 +288,9 @@ const TechnicalDrawer = () => {
                       },
                     }))
                   }
-                  checked={optimizationCheckState.initParameters.individualMutationRate}
+                  checked={
+                    optimizationCheckState.initParameters.individualMutationRate
+                  }
                   onCheck={(e) =>
                     setOptimizationCheckState((prev) => ({
                       ...prev,
@@ -310,7 +314,9 @@ const TechnicalDrawer = () => {
                       },
                     }))
                   }
-                  checked={optimizationCheckState.initParameters.geneMutationRate}
+                  checked={
+                    optimizationCheckState.initParameters.geneMutationRate
+                  }
                   onCheck={(e) =>
                     setOptimizationCheckState((prev) => ({
                       ...prev,
@@ -334,7 +340,9 @@ const TechnicalDrawer = () => {
                       },
                     }))
                   }
-                  checked={optimizationCheckState.initParameters.mutationIntensity}
+                  checked={
+                    optimizationCheckState.initParameters.mutationIntensity
+                  }
                   onCheck={(e) =>
                     setOptimizationCheckState((prev) => ({
                       ...prev,
