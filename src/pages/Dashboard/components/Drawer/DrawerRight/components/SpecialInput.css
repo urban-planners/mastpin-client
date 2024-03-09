@@ -1,0 +1,12 @@
+.drawer__form__input__container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  width: 100%;
+}
+
+.drawer__special__input .drawer__form__checkbox {
+  max-width: 16px;
+}

@@ -1,4 +1,4 @@
 export * from "./reducer";
-export * from "./map";
-export * from "./drawer";
-export * from "./project";
+export * from "./map.types";
+export * from "./drawer.types";
+export * from "./project.types";

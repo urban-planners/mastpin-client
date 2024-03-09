@@ -1,6 +1,7 @@
 import "./MappingDrawer.css";
 import { FormEvent, Fragment, useEffect, useState } from "react";
 import {
+  ConfigurationCheckInterface,
   ConfigurationInterface,
   PinInfoInterface,
   RegionInterface,
@@ -11,10 +12,10 @@ import { useDispatch, useSelector } from "react-redux";
 import SubTitle from "../../components/SubTitle";
 import {
   setConfiguration,
-  setMapResolution,
   updatePin,
   updateRegion,
 } from "../../../../../../redux/actions";
+import SpecialInput from "../components/SpecialInput";
 
 const MappingDrawer = () => {
   const dispatch = useDispatch();
@@ -37,9 +38,9 @@ const MappingDrawer = () => {
     (state: any) => state.project.configuration,
   ) as ConfigurationInterface;
 
-  const resolution = useSelector(
-    (state: any) => state.map.resolution,
-  ) as number;
+  const configurationCheck = useSelector(
+    (state: any) => state.project.configurationCheck,
+  ) as ConfigurationCheckInterface;
 
   const [region, setRegion] = useState<RegionInterface>({
     id: "",
@@ -58,6 +59,10 @@ const MappingDrawer = () => {
       lng: 0,
     },
   });
+
+  const [configurationState, setConfigurationState] = useState(configuration);
+  const [configurationCheckState, setConfigurationCheckState] =
+    useState(configurationCheck);
 
   useEffect(() => {
     if (selectedRegion)
@@ -84,8 +89,6 @@ const MappingDrawer = () => {
     dispatch(updatePin(pin));
   };
 
-  const [configurationState, setConfigurationState] = useState(configuration);
-
   useEffect(() => {
     dispatch(setConfiguration(configurationState));
   }, [configurationState]);
@@ -104,59 +107,50 @@ const MappingDrawer = () => {
                     key={selectedRegion}
                     onSubmit={updateRegionHandler}
                   >
-                    <label>
-                      Title
-                      <input
-                        onFocus={(e) => e.target.select()}
-                        value={region.title}
-                        onChange={(e) =>
-                          setRegion((prev) => ({
-                            ...prev,
-                            title: e.target.value,
-                          }))
-                        }
-                      />
-                    </label>
-                    <label>
-                      Population
-                      <input
-                        onFocus={(e) => e.target.select()}
-                        type="number"
-                        value={region.population}
-                        onChange={(e) =>
-                          setRegion((prev) => ({
-                            ...prev,
-                            population: parseInt(e.target.value) || 0,
-                          }))
-                        }
-                      />
-                    </label>
-                    <label>
-                      Fill Color
-                      <input
-                        onFocus={(e) => e.target.select()}
-                        value={region.fillColor}
-                        onChange={(e) =>
-                          setRegion((prev) => ({
-                            ...prev,
-                            fillColor: e.target.value,
-                          }))
-                        }
-                      />
-                    </label>
-                    <label>
-                      Stroke Color
-                      <input
-                        onFocus={(e) => e.target.select()}
-                        value={region.strokeColor}
-                        onChange={(e) =>
-                          setRegion((prev) => ({
-                            ...prev,
-                            strokeColor: e.target.value,
-                          }))
-                        }
-                      />
-                    </label>
+                    <SpecialInput
+                      title="Title"
+                      value={region.title}
+                      onchange={(e) =>
+                        setRegion((prev) => ({
+                          ...prev,
+                          title: e.target.value,
+                        }))
+                      }
+                      type="text"
+                    />
+                    <SpecialInput
+                      title="Population"
+                      value={region.population}
+                      onchange={(e) =>
+                        setRegion((prev) => ({
+                          ...prev,
+                          population: parseInt(e.target.value) || 0,
+                        }))
+                      }
+                      type="number"
+                    />
+                    <SpecialInput
+                      title="Fill Color"
+                      value={region.fillColor}
+                      onchange={(e) =>
+                        setRegion((prev) => ({
+                          ...prev,
+                          fillColor: e.target.value,
+                        }))
+                      }
+                      type="text"
+                    />
+                    <SpecialInput
+                      title="Stroke Color"
+                      value={region.strokeColor}
+                      onchange={(e) =>
+                        setRegion((prev) => ({
+                          ...prev,
+                          strokeColor: e.target.value,
+                        }))
+                      }
+                      type="text"
+                    />
                     <button type="submit" hidden>
                       Update
                     </button>
@@ -173,53 +167,36 @@ const MappingDrawer = () => {
                     key={selectedPin}
                     onSubmit={updatePinHandler}
                   >
-                    <label>
-                      Title
-                      <input
-                        onFocus={(e) => e.target.select()}
-                        value={pin.title}
-                        onChange={(e) =>
-                          setPin((prev) => ({
-                            ...prev,
-                            title: e.target.value,
-                          }))
-                        }
-                      />
-                    </label>
-                    <label>
-                      Longitude
-                      <input
-                        onFocus={(e) => e.target.select()}
-                        type="number"
-                        value={pin.loc?.lng}
-                        onChange={(e) =>
-                          setPin((prev) => ({
-                            ...prev,
-                            loc: {
-                              ...prev.loc,
-                              lng: parseFloat(e.target.value),
-                            },
-                          }))
-                        }
-                      />
-                    </label>
-                    <label>
-                      Latitude
-                      <input
-                        onFocus={(e) => e.target.select()}
-                        type="number"
-                        value={pin.loc?.lat}
-                        onChange={(e) =>
-                          setPin((prev) => ({
-                            ...prev,
-                            loc: {
-                              ...prev.loc,
-                              lat: parseFloat(e.target.value),
-                            },
-                          }))
-                        }
-                      />
-                    </label>
+                    <SpecialInput
+                      title="Title"
+                      value={pin.title}
+                      onchange={(e) =>
+                        setPin((prev) => ({ ...prev, title: e.target.value }))
+                      }
+                      type="text"
+                    />
+                    <SpecialInput
+                      title="Longitude"
+                      value={pin.loc?.lng}
+                      onchange={(e) =>
+                        setPin((prev) => ({
+                          ...prev,
+                          loc: { ...prev.loc, lng: parseFloat(e.target.value) },
+                        }))
+                      }
+                      type="number"
+                    />
+                    <SpecialInput
+                      title="Latitude"
+                      value={pin.loc?.lat}
+                      onchange={(e) =>
+                        setPin((prev) => ({
+                          ...prev,
+                          loc: { ...prev.loc, lat: parseFloat(e.target.value) },
+                        }))
+                      }
+                      type="number"
+                    />
                     <button type="submit" hidden>
                       Update
                     </button>
@@ -236,16 +213,17 @@ const MappingDrawer = () => {
                 onSubmit={(e) => e.preventDefault()}
                 key={"resolution"}
               >
-                <label className="drawer__form__label">
-                  Resolution
-                  <input
-                    value={resolution}
-                    type="number"
-                    onChange={(e) =>
-                      dispatch(setMapResolution(parseInt(e.target.value)))
-                    }
-                  />
-                </label>
+                <SpecialInput
+                  title="Resolution"
+                  value={configurationState.resolution}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      resolution: parseInt(e.target.value),
+                    }))
+                  }
+                  type="number"
+                />
               </form>,
             ]}
           </Content>
@@ -258,184 +236,195 @@ const MappingDrawer = () => {
                 key={"configurations"}
               >
                 <SubTitle text="Number of Masts" />
-                <label className="drawer__form__label">
-                  Specific
-                  <input
-                    value={configurationState.numberOfMasts.specific}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        numberOfMasts: {
-                          ...prev.numberOfMasts,
-                          specific: parseInt(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
-                <label className="drawer__form__label">
-                  Minimum
-                  <input
-                    value={configurationState.numberOfMasts.min}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        numberOfMasts: {
-                          ...prev.numberOfMasts,
-                          min: parseInt(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
-                <label className="drawer__form__label">
-                  Maximum
-                  <input
-                    value={configurationState.numberOfMasts.max}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        numberOfMasts: {
-                          ...prev.numberOfMasts,
-                          max: parseInt(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
+                <SpecialInput
+                  title="Specific"
+                  value={configurationState.numberOfMasts.specific}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      numberOfMasts: {
+                        ...prev.numberOfMasts,
+                        specific: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                  checked={configurationCheckState.numberOfMasts.specific}
+                  onCheck={(e) =>
+                    setConfigurationCheckState((prev) => ({
+                      ...prev,
+                      numberOfMasts: {
+                        specific: e.target.checked,
+                      },
+                    }))
+                  }
+                />
+                <SpecialInput
+                  title="Minimum"
+                  value={configurationState.numberOfMasts.min}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      numberOfMasts: {
+                        ...prev.numberOfMasts,
+                        min: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                  checked={!configurationCheckState.numberOfMasts.specific}
+                  hideCheckbox={true}
+                />
+                <SpecialInput
+                  title="Maximum"
+                  value={configurationState.numberOfMasts.max}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      numberOfMasts: {
+                        ...prev.numberOfMasts,
+                        max: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                  checked={!configurationCheckState.numberOfMasts.specific}
+                  hideCheckbox={true}
+                />
                 <SubTitle text="Threshold" />
-                <label className="drawer__form__label">
-                  Coverage
-                  <input
-                    value={configurationState.threshold.coverage}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        threshold: {
-                          ...prev.threshold,
-                          coverage: parseFloat(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
-                <label className="drawer__form__label">
-                  Signal Strength
-                  <input
-                    value={configurationState.threshold.signalStrength}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        threshold: {
-                          ...prev.threshold,
-                          signalStrength: parseInt(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
+                <SpecialInput
+                  title="Coverage"
+                  value={configurationState.threshold.coverage}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      threshold: {
+                        ...prev.threshold,
+                        coverage: parseFloat(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                  checked={configurationCheckState.threshold.coverage}
+                  onCheck={(e) =>
+                    setConfigurationCheckState((prev) => ({
+                      ...prev,
+                      threshold: {
+                        ...prev.threshold,
+                        coverage: e.target.checked,
+                      },
+                    }))
+                  }
+                />
+                <SpecialInput
+                  title="Signal Strength"
+                  value={configurationState.threshold.signalStrength}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      threshold: {
+                        ...prev.threshold,
+                        signalStrength: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                  checked={configurationCheckState.threshold.signalStrength}
+                  onCheck={(e) =>
+                    setConfigurationCheckState((prev) => ({
+                      ...prev,
+                      threshold: {
+                        ...prev.threshold,
+                        signalStrength: e.target.checked,
+                      },
+                    }))
+                  }
+                />
                 <SubTitle text="Hata Parameters" />
-                <label className="drawer__form__label">
-                  Mast Range
-                  <input
-                    value={configurationState.hataParameters.mastRange}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        hataParameters: {
-                          ...prev.hataParameters,
-                          mastRange: parseInt(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
-                <label className="drawer__form__label">
-                  Mast Height
-                  <input
-                    value={configurationState.hataParameters.mastHeight}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        hataParameters: {
-                          ...prev.hataParameters,
-                          mastHeight: parseFloat(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
-                <label className="drawer__form__label">
-                  Mast Frequency
-                  <input
-                    value={configurationState.hataParameters.mastFrequency}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        hataParameters: {
-                          ...prev.hataParameters,
-                          mastFrequency: parseFloat(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
-                <label className="drawer__form__label">
-                  Mast EIRP
-                  <input
-                    value={configurationState.hataParameters.mastEirp}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        hataParameters: {
-                          ...prev.hataParameters,
-                          mastEirp: parseInt(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
-                <label className="drawer__form__label">
-                  Receiver Height
-                  <input
-                    value={configurationState.hataParameters.receiverHeight}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        hataParameters: {
-                          ...prev.hataParameters,
-                          receiverHeight: parseFloat(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
-                <label className="drawer__form__label">
-                  SS Cap
-                  <input
-                    value={configurationState.hataParameters.ssCap}
-                    type="number"
-                    onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        hataParameters: {
-                          ...prev.hataParameters,
-                          ssCap: parseFloat(e.target.value),
-                        },
-                      }))
-                    }
-                  />
-                </label>
+                <SpecialInput
+                  title="Mast Range"
+                  value={configurationState.hataParameters.mastRange}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      hataParameters: {
+                        ...prev.hataParameters,
+                        mastRange: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                />
+                <SpecialInput
+                  title="Mast Height"
+                  value={configurationState.hataParameters.mastHeight}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      hataParameters: {
+                        ...prev.hataParameters,
+                        mastHeight: parseFloat(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                />
+                <SpecialInput
+                  title="Mast Frequency"
+                  value={configurationState.hataParameters.mastFrequency}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      hataParameters: {
+                        ...prev.hataParameters,
+                        mastFrequency: parseFloat(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                />
+                <SpecialInput
+                  title="Mast EIRP"
+                  value={configurationState.hataParameters.mastEirp}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      hataParameters: {
+                        ...prev.hataParameters,
+                        mastEirp: parseInt(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                />
+                <SpecialInput
+                  title="Receiver Height"
+                  value={configurationState.hataParameters.receiverHeight}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      hataParameters: {
+                        ...prev.hataParameters,
+                        receiverHeight: parseFloat(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                />
+                <SpecialInput
+                  title="SS Cap"
+                  value={configurationState.hataParameters.ssCap}
+                  onchange={(e) =>
+                    setConfigurationState((prev) => ({
+                      ...prev,
+                      hataParameters: {
+                        ...prev.hataParameters,
+                        ssCap: parseFloat(e.target.value),
+                      },
+                    }))
+                  }
+                  type="number"
+                />
                 <label className="drawer__form__label">
                   City Size
                   <select

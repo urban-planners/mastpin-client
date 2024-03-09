@@ -9,10 +9,12 @@ import {
   RegionInterface,
 } from "../../../../types";
 import { useEffect, useState } from "react";
-import { IoPlay } from "react-icons/io5";
+import { IoPlayOutline } from "react-icons/io5";
 import { switchTheme, toggleDisplayMode } from "../../../../redux/actions";
 import { IoMdSunny } from "react-icons/io";
 import { WiMoonAltWaningCrescent4 } from "react-icons/wi";
+import { IoShareSocial } from "react-icons/io5";
+import { IoSyncOutline } from "react-icons/io5";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
@@ -31,15 +33,19 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     (state: any) => state.map.regions,
   ) as RegionInterface[];
 
+  const resolution = useSelector(
+    (state: any) => state.project.configuration.resolution,
+  ) as number;
+
   useEffect(() => {
     setTitle(projectDetails.projectName);
   }, [projectDetails.projectName]);
 
-  const startSimulation = async () => {
+  const startGeneration = async () => {
     const map: GenerateMapInterface = {
       regions,
       pins: assignRegionsToPins(pins, regions),
-      resolution: 100,
+      resolution,
     };
 
     try {
@@ -56,6 +62,8 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     } catch (error) {}
   };
 
+  const startEvaluation = async () => {};
+
   return (
     <nav className="dashboard__nav">
       <form className="drawer project-name__container">
@@ -68,21 +76,31 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
         {isLoaded && <PlacesAutocomplete />}
       </div>
       <div className="drawer nav__actions__container">
-        <div className="nav__actions__item" onClick={startSimulation}>
-          <IoPlay className="nav__actions__icon" />
-          <span>Start Simulation</span>
+        <div className="nav__actions__item" onClick={startGeneration}>
+          <IoPlayOutline className="nav__actions__icon" />
+          <span>Generate optimal placements</span>
         </div>
-        <div className="nav__actions__item">
+        <div className="nav__actions__item" onClick={startEvaluation}>
+          <IoSyncOutline className="nav__actions__icon" />
+          <span>Evaluate current placements</span>
+        </div>
+        <div
+          className="nav__actions__item"
+          onClick={() => dispatch(toggleDisplayMode())}
+        >
           <div
             className={`nav__actions__icon nav__actions__switch ${
               displayMode === "mapping" ? "" : "active"
             }`}
-            onClick={() => dispatch(toggleDisplayMode())}
           >
             <div className="nav__actions__switch__circle" />
           </div>
           {displayMode === "mapping" && <span>Switch to technical mode</span>}
           {displayMode === "technical" && <span>Switch to mapping mode</span>}
+        </div>
+        <div className="nav__actions__item nav__actions__share">
+          <p>Share</p>
+          <IoShareSocial className="nav__actions__icon" />
         </div>
         <div
           className="nav__actions__item"

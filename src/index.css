@@ -6,6 +6,8 @@
   --gray-dark: rgb(37, 37, 37);
   --gray-light: rgb(92, 92, 92);
   --offwhite: rgb(250, 250, 250);
+  --text-color: #000;
+  --text-color-alt: #fff;
 
   /* STYLES */
   --border-radius: 5px;

@@ -20,7 +20,6 @@ const initialState: {
   pins: PinInfoInterface[];
   selectedRegion: string;
   selectedPin: string;
-  resolution: number;
 } = {
   mapInfo: {
     zoom: 15,
@@ -37,7 +36,6 @@ const initialState: {
   selectedPin: "",
   regions: [],
   pins: [],
-  resolution: 100,
 };
 
 export const mapReducer = (state = initialState, action: ActionInterface) => {
@@ -202,12 +200,6 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
           ),
         };
       })();
-
-    case "SET_MAP_RESOLUTION":
-      return {
-        ...state,
-        resolution: action.payload,
-      };
 
     default:
       return state;
