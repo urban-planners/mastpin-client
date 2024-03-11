@@ -9,4 +9,5 @@
 
 .drawer__special__input .drawer__form__checkbox {
   max-width: 16px;
+  color: var(--primary-color);
 }

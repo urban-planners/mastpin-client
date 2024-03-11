@@ -32,10 +32,10 @@ const initialState: {
     },
     threshold: {
       coverage: 0.9999,
-      signalStrength: 0,
+      signalStrength:-90,
     },
     hataParameters: {
-      mastRange: 200,
+      mastRange: 0.1,
       mastHeight: 30,
       mastFrequency: 900,
       mastEirp: 45,
@@ -96,9 +96,9 @@ const initialState: {
     },
     runParameters: {
       maxIter: true,
-      scoreThreshold: true,
-      patience: true,
-      tolerance: true,
+      scoreThreshold: false,
+      patience: false,
+      tolerance: false,
       maxGenerations: true,
     },
   },

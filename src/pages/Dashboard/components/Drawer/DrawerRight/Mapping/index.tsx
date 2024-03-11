@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SubTitle from "../../components/SubTitle";
 import {
   setConfiguration,
+  setConfigurationCheck,
   updatePin,
   updateRegion,
 } from "../../../../../../redux/actions";
@@ -42,56 +43,48 @@ const MappingDrawer = () => {
     (state: any) => state.project.configurationCheck,
   ) as ConfigurationCheckInterface;
 
-  const [region, setRegion] = useState<RegionInterface>({
-    id: "",
-    title: "",
-    bounds: [],
-    fillColor: "",
-    strokeColor: "",
-    population: 0,
-  });
-  const [pin, setPin] = useState<PinInfoInterface>({
-    id: "",
-    regionId: "",
-    title: "",
-    loc: {
-      lat: 0,
-      lng: 0,
-    },
-  });
-
   const [configurationState, setConfigurationState] = useState(configuration);
   const [configurationCheckState, setConfigurationCheckState] =
     useState(configurationCheck);
+  const [regionState, setRegionState] = useState<RegionInterface>(
+    {} as RegionInterface,
+  );
+  const [pinState, setPinState] = useState<PinInfoInterface>(
+    {} as PinInfoInterface,
+  );
 
   useEffect(() => {
     if (selectedRegion)
-      setRegion(
+      setRegionState(
         regions.find((region) => region.id === selectedRegion) ||
           ({} as RegionInterface),
       );
-  }, [selectedRegion, regions]);
+  }, [selectedRegion, pins]);
 
   useEffect(() => {
     if (selectedPin)
-      setPin(
+      setPinState(
         pins.find((pin) => pin.id === selectedPin) || ({} as PinInfoInterface),
       );
-  }, [selectedPin, pins]);
+  }, [selectedPin]);
 
-  const updateRegionHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    dispatch(updateRegion(region));
-  };
+  useEffect(() => {
+    if (Object.keys(regionState).length > 0)
+      dispatch(updateRegion(regionState as RegionInterface));
+  }, [regionState, dispatch]);
 
-  const updatePinHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    dispatch(updatePin(pin));
-  };
+  useEffect(() => {
+    if (Object.keys(pinState).length > 0)
+      dispatch(updatePin(pinState as PinInfoInterface));
+  }, [pinState, dispatch]);
 
   useEffect(() => {
     dispatch(setConfiguration(configurationState));
-  }, [configurationState]);
+  }, [configurationState, dispatch]);
+
+  useEffect(() => {
+    dispatch(setConfigurationCheck(configurationCheckState));
+  }, [configurationCheckState, dispatch]);
 
   return (
     <Fragment>
@@ -100,18 +93,18 @@ const MappingDrawer = () => {
           <Title title="Properties" />
           <SubTitle text="Region Properties" />
           <Content emptyText="No properties to show.">
-            {selectedRegion
+            {Object.keys(regionState).length > 0
               ? [
                   <form
                     className="drawer__form"
                     key={selectedRegion}
-                    onSubmit={updateRegionHandler}
+                    onSubmit={(e) => e.preventDefault()}
                   >
                     <SpecialInput
                       title="Title"
-                      value={region.title}
+                      value={regionState.title}
                       onchange={(e) =>
-                        setRegion((prev) => ({
+                        setRegionState((prev) => ({
                           ...prev,
                           title: e.target.value,
                         }))
@@ -120,20 +113,22 @@ const MappingDrawer = () => {
                     />
                     <SpecialInput
                       title="Population"
-                      value={region.population}
+                      value={regionState.population}
                       onchange={(e) =>
-                        setRegion((prev) => ({
+                        setRegionState((prev) => ({
                           ...prev,
-                          population: parseInt(e.target.value) || 0,
+                          population: /^[0-9]+$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
                         }))
                       }
                       type="number"
                     />
                     <SpecialInput
                       title="Fill Color"
-                      value={region.fillColor}
+                      value={regionState.fillColor}
                       onchange={(e) =>
-                        setRegion((prev) => ({
+                        setRegionState((prev) => ({
                           ...prev,
                           fillColor: e.target.value,
                         }))
@@ -142,9 +137,9 @@ const MappingDrawer = () => {
                     />
                     <SpecialInput
                       title="Stroke Color"
-                      value={region.strokeColor}
+                      value={regionState.strokeColor}
                       onchange={(e) =>
-                        setRegion((prev) => ({
+                        setRegionState((prev) => ({
                           ...prev,
                           strokeColor: e.target.value,
                         }))
@@ -160,39 +155,52 @@ const MappingDrawer = () => {
           </Content>
           <SubTitle text="Pin Properties" />
           <Content emptyText="No properties to show.">
-            {selectedPin
+            {Object.keys(pinState).length > 0
               ? [
                   <form
                     className="drawer__form"
                     key={selectedPin}
-                    onSubmit={updatePinHandler}
+                    onSubmit={(e) => e.preventDefault()}
                   >
                     <SpecialInput
                       title="Title"
-                      value={pin.title}
+                      value={pinState.title}
                       onchange={(e) =>
-                        setPin((prev) => ({ ...prev, title: e.target.value }))
+                        setPinState((prev) => ({
+                          ...prev,
+                          title: e.target.value,
+                        }))
                       }
                       type="text"
                     />
                     <SpecialInput
                       title="Longitude"
-                      value={pin.loc?.lng}
+                      value={pinState.loc?.lng}
                       onchange={(e) =>
-                        setPin((prev) => ({
+                        setPinState((prev) => ({
                           ...prev,
-                          loc: { ...prev.loc, lng: parseFloat(e.target.value) },
+                          loc: {
+                            ...prev.loc,
+                            lng: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                              ? e.target.value
+                              : 0,
+                          },
                         }))
                       }
                       type="number"
                     />
                     <SpecialInput
                       title="Latitude"
-                      value={pin.loc?.lat}
+                      value={pinState.loc?.lat}
                       onchange={(e) =>
-                        setPin((prev) => ({
+                        setPinState((prev) => ({
                           ...prev,
-                          loc: { ...prev.loc, lat: parseFloat(e.target.value) },
+                          loc: {
+                            ...prev.loc,
+                            lat: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                              ? e.target.value
+                              : 0,
+                          },
                         }))
                       }
                       type="number"
@@ -219,7 +227,9 @@ const MappingDrawer = () => {
                   onchange={(e) =>
                     setConfigurationState((prev) => ({
                       ...prev,
-                      resolution: parseInt(e.target.value),
+                      resolution: /^[0-9]+$/.test(e.target.value)
+                        ? e.target.value
+                        : 0,
                     }))
                   }
                   type="number"
@@ -244,7 +254,9 @@ const MappingDrawer = () => {
                       ...prev,
                       numberOfMasts: {
                         ...prev.numberOfMasts,
-                        specific: parseInt(e.target.value),
+                        specific: /^[0-9]+$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -267,7 +279,9 @@ const MappingDrawer = () => {
                       ...prev,
                       numberOfMasts: {
                         ...prev.numberOfMasts,
-                        min: parseInt(e.target.value),
+                        min: /^[0-9]+$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -283,7 +297,9 @@ const MappingDrawer = () => {
                       ...prev,
                       numberOfMasts: {
                         ...prev.numberOfMasts,
-                        max: parseInt(e.target.value),
+                        max: /^[0-9]+$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -300,7 +316,9 @@ const MappingDrawer = () => {
                       ...prev,
                       threshold: {
                         ...prev.threshold,
-                        coverage: parseFloat(e.target.value),
+                        coverage: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -324,7 +342,9 @@ const MappingDrawer = () => {
                       ...prev,
                       threshold: {
                         ...prev.threshold,
-                        signalStrength: parseInt(e.target.value),
+                        signalStrength: /^-*[0-9]+$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -349,7 +369,9 @@ const MappingDrawer = () => {
                       ...prev,
                       hataParameters: {
                         ...prev.hataParameters,
-                        mastRange: parseInt(e.target.value),
+                        mastRange: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -363,7 +385,9 @@ const MappingDrawer = () => {
                       ...prev,
                       hataParameters: {
                         ...prev.hataParameters,
-                        mastHeight: parseFloat(e.target.value),
+                        mastHeight: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -377,7 +401,11 @@ const MappingDrawer = () => {
                       ...prev,
                       hataParameters: {
                         ...prev.hataParameters,
-                        mastFrequency: parseFloat(e.target.value),
+                        mastFrequency: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                          e.target.value,
+                        )
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -391,7 +419,9 @@ const MappingDrawer = () => {
                       ...prev,
                       hataParameters: {
                         ...prev.hataParameters,
-                        mastEirp: parseInt(e.target.value),
+                        mastEirp: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -405,7 +435,11 @@ const MappingDrawer = () => {
                       ...prev,
                       hataParameters: {
                         ...prev.hataParameters,
-                        receiverHeight: parseFloat(e.target.value),
+                        receiverHeight: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                          e.target.value,
+                        )
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -419,7 +453,9 @@ const MappingDrawer = () => {
                       ...prev,
                       hataParameters: {
                         ...prev.hataParameters,
-                        ssCap: parseFloat(e.target.value),
+                        ssCap: /^-*[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }

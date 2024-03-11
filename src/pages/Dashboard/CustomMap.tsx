@@ -2,10 +2,12 @@ import "./CustomMap.css";
 import { GoogleMap, Marker, Polygon } from "@react-google-maps/api";
 import pin from "../../assets/svgs/pin.svg";
 import modalPin from "../../assets/svgs/modal-pin.svg";
-import { Fragment, useEffect, useState } from "react";
+import mastPin from "../../assets/svgs/mast.svg";
+import { Fragment, useState } from "react";
 import {
   MapInfoInterface,
   PinInfoInterface,
+  PresentationInterface,
   RegionInterface,
 } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,6 +38,9 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
   const showLabels = useSelector(
     (state: any) => state.map.mapInfo.showLabels,
   ) as boolean;
+  const presentation = useSelector(
+    (state: any) => state.result.presentation,
+  ) as PresentationInterface;
 
   const onClick = (e: google.maps.MapMouseEvent | undefined) => {
     if (!e) return;
@@ -158,6 +163,21 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
             })}
           </Fragment>
         )}
+        {presentation &&
+          presentation.mast_loc_coord &&
+          presentation.mast_loc_coord.map((mast, index) => (
+            <Marker
+            key={index}
+              position={{
+                lat: mast?.[1] || 0,
+                lng: mast?.[0] || 0,
+              }}
+              icon={{
+                url: mastPin,
+                scaledSize: new window.google.maps.Size(40, 40),
+              }}
+            />
+          ))}
       </GoogleMap>
     </div>
   );

@@ -7,6 +7,9 @@ import {
   PinInfoInterface,
   ProjectDetailsInterface,
   RegionInterface,
+  ConfigurationInterface,
+  OptimizationInterface,
+  PresentationInterface,
 } from "../../../../types";
 import { useEffect, useState } from "react";
 import { IoPlayOutline } from "react-icons/io5";
@@ -15,6 +18,8 @@ import { IoMdSunny } from "react-icons/io";
 import { WiMoonAltWaningCrescent4 } from "react-icons/wi";
 import { IoShareSocial } from "react-icons/io5";
 import { IoSyncOutline } from "react-icons/io5";
+import { sortConfiguration, sortOptimization } from "./utils";
+import { setPresentation } from "../../../../redux/actions/result.action";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
@@ -33,9 +38,18 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     (state: any) => state.map.regions,
   ) as RegionInterface[];
 
-  const resolution = useSelector(
-    (state: any) => state.project.configuration.resolution,
-  ) as number;
+  const configuration = useSelector(
+    (state: any) => state.project.configuration,
+  ) as ConfigurationInterface;
+  const optimization = useSelector(
+    (state: any) => state.project.optimization,
+  ) as OptimizationInterface;
+  const configurationCheck = useSelector(
+    (state: any) => state.project.configurationCheck,
+  );
+  const optimizationCheck = useSelector(
+    (state: any) => state.project.optimizationCheck,
+  );
 
   useEffect(() => {
     setTitle(projectDetails.projectName);
@@ -45,7 +59,8 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     const map: GenerateMapInterface = {
       regions,
       pins: assignRegionsToPins(pins, regions),
-      resolution,
+      configuration: sortConfiguration(configuration, configurationCheck),
+      optimization: sortOptimization(optimization, optimizationCheck),
     };
 
     try {
@@ -58,7 +73,8 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       });
 
       const data = await response.json();
-      console.log(data);
+      const presentationData = data.data as PresentationInterface;
+      dispatch(setPresentation(presentationData));
     } catch (error) {}
   };
 

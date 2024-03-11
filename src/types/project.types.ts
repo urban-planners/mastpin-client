@@ -4,24 +4,24 @@ export interface ProjectDetailsInterface {
 }
 
 export interface ConfigurationInterface {
-  resolution: number;
+  resolution: number | string;
   mastLocation?: [];
   numberOfMasts: {
-    specific?: number;
-    min?: number;
-    max?: number;
+    specific?: number | string;
+    min?: number | string;
+    max?: number | string;
   };
   threshold: {
-    coverage?: number;
-    signalStrength?: number;
+    coverage?: number | string;
+    signalStrength?: number | string;
   };
   hataParameters: {
-    mastRange: number;
-    mastHeight: number;
-    mastFrequency: number;
-    mastEirp: number;
-    receiverHeight: number;
-    ssCap: number;
+    mastRange: number | string;
+    mastHeight: number | string;
+    mastFrequency: number | string;
+    mastEirp: number | string;
+    receiverHeight: number | string;
+    ssCap: number | string;
     citySize: "small" | "medium" | "large";
   };
 }
@@ -29,25 +29,25 @@ export interface ConfigurationInterface {
 export interface OptimizationInterface {
   algorithm: "pso" | "ga";
   initParameters: {
-    swarmSize?: number;
-    popSize?: number;
-    kBestIndividuals?: number;
-    nParents?: number;
+    swarmSize?: number | string;
+    popSize?: number | string;
+    kBestIndividuals?: number | string;
+    nParents?: number | string;
     breedingMethod?: "average" | "random";
-    individualMutationRate?: number;
-    geneMutationRate?: number;
-    mutationIntensity?: number;
-    inertia?: number;
-    cognCoeff?: number;
-    socCoeff?: number;
-    velocityMagnitude?: number;
+    individualMutationRate?: number | string;
+    geneMutationRate?: number | string;
+    mutationIntensity?: number | string;
+    inertia?: number | string;
+    cognCoeff?: number | string;
+    socCoeff?: number | string;
+    velocityMagnitude?: number | string;
   };
   runParameters: {
-    maxGenerations?: number;
-    maxIter?: number;
-    scoreThreshold?: number;
-    patience?: number;
-    tolerance?: number;
+    maxGenerations?: number | string;
+    maxIter?: number | string;
+    scoreThreshold?: number | string;
+    patience?: number | string;
+    tolerance?: number | string;
   };
 }
 

@@ -1,3 +1,5 @@
+import { ConfigurationInterface, OptimizationInterface } from "./project.types";
+
 export interface MapInfoInterface {
   center: google.maps.LatLngLiteral;
   zoom: number;
@@ -33,5 +35,6 @@ export interface GeneratePinInterface {
 export interface GenerateMapInterface {
   regions: RegionInterface[];
   pins: GeneratePinInterface[];
-  resolution: number;
+  configuration: ConfigurationInterface;
+  optimization: OptimizationInterface;
 }

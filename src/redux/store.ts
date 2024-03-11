@@ -1,10 +1,11 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { mapReducer, projectReducer } from "./reducers";
+import { mapReducer, projectReducer, resultReducer } from "./reducers";
 
 const store = configureStore({
   reducer: combineReducers({
     map: mapReducer,
     project: projectReducer,
+    result: resultReducer,
   }),
 });
 
