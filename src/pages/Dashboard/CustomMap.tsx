@@ -167,7 +167,7 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
           presentation.mast_loc_coord &&
           presentation.mast_loc_coord.map((mast, index) => (
             <Marker
-            key={index}
+              key={index}
               position={{
                 lat: mast?.[1] || 0,
                 lng: mast?.[0] || 0,

@@ -5,10 +5,7 @@ export interface PresentationInterface {
   load_std: number;
   load_values: [];
   mast_loc: [];
-  mast_loc_coord: [[
-    number,
-    number
-  ]];
+  mast_loc_coord: [[number, number]];
   region_signal_strength: [];
   signal_strength: number;
 }

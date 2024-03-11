@@ -10,9 +10,7 @@ const initialState: {
     load_std: 0,
     load_values: [],
     mast_loc: [],
-    mast_loc_coord: [
-        [0, 0],
-    ],
+    mast_loc_coord: [[0, 0]],
     region_signal_strength: [],
     signal_strength: 0,
   },
