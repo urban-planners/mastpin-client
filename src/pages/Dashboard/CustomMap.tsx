@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addPin,
   removePin,
+  selectRegion,
   showMapLabels,
   updateMapZoom,
   updatePin,

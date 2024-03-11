@@ -20,6 +20,7 @@ import { IoShareSocial } from "react-icons/io5";
 import { IoSyncOutline } from "react-icons/io5";
 import { sortConfiguration, sortOptimization } from "./utils";
 import { setPresentation } from "../../../../redux/actions/result.action";
+import { ToastContainer, toast } from "react-toastify";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
@@ -50,12 +51,22 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
   const optimizationCheck = useSelector(
     (state: any) => state.project.optimizationCheck,
   );
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setTitle(projectDetails.projectName);
   }, [projectDetails.projectName]);
 
   const startGeneration = async () => {
+    if (loading) return;
+    if (regions.length === 0) return toast.error("Add regions to the map");
+    if (pins.length === 0) return toast.error("Add pins to the map");
+    if (regions.find((region) => region.bounds.length < 3))
+      return toast.error("Map regions are not well defined");
+    if (regions.length === 0) return toast.error("Add regions to the map");
+    if (regions.find((region) => region.population === 0))
+      return toast.error("Population of regions must be greater than 0");
+
     const map: GenerateMapInterface = {
       regions,
       pins: assignRegionsToPins(pins, regions),
@@ -64,6 +75,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     };
 
     try {
+      setLoading(true);
       const response = await fetch(`${SERVER}/api/simulate`, {
         method: "POST",
         headers: {
@@ -71,17 +83,34 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
         },
         body: JSON.stringify(map),
       });
-
+      setLoading(false);
       const data = await response.json();
       const presentationData = data.data as PresentationInterface;
       dispatch(setPresentation(presentationData));
-    } catch (error) {}
+    } catch (error: any) {
+      setLoading(false);
+      if (/failed to fetch|network *error/i.test(error.message))
+        toast.error("Check your internet connection and try again");
+      else toast.error(error.message);
+    }
   };
 
   const startEvaluation = async () => {};
 
   return (
     <nav className="dashboard__nav">
+      <ToastContainer
+        position="top-center"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <form className="drawer project-name__container">
         <label>
           <small>Project Name</small>
@@ -92,7 +121,10 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
         {isLoaded && <PlacesAutocomplete />}
       </div>
       <div className="drawer nav__actions__container">
-        <div className="nav__actions__item" onClick={startGeneration}>
+        <div
+          className={`nav__actions__item ${loading ? "disabled" : ""}`}
+          onClick={startGeneration}
+        >
           <IoPlayOutline className="nav__actions__icon" />
           <span>Generate optimal placements</span>
         </div>

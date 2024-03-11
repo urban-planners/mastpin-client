@@ -74,7 +74,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        swarmSize: parseInt(e.target.value),
+                        swarmSize: /^[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -98,7 +100,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        inertia: parseFloat(e.target.value),
+                        inertia: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -122,7 +126,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        cognCoeff: parseFloat(e.target.value),
+                        cognCoeff: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -146,7 +152,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        socCoeff: parseFloat(e.target.value),
+                        socCoeff: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -170,7 +178,11 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        velocityMagnitude: parseFloat(e.target.value),
+                        velocityMagnitude: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                          e.target.value,
+                        )
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -200,7 +212,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        popSize: parseInt(e.target.value),
+                        popSize: /^[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -224,7 +238,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        kBestIndividuals: parseInt(e.target.value),
+                        kBestIndividuals: /^[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -238,7 +254,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        nParents: parseInt(e.target.value),
+                        nParents: /^[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -284,7 +302,11 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        individualMutationRate: parseFloat(e.target.value),
+                        individualMutationRate: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                          e.target.value,
+                        )
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -310,7 +332,11 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        geneMutationRate: parseFloat(e.target.value),
+                        geneMutationRate: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                          e.target.value,
+                        )
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -336,7 +362,11 @@ const TechnicalDrawer = () => {
                       ...prev,
                       initParameters: {
                         ...prev.initParameters,
-                        mutationIntensity: parseFloat(e.target.value),
+                        mutationIntensity: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                          e.target.value,
+                        )
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -367,7 +397,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       runParameters: {
                         ...prev.runParameters,
-                        maxIter: parseInt(e.target.value),
+                        maxIter: /^[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -391,7 +423,11 @@ const TechnicalDrawer = () => {
                       ...prev,
                       runParameters: {
                         ...prev.runParameters,
-                        scoreThreshold: parseFloat(e.target.value),
+                        scoreThreshold: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                          e.target.value,
+                        )
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -415,7 +451,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       runParameters: {
                         ...prev.runParameters,
-                        patience: parseInt(e.target.value),
+                        patience: /^[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -439,7 +477,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       runParameters: {
                         ...prev.runParameters,
-                        tolerance: parseFloat(e.target.value),
+                        tolerance: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -467,7 +507,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       runParameters: {
                         ...prev.runParameters,
-                        maxGenerations: parseInt(e.target.value),
+                        maxGenerations: /^[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -491,7 +533,11 @@ const TechnicalDrawer = () => {
                       ...prev,
                       runParameters: {
                         ...prev.runParameters,
-                        scoreThreshold: parseFloat(e.target.value),
+                        scoreThreshold: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                          e.target.value,
+                        )
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -515,7 +561,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       runParameters: {
                         ...prev.runParameters,
-                        patience: parseInt(e.target.value),
+                        patience: /^[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }
@@ -539,7 +587,9 @@ const TechnicalDrawer = () => {
                       ...prev,
                       runParameters: {
                         ...prev.runParameters,
-                        tolerance: parseFloat(e.target.value),
+                        tolerance: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
                       },
                     }))
                   }

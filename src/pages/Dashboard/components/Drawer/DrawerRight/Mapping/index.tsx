@@ -1,5 +1,5 @@
 import "./MappingDrawer.css";
-import { FormEvent, Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   ConfigurationCheckInterface,
   ConfigurationInterface,
@@ -59,7 +59,7 @@ const MappingDrawer = () => {
         regions.find((region) => region.id === selectedRegion) ||
           ({} as RegionInterface),
       );
-  }, [selectedRegion, pins]);
+  }, [selectedRegion]);
 
   useEffect(() => {
     if (selectedPin)
@@ -133,7 +133,7 @@ const MappingDrawer = () => {
                           fillColor: e.target.value,
                         }))
                       }
-                      type="text"
+                      type="color"
                     />
                     <SpecialInput
                       title="Stroke Color"
@@ -144,7 +144,7 @@ const MappingDrawer = () => {
                           strokeColor: e.target.value,
                         }))
                       }
-                      type="text"
+                      type="color"
                     />
                     <button type="submit" hidden>
                       Update

@@ -46,6 +46,11 @@
   display: flex;
 }
 
+.nav__actions__item.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .nav__actions__item span {
   opacity: 0;
   pointer-events: none;

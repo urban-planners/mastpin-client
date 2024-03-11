@@ -52,7 +52,7 @@ select {
   padding-inline: 8px;
 }
 
-button {
+button:not(.Toastify*) {
   width: 100%;
   max-width: 300px;
   height: 32px;
