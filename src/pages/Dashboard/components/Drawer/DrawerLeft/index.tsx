@@ -11,6 +11,7 @@ import {
   addRegion,
   selectPin,
   selectRegion,
+  setMapAction,
 } from "../../../../../redux/actions";
 
 const DrawerLeft = () => {
@@ -33,7 +34,10 @@ const DrawerLeft = () => {
       <Title title="Regions">
         <SmartIcon
           description="Add new region"
-          onClick={() => dispatch(addRegion())}
+          onClick={() => {
+            dispatch(addRegion());
+            dispatch(setMapAction("pin"));
+          }}
         >
           <FiPlus />
         </SmartIcon>

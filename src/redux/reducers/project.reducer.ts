@@ -33,6 +33,7 @@ const initialState: {
     threshold: {
       coverage: 0.9999,
       signalStrength: -90,
+      loadVariance: false,
     },
     hataParameters: {
       mastRange: 0.1,

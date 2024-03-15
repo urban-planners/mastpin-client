@@ -1,4 +1,4 @@
-import { PinInfoInterface, RegionInterface } from "../../types";
+import { MapActionType, PinInfoInterface, RegionInterface } from "../../types";
 
 export const addRegion = () => ({
   type: "ADD_REGION",
@@ -52,4 +52,33 @@ export const updateMapCenter = (mapCenter: google.maps.LatLngLiteral) => ({
 export const showMapLabels = (showLabels: boolean) => ({
   type: "SHOW_MAP_LABELS",
   payload: showLabels,
+});
+
+export const setMapAction = (action: MapActionType) => ({
+  type: "SET_MAP_ACTION",
+  payload: action,
+});
+
+export const addMast = (mast: PinInfoInterface) => ({
+  type: "ADD_MAST",
+  payload: mast,
+});
+
+export const removeMast = (id: string) => ({
+  type: "REMOVE_MAST",
+  payload: id,
+});
+
+export const selectMast = (id: string) => ({
+  type: "SELECT_MAST",
+  payload: id,
+});
+
+export const updateMast = (mast: PinInfoInterface) => ({
+  type: "UPDATE_MAST",
+  payload: mast,
+});
+
+export const clearMasts = () => ({
+  type: "CLEAR_MASTS",
 });

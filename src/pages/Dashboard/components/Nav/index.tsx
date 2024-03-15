@@ -19,7 +19,10 @@ import { WiMoonAltWaningCrescent4 } from "react-icons/wi";
 import { IoShareSocial } from "react-icons/io5";
 import { IoSyncOutline } from "react-icons/io5";
 import { sortConfiguration, sortOptimization } from "./utils";
-import { setPresentation } from "../../../../redux/actions/result.action";
+import {
+  setHasResult,
+  setPresentation,
+} from "../../../../redux/actions/result.action";
 import { ToastContainer, toast } from "react-toastify";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
@@ -32,6 +35,9 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
   const dispatch = useDispatch();
   const displayMode = useSelector((state: any) => state.project.displayMode);
   const theme = useSelector((state: any) => state.project.theme);
+  const currentMasts = useSelector(
+    (state: any) => state.map.currentMasts,
+  ) as PinInfoInterface[];
   const pins = useSelector(
     (state: any) => state.map.pins,
   ) as PinInfoInterface[];
@@ -39,9 +45,13 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     (state: any) => state.map.regions,
   ) as RegionInterface[];
 
-  const configuration = useSelector(
-    (state: any) => state.project.configuration,
-  ) as ConfigurationInterface;
+  const configuration = useSelector((state: any) => {
+    const stateCopy = JSON.parse(JSON.stringify(state));
+    const conf = stateCopy.project.configuration;
+    conf.threshold.loadVariance =
+      !conf.numberOfMasts.specific && conf.threshold.loadVariance;
+    return conf;
+  }) as ConfigurationInterface;
   const optimization = useSelector(
     (state: any) => state.project.optimization,
   ) as OptimizationInterface;
@@ -52,6 +62,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     (state: any) => state.project.optimizationCheck,
   );
   const [loading, setLoading] = useState(false);
+  const [evaluating, setEvaluating] = useState(false);
 
   useEffect(() => {
     setTitle(projectDetails.projectName);
@@ -87,6 +98,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       const data = await response.json();
       const presentationData = data.data as PresentationInterface;
       dispatch(setPresentation(presentationData));
+      dispatch(setHasResult(true));
     } catch (error: any) {
       setLoading(false);
       if (/failed to fetch|network *error/i.test(error.message))
@@ -95,7 +107,10 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     }
   };
 
-  const startEvaluation = async () => {};
+  const startEvaluation = async () => {
+    if (evaluating) return;
+    if (!currentMasts.length) return toast.error("Add masts to the map");
+  };
 
   return (
     <nav className="dashboard__nav">
@@ -128,7 +143,10 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
           <IoPlayOutline className="nav__actions__icon" />
           <span>Generate optimal placements</span>
         </div>
-        <div className="nav__actions__item" onClick={startEvaluation}>
+        <div
+          className={`nav__actions__item ${evaluating ? "disabled" : ""}`}
+          onClick={startEvaluation}
+        >
           <IoSyncOutline className="nav__actions__icon" />
           <span>Evaluate current placements</span>
         </div>

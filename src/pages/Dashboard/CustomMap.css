@@ -37,3 +37,45 @@
 .show__landmarks-label input[type="checkbox"] {
   width: 15px;
 }
+
+.map__actions__container {
+  position: absolute;
+  background-color: #fff;
+  z-index: 100;
+  border-radius: 5px;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.map__actions__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.map__actions__item:active {
+  cursor: grabbing;
+}
+
+.map__actions__item.active {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.map__actions__item.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.map__actions__item svg {
+  width: 20px;
+  height: 20px;
+}

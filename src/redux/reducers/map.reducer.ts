@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import {
   ActionInterface,
+  MapActionType,
   MapInfoInterface,
   PinInfoInterface,
   RegionInterface,
@@ -20,6 +21,9 @@ const initialState: {
   pins: PinInfoInterface[];
   selectedRegion: string;
   selectedPin: string;
+  selectedMapAction: MapActionType;
+  currentMasts: PinInfoInterface[];
+  selectedMast: string;
 } = {
   mapInfo: {
     zoom: 15,
@@ -36,6 +40,9 @@ const initialState: {
   selectedPin: "",
   regions: [],
   pins: [],
+  selectedMapAction: "hand",
+  currentMasts: [],
+  selectedMast: "",
 };
 
 export const mapReducer = (state = initialState, action: ActionInterface) => {
@@ -201,6 +208,46 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
           ),
         };
       })();
+
+    case "SET_MAP_ACTION":
+      return {
+        ...state,
+        selectedMapAction: action.payload,
+      };
+
+    case "ADD_MAST":
+      return {
+        ...state,
+        currentMasts: [action.payload, ...state.currentMasts],
+      };
+
+    case "REMOVE_MAST":
+      return {
+        ...state,
+        currentMasts: state.currentMasts.filter(
+          (mast) => mast.id !== action.payload,
+        ),
+      };
+
+    case "CLEAR_MASTS":
+      return {
+        ...state,
+        currentMasts: [],
+      };
+
+    case "SELECT_MAST":
+      return {
+        ...state,
+        selectedMast: action.payload,
+      };
+
+    case "UPDATE_MAST":
+      return {
+        ...state,
+        currentMasts: state.currentMasts.map((mast) =>
+          mast.id === action.payload.id ? action.payload : mast,
+        ),
+      };
 
     default:
       return state;

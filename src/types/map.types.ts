@@ -38,3 +38,5 @@ export interface GenerateMapInterface {
   configuration: ConfigurationInterface;
   optimization: OptimizationInterface;
 }
+
+export type MapActionType = "hand" | "pin" | "mast" | "doc";

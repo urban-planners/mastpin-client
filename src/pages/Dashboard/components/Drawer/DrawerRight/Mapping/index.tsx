@@ -227,7 +227,7 @@ const MappingDrawer = () => {
                   onchange={(e) =>
                     setConfigurationState((prev) => ({
                       ...prev,
-                      resolution: /^[0-9]+$/.test(e.target.value)
+                      resolution: /^[0-9]*$/.test(e.target.value)
                         ? e.target.value
                         : 0,
                     }))
@@ -360,9 +360,30 @@ const MappingDrawer = () => {
                     }))
                   }
                 />
+                <label className="drawer__form__label drawer__special__input load__variance__label">
+                  <input
+                    className="drawer__form__checkbox"
+                    checked={
+                      !configurationCheckState.numberOfMasts.specific &&
+                      configurationState.threshold.loadVariance
+                    }
+                    onChange={(e) =>
+                      setConfigurationState((prev) => ({
+                        ...prev,
+                        threshold: {
+                          ...prev.threshold,
+                          loadVariance: e.target.checked,
+                        },
+                      }))
+                    }
+                    type="checkbox"
+                    disabled={configurationCheckState.numberOfMasts.specific}
+                  />
+                  Load Variance
+                </label>
                 <SubTitle text="Hata Parameters" />
                 <SpecialInput
-                  title="Mast Range"
+                  title="Mast Range (km)"
                   value={configurationState.hataParameters.mastRange}
                   onchange={(e) =>
                     setConfigurationState((prev) => ({

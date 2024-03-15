@@ -14,6 +14,7 @@ export interface ConfigurationInterface {
   threshold: {
     coverage?: number | string;
     signalStrength?: number | string;
+    loadVariance?: boolean;
   };
   hataParameters: {
     mastRange: number | string;

@@ -1,8 +1,10 @@
 import { ActionInterface, PresentationInterface } from "../../types";
 
 const initialState: {
+  hasResult: boolean;
   presentation: PresentationInterface;
 } = {
+  hasResult: false,
   presentation: {
     coverage: 0,
     load_max: 0,
@@ -25,6 +27,12 @@ export const resultReducer = (
       return {
         ...state,
         presentation: action.payload,
+      };
+
+    case "SET_HAS_RESULT":
+      return {
+        ...state,
+        hasResult: action.payload,
       };
 
     default:

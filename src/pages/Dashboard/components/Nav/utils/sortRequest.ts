@@ -23,7 +23,11 @@ export const sortConfiguration = (
     delete sortedConfiguration.threshold.coverage;
   if (!configurationCheck.threshold.signalStrength)
     delete sortedConfiguration.threshold.signalStrength;
-
+  if (
+    configuration.numberOfMasts.specific ||
+    configuration.threshold.loadVariance
+  )
+    delete sortedConfiguration.threshold.loadVariance;
   return sortedConfiguration;
 };
 

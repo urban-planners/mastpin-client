@@ -6,3 +6,8 @@
 .drawer__mapping .drawer__form {
   position: relative;
 }
+
+.load__variance__label {
+  flex-direction: row !important;
+  align-items: center;
+}

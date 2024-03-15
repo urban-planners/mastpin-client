@@ -6,3 +6,10 @@ export const setPresentation = (presentation: PresentationInterface) => {
     payload: presentation,
   };
 };
+
+export const setHasResult = (hasResult: boolean) => {
+  return {
+    type: "SET_HAS_RESULT",
+    payload: hasResult,
+  };
+};
