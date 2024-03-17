@@ -94,6 +94,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       regions,
       pins: assignRegionsToPins(pins, regions),
       configuration: sortConfiguration(
+        "simulation",
         currentMasts,
         configuration,
         configurationCheck,
@@ -139,6 +140,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       regions,
       pins: assignRegionsToPins(pins, regions),
       configuration: sortConfiguration(
+        "evaluation",
         currentMasts,
         configuration,
         configurationCheck,

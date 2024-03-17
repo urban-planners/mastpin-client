@@ -9,6 +9,7 @@ import {
 } from "../../../../../types";
 
 export const sortConfiguration = (
+  category: "simulation" | "evaluation",
   currentMasts: PinInfoInterface[],
   configuration: ConfigurationInterface,
   configurationCheck: ConfigurationCheckInterface,
@@ -31,6 +32,12 @@ export const sortConfiguration = (
     delete sortedConfiguration.threshold.coverage;
   if (!configurationCheck.threshold.signalStrength)
     delete sortedConfiguration.threshold.signalStrength;
+  if (
+    category === "simulation" &&
+    !sortedConfiguration.numberOfMasts.useCurrent
+  )
+    sortedConfiguration.mastLocation = [];
+  delete sortedConfiguration.numberOfMasts.useCurrent;
   return sortedConfiguration;
 };
 

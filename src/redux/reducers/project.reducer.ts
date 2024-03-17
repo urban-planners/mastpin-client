@@ -36,6 +36,7 @@ const initialState: {
     resolution: 100,
     mastLocation: [],
     numberOfMasts: {
+      useCurrent: true,
       specific: 8,
       min: 5,
       max: 15,

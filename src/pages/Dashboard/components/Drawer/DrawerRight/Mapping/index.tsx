@@ -226,6 +226,25 @@ const MappingDrawer = () => {
                 key={"configurations"}
               >
                 <SubTitle text="Number of Masts" />
+                <label className="drawer__form__label drawer__special__input load__variance__label">
+                  <input
+                    className="drawer__form__checkbox"
+                    checked={configuration.numberOfMasts.useCurrent}
+                    onChange={(e) =>
+                      dispatch(
+                        setConfiguration({
+                          ...configuration,
+                          numberOfMasts: {
+                            ...configuration.numberOfMasts,
+                            useCurrent: e.target.checked,
+                          },
+                        }),
+                      )
+                    }
+                    type="checkbox"
+                  />
+                  Use existing masts
+                </label>
                 <SpecialInput
                   title="Specific"
                   value={configuration.numberOfMasts.specific}

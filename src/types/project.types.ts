@@ -9,6 +9,7 @@ export interface ConfigurationInterface {
   resolution: number | string;
   mastLocation: MastLocInterface[];
   numberOfMasts: {
+    useCurrent?: boolean;
     specific?: number | string;
     min?: number | string;
     max?: number | string;
