@@ -18,6 +18,7 @@ import {
   addPin,
   removeMast,
   removePin,
+  selectRegion,
   setMapAction,
   showMapLabels,
   updateMapZoom,
@@ -239,6 +240,12 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
                     strokeOpacity: 0.8,
                     strokeWeight: 2,
                     fillOpacity: 0.35,
+                  }}
+                  onClick={(e) => {
+                    e.stop();
+                    if (selectedMapAction === "hand")
+                      return dispatch(selectRegion(region.id));
+                    onClick(e);
                   }}
                 />
               );
