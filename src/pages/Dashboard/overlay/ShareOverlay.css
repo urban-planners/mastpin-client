@@ -1,0 +1,81 @@
+.map__share__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.map__share__content {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 1rem;
+  padding-block: 10px;
+  align-items: center;
+}
+
+.map__share__container label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.analysis__visibility__container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.analysis__visibility__container label {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.analysis__visibility__container label p {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+}
+
+.analysis__visibility__container input[type="radio"] {
+  width: 16px;
+  height: 16px;
+}
+
+.map__share__container input[type="text"] {
+  height: 48px;
+  max-width: 400px;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.map__share__container button {
+  height: 48px;
+  width: 100%;
+  max-width: 400px;
+  font-weight: 500;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  font-size: 1rem;
+}
+
+.map__share__container button:not(:disabled) {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.map__share__container button:disabled {
+  pointer-events: none;
+}

@@ -74,6 +74,12 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
         },
       };
 
+    case "SET_REGIONS":
+      return {
+        ...state,
+        regions: action.payload,
+      };
+
     case "ADD_REGION":
       const title = getRegionTitle(state.regions);
       const { strokeColor, fillColor } = generateRegionColors(title);
@@ -127,6 +133,12 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
             ? { ...region, bounds: action.payload.bounds }
             : region,
         ),
+      };
+
+    case "SET_PINS":
+      return {
+        ...state,
+        pins: action.payload,
       };
 
     case "ADD_PIN":

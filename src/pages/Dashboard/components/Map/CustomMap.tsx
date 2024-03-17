@@ -1,9 +1,9 @@
 import "./CustomMap.css";
 import { GoogleMap, Marker, Polygon } from "@react-google-maps/api";
-import pin from "../../assets/svgs/pin.svg";
-import modalPin from "../../assets/svgs/modal-pin.svg";
-import mastPin from "../../assets/svgs/mast.svg";
-import currentMastPin from "../../assets/svgs/CellTower2.svg";
+import pin from "../../../../assets/svgs/pin.svg";
+import modalPin from "../../../../assets/svgs/modal-pin.svg";
+import mastPin from "../../../../assets/svgs/mast.svg";
+import currentMastPin from "../../../../assets/svgs/CellTower2.svg";
 import { Fragment, useState } from "react";
 import {
   MapActionType,
@@ -11,7 +11,7 @@ import {
   PinInfoInterface,
   PresentationInterface,
   RegionInterface,
-} from "../../types";
+} from "../../../../types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addMast,
@@ -23,11 +23,12 @@ import {
   updateMapZoom,
   updateMast,
   updatePin,
-} from "../../redux/actions";
+} from "../../../../redux/actions";
 import { nanoid } from "nanoid";
 import { FaHand, FaMapPin } from "react-icons/fa6";
 import { MdCellTower, MdOutlineDocumentScanner } from "react-icons/md";
-import ResultOverlay from "./overlay/ResultOverlay";
+import ResultOverlay from "../../overlay/ResultOverlay";
+import ShareOverlay from "../../overlay/ShareOverlay";
 
 const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
   const [map, setMap] = useState<google.maps.Map>();
@@ -50,14 +51,20 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
   const showLabels = useSelector(
     (state: any) => state.map.mapInfo.showLabels,
   ) as boolean;
-  const presentation = useSelector(
-    (state: any) => state.result.presentation,
+  const simulation = useSelector(
+    (state: any) => state.result.simulation,
   ) as PresentationInterface;
   const selectedMapAction = useSelector(
     (state: any) => state.map.selectedMapAction,
   ) as MapActionType;
-  const hasResult = useSelector(
-    (state: any) => state.result.hasResult,
+  const hasSimulation = useSelector(
+    (state: any) => state.result.hasSimulation,
+  ) as boolean;
+  const hasEvaluation = useSelector(
+    (state: any) => state.result.hasEvaluation,
+  ) as boolean;
+  const showShareDialog = useSelector(
+    (state: any) => state.project.showShareDialog,
   ) as boolean;
 
   const onClick = (e: google.maps.MapMouseEvent | undefined) => {
@@ -110,6 +117,7 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
         />
       </label>
       {selectedMapAction === "doc" && <ResultOverlay />}
+      {showShareDialog && <ShareOverlay />}
       <GoogleMap
         zoom={mapInfo.zoom}
         center={mapInfo.center}
@@ -237,9 +245,9 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
             })}
           </Fragment>
         )}
-        {presentation &&
-          presentation.mast_loc_coord &&
-          presentation.mast_loc_coord.map((mast, index) => (
+        {simulation &&
+          simulation.mast_loc_coord &&
+          simulation.mast_loc_coord.map((mast, index) => (
             <Marker
               key={index}
               position={{
@@ -277,8 +285,10 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
           <MdCellTower />
         </div>
         <div
-          className={`map__actions__item ${selectedMapAction === "doc" ? "active" : ""} ${!hasResult ? "disabled" : ""}`}
-          onClick={() => (hasResult ? dispatch(setMapAction("doc")) : {})}
+          className={`map__actions__item ${selectedMapAction === "doc" ? "active" : ""} ${!hasSimulation && !hasEvaluation ? "disabled" : ""}`}
+          onClick={() =>
+            hasSimulation || hasEvaluation ? dispatch(setMapAction("doc")) : {}
+          }
         >
           <MdOutlineDocumentScanner />
         </div>

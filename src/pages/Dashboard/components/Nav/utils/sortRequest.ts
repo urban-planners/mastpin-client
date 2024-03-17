@@ -3,9 +3,13 @@ import {
   ConfigurationCheckInterface,
   OptimizationInterface,
   OptimizationCheckInterface,
+  PinInfoInterface,
+  RegionInterface,
+  GeneratePinInterface,
 } from "../../../../../types";
 
 export const sortConfiguration = (
+  currentMasts: PinInfoInterface[],
   configuration: ConfigurationInterface,
   configurationCheck: ConfigurationCheckInterface,
 ): ConfigurationInterface => {
@@ -13,6 +17,10 @@ export const sortConfiguration = (
     JSON.stringify(configuration),
   );
 
+  sortedConfiguration.mastLocation = currentMasts.map((mast) => ({
+    x: mast.loc.lng,
+    y: mast.loc.lat,
+  }));
   if (!configurationCheck.numberOfMasts.specific)
     delete sortedConfiguration.numberOfMasts.specific;
   else {
@@ -23,11 +31,6 @@ export const sortConfiguration = (
     delete sortedConfiguration.threshold.coverage;
   if (!configurationCheck.threshold.signalStrength)
     delete sortedConfiguration.threshold.signalStrength;
-  if (
-    configuration.numberOfMasts.specific ||
-    configuration.threshold.loadVariance
-  )
-    delete sortedConfiguration.threshold.loadVariance;
   return sortedConfiguration;
 };
 
@@ -76,3 +79,32 @@ export const sortOptimization = (
 
   return sortedOptimization;
 };
+
+export function assignRegionsToPins(
+  pins: PinInfoInterface[],
+  regions: RegionInterface[],
+): GeneratePinInterface[] {
+  const result: GeneratePinInterface[] = [];
+
+  pins.forEach((pin) => {
+    const regionsContainingPin = regions
+      .filter((region) => {
+        return google.maps.geometry.poly.containsLocation(
+          pin.loc,
+          new google.maps.Polygon({ paths: region.bounds }),
+        );
+      })
+      .map((region) => region.title);
+
+    result.push({
+      id: pin.id,
+      regionId: pin.regionId,
+      title: pin.title,
+      x: pin.loc.lng,
+      y: pin.loc.lat,
+      regions: regionsContainingPin,
+    });
+  });
+
+  return result;
+}

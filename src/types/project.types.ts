@@ -1,3 +1,5 @@
+import { MastLocInterface } from "./map.types";
+
 export interface ProjectDetailsInterface {
   projectName: string;
   createdAt: string;
@@ -5,7 +7,7 @@ export interface ProjectDetailsInterface {
 
 export interface ConfigurationInterface {
   resolution: number | string;
-  mastLocation?: [];
+  mastLocation: MastLocInterface[];
   numberOfMasts: {
     specific?: number | string;
     min?: number | string;
@@ -84,4 +86,9 @@ export interface OptimizationCheckInterface {
     patience: boolean;
     tolerance: boolean;
   };
+}
+
+export interface ShareInterface {
+  isPublic: boolean;
+  link: string;
 }

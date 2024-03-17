@@ -2,7 +2,6 @@ import "./Nav.css";
 import { useDispatch, useSelector } from "react-redux";
 import PlacesAutocomplete from "../../../../components/PlacesAutocomplete";
 import {
-  GeneratePinInterface,
   GenerateMapInterface,
   PinInfoInterface,
   ProjectDetailsInterface,
@@ -10,18 +9,27 @@ import {
   ConfigurationInterface,
   OptimizationInterface,
   PresentationInterface,
+  ConfigurationCheckInterface,
+  OptimizationCheckInterface,
+  EvaluateMapInterface,
 } from "../../../../types";
 import { useEffect, useState } from "react";
 import { IoPlayOutline } from "react-icons/io5";
-import { switchTheme, toggleDisplayMode } from "../../../../redux/actions";
+import {
+  showShareDisplay,
+  switchTheme,
+  toggleDisplayMode,
+} from "../../../../redux/actions";
 import { IoMdSunny } from "react-icons/io";
 import { WiMoonAltWaningCrescent4 } from "react-icons/wi";
 import { IoShareSocial } from "react-icons/io5";
 import { IoSyncOutline } from "react-icons/io5";
-import { sortConfiguration, sortOptimization } from "./utils";
+import { assignRegionsToPins, sortConfiguration, sortOptimization } from "./utils";
 import {
-  setHasResult,
-  setPresentation,
+  setHasSimulation,
+  setSimulation,
+  setHasEvaluation,
+  setEvaluation,
 } from "../../../../redux/actions/result.action";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -45,23 +53,23 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     (state: any) => state.map.regions,
   ) as RegionInterface[];
 
+  const configurationCheck = useSelector(
+    (state: any) => state.project.configurationCheck,
+  ) as ConfigurationCheckInterface;
+  const optimizationCheck = useSelector(
+    (state: any) => state.project.optimizationCheck,
+  ) as OptimizationCheckInterface;
   const configuration = useSelector((state: any) => {
     const stateCopy = JSON.parse(JSON.stringify(state));
-    const conf = stateCopy.project.configuration;
+    const conf = stateCopy.project.configuration as ConfigurationInterface;
     conf.threshold.loadVariance =
-      !conf.numberOfMasts.specific && conf.threshold.loadVariance;
+      !configurationCheck.numberOfMasts.specific && conf.threshold.loadVariance;
     return conf;
   }) as ConfigurationInterface;
   const optimization = useSelector(
     (state: any) => state.project.optimization,
   ) as OptimizationInterface;
-  const configurationCheck = useSelector(
-    (state: any) => state.project.configurationCheck,
-  );
-  const optimizationCheck = useSelector(
-    (state: any) => state.project.optimizationCheck,
-  );
-  const [loading, setLoading] = useState(false);
+  const [simulating, setSimulating] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
 
   useEffect(() => {
@@ -69,7 +77,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
   }, [projectDetails.projectName]);
 
   const startGeneration = async () => {
-    if (loading) return;
+    if (simulating) return;
     if (regions.length === 0) return toast.error("Add regions to the map");
     if (pins.length === 0) return toast.error("Add pins to the map");
     if (regions.find((region) => region.bounds.length < 3))
@@ -81,12 +89,16 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     const map: GenerateMapInterface = {
       regions,
       pins: assignRegionsToPins(pins, regions),
-      configuration: sortConfiguration(configuration, configurationCheck),
+      configuration: sortConfiguration(
+        currentMasts,
+        configuration,
+        configurationCheck,
+      ),
       optimization: sortOptimization(optimization, optimizationCheck),
     };
 
     try {
-      setLoading(true);
+      setSimulating(true);
       const response = await fetch(`${SERVER}/api/simulate`, {
         method: "POST",
         headers: {
@@ -94,13 +106,22 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
         },
         body: JSON.stringify(map),
       });
-      setLoading(false);
+      setSimulating(false);
       const data = await response.json();
+      if (data.error) throw new Error(data.message);
       const presentationData = data.data as PresentationInterface;
-      dispatch(setPresentation(presentationData));
-      dispatch(setHasResult(true));
+      presentationData.coverage = (() => {
+        const totalPopulation = regions.reduce(
+          (acc, curr: RegionInterface) => acc + curr.population,
+          0,
+        );
+        return (presentationData.coverage / totalPopulation) * 100;
+      })();
+      console.log(presentationData);
+      dispatch(setSimulation(presentationData));
+      dispatch(setHasSimulation(true));
     } catch (error: any) {
-      setLoading(false);
+      setSimulating(false);
       if (/failed to fetch|network *error/i.test(error.message))
         toast.error("Check your internet connection and try again");
       else toast.error(error.message);
@@ -110,6 +131,47 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
   const startEvaluation = async () => {
     if (evaluating) return;
     if (!currentMasts.length) return toast.error("Add masts to the map");
+
+    const map: EvaluateMapInterface = {
+      regions,
+      pins: assignRegionsToPins(pins, regions),
+      configuration: sortConfiguration(
+        currentMasts,
+        configuration,
+        configurationCheck,
+      ),
+      optimization: sortOptimization(optimization, optimizationCheck),
+    };
+
+    try {
+      setEvaluating(true);
+      const response = await fetch(`${SERVER}/api/evaluate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(map),
+      });
+      setEvaluating(false);
+      const data = await response.json();
+      if (data.error) throw new Error(data.message);
+      const presentationData = data.data as PresentationInterface;
+      presentationData.coverage = (() => {
+        const totalPopulation = regions.reduce(
+          (acc, curr: RegionInterface) => acc + curr.population,
+          0,
+        );
+        return (presentationData.coverage / totalPopulation) * 100;
+      })();
+      console.log(presentationData);
+      dispatch(setEvaluation(presentationData));
+      dispatch(setHasEvaluation(true));
+    } catch (error: any) {
+      setEvaluating(false);
+      if (/failed to fetch|network *error/i.test(error.message))
+        toast.error("Check your internet connection and try again");
+      else toast.error(error.message);
+    }
   };
 
   return (
@@ -137,7 +199,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       </div>
       <div className="drawer nav__actions__container">
         <div
-          className={`nav__actions__item ${loading ? "disabled" : ""}`}
+          className={`nav__actions__item ${simulating ? "disabled" : ""}`}
           onClick={startGeneration}
         >
           <IoPlayOutline className="nav__actions__icon" />
@@ -164,7 +226,10 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
           {displayMode === "mapping" && <span>Switch to technical mode</span>}
           {displayMode === "technical" && <span>Switch to mapping mode</span>}
         </div>
-        <div className="nav__actions__item nav__actions__share">
+        <div
+          className="nav__actions__item nav__actions__share"
+          onClick={() => dispatch(showShareDisplay(true))}
+        >
           <p>Share</p>
           <IoShareSocial className="nav__actions__icon" />
         </div>
@@ -186,32 +251,3 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
 };
 
 export default Nav;
-
-function assignRegionsToPins(
-  pins: PinInfoInterface[],
-  regions: RegionInterface[],
-): GeneratePinInterface[] {
-  const result: GeneratePinInterface[] = [];
-
-  pins.forEach((pin) => {
-    const regionsContainingPin = regions
-      .filter((region) => {
-        return google.maps.geometry.poly.containsLocation(
-          pin.loc,
-          new google.maps.Polygon({ paths: region.bounds }),
-        );
-      })
-      .map((region) => region.title);
-
-    result.push({
-      id: pin.id,
-      regionId: pin.regionId,
-      title: pin.title,
-      x: pin.loc.lng,
-      y: pin.loc.lat,
-      regions: regionsContainingPin,
-    });
-  });
-
-  return result;
-}

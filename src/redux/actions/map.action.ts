@@ -1,5 +1,10 @@
 import { MapActionType, PinInfoInterface, RegionInterface } from "../../types";
 
+export const setRegions = (regions: RegionInterface[]) => ({
+  type: "SET_REGIONS",
+  payload: regions,
+});
+
 export const addRegion = () => ({
   type: "ADD_REGION",
 });
@@ -17,6 +22,11 @@ export const selectRegion = (id: string) => ({
 export const updateRegion = (region: RegionInterface) => ({
   type: "UPDATE_REGION",
   payload: region,
+});
+
+export const setPins = (pins: PinInfoInterface[]) => ({
+  type: "SET_PINS",
+  payload: pins,
 });
 
 export const addPin = (pin: PinInfoInterface) => ({

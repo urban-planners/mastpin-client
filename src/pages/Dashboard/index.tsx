@@ -1,6 +1,6 @@
 import "./Dashboard.css";
 import { useLoadScript } from "@react-google-maps/api";
-import CustomMap from "./CustomMap";
+import CustomMap from "./components/Map/CustomMap";
 import Loading from "../Loading";
 import { useEffect, useState } from "react";
 import DrawerLeft from "./components/Drawer/DrawerLeft";
@@ -8,11 +8,27 @@ import DrawerRight from "./components/Drawer/DrawerRight";
 import Nav from "./components/Nav";
 import { MapInfoInterface } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { showMapLabels } from "../../redux/actions";
+import {
+  setConfiguration,
+  setConfigurationCheck,
+  setMapVisibility,
+  setOptimization,
+  setOptimizationCheck,
+  setPins,
+  setProjectDetails,
+  setRegions,
+  showMapLabels,
+} from "../../redux/actions";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Dispatch } from "@reduxjs/toolkit";
+import { SyncLoader } from "react-spinners";
 
+const SERVER = process.env.REACT_APP_SERVER_URL;
 const MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
 
 const Dashboard = () => {
+  const { id } = useParams();
   const mapInfo = useSelector(
     (state: any) => state.map.mapInfo,
   ) as MapInfoInterface;
@@ -21,6 +37,8 @@ const Dashboard = () => {
   const showLabels = useSelector(
     (state: any) => state.map.mapInfo.showLabels,
   ) as boolean;
+  const navigate = useNavigate();
+  const [gettingProject, setGettingProject] = useState(false);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: MAPS_API_KEY as string,
@@ -49,8 +67,28 @@ const Dashboard = () => {
     };
   }, [showLabels]);
 
+  useEffect(() => {
+    (async () => {
+      try {
+        setGettingProject(true);
+        await getProject({ id: id as string, dispatch });
+        setGettingProject(false);
+      } catch (error: any) {
+        toast.error(error.message, {
+          onClose: () => navigate(`/dashboard`, { replace: true }),
+        });
+      }
+    })();
+  }, [id]);
+
   return (
     <div className="dashboard-page">
+      {gettingProject && (
+        <div className="dashboard__loading">
+          <div />
+          <SyncLoader color="#fff" />
+        </div>
+      )}
       {!fullScreen && <Nav isLoaded={isLoaded} />}
       <main className="dashboard__main">
         {!fullScreen && <DrawerLeft />}
@@ -62,3 +100,44 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+const getProject = async ({
+  id,
+  dispatch,
+}: {
+  id: string;
+  dispatch: Dispatch;
+}): Promise<Error | void> => {
+  if (!id) throw new Error("ID is required");
+  const response = await fetch(`${SERVER}/projects/one/${id}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+  const data = await response.json();
+  if (data.error) throw new Error(data.message);
+  const projectName = data.data.title;
+  const createdAt = data.data.createdAt;
+  const regions = data.data.regions;
+  const pins = data.data.pins;
+  const visibility = data.data.visibility;
+  const configuration = data.data.configuration.configuration;
+  const configurationCheck = data.data.configuration.configurationOptions;
+  const optimization = data.data.optimization.optimization;
+  const optimizationCheck = data.data.optimization.optimizationOptions;
+
+  dispatch(
+    setProjectDetails({
+      projectName,
+      createdAt,
+    }),
+  );
+  dispatch(setRegions(regions));
+  dispatch(setPins(pins));
+  dispatch(setMapVisibility(visibility));
+  dispatch(setConfiguration(configuration));
+  dispatch(setConfigurationCheck(configurationCheck));
+  dispatch(setOptimization(optimization));
+  dispatch(setOptimizationCheck(optimizationCheck));
+};

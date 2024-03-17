@@ -1,5 +1,5 @@
 import "./MappingDrawer.css";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import {
   ConfigurationCheckInterface,
   ConfigurationInterface,
@@ -35,6 +35,13 @@ const MappingDrawer = () => {
     (state: any) => state.map.pins,
   ) as PinInfoInterface[];
 
+  const region =
+    regions.find((region) => region.id === selectedRegion) ||
+    ({} as RegionInterface);
+
+  const pin =
+    pins.find((pin) => pin.id === selectedPin) || ({} as PinInfoInterface);
+
   const configuration = useSelector(
     (state: any) => state.project.configuration,
   ) as ConfigurationInterface;
@@ -43,49 +50,6 @@ const MappingDrawer = () => {
     (state: any) => state.project.configurationCheck,
   ) as ConfigurationCheckInterface;
 
-  const [configurationState, setConfigurationState] = useState(configuration);
-  const [configurationCheckState, setConfigurationCheckState] =
-    useState(configurationCheck);
-  const [regionState, setRegionState] = useState<RegionInterface>(
-    {} as RegionInterface,
-  );
-  const [pinState, setPinState] = useState<PinInfoInterface>(
-    {} as PinInfoInterface,
-  );
-
-  useEffect(() => {
-    if (selectedRegion)
-      setRegionState(
-        regions.find((region) => region.id === selectedRegion) ||
-          ({} as RegionInterface),
-      );
-  }, [selectedRegion]);
-
-  useEffect(() => {
-    if (selectedPin)
-      setPinState(
-        pins.find((pin) => pin.id === selectedPin) || ({} as PinInfoInterface),
-      );
-  }, [selectedPin]);
-
-  useEffect(() => {
-    if (Object.keys(regionState).length > 0)
-      dispatch(updateRegion(regionState as RegionInterface));
-  }, [regionState, dispatch]);
-
-  useEffect(() => {
-    if (Object.keys(pinState).length > 0)
-      dispatch(updatePin(pinState as PinInfoInterface));
-  }, [pinState, dispatch]);
-
-  useEffect(() => {
-    dispatch(setConfiguration(configurationState));
-  }, [configurationState, dispatch]);
-
-  useEffect(() => {
-    dispatch(setConfigurationCheck(configurationCheckState));
-  }, [configurationCheckState, dispatch]);
-
   return (
     <Fragment>
       <div className="scrollable drawer__mapping">
@@ -93,7 +57,7 @@ const MappingDrawer = () => {
           <Title title="Properties" />
           <SubTitle text="Region Properties" />
           <Content emptyText="No properties to show.">
-            {Object.keys(regionState).length > 0
+            {Object.keys(region).length > 0
               ? [
                   <form
                     className="drawer__form"
@@ -102,47 +66,55 @@ const MappingDrawer = () => {
                   >
                     <SpecialInput
                       title="Title"
-                      value={regionState.title}
+                      value={region.title}
                       onchange={(e) =>
-                        setRegionState((prev) => ({
-                          ...prev,
-                          title: e.target.value,
-                        }))
+                        dispatch(
+                          updateRegion({
+                            ...region,
+                            title: e.target.value,
+                          }),
+                        )
                       }
                       type="text"
                     />
                     <SpecialInput
                       title="Population"
-                      value={regionState.population}
+                      value={region.population}
                       onchange={(e) =>
-                        setRegionState((prev) => ({
-                          ...prev,
-                          population: /^[0-9]+$/.test(e.target.value)
-                            ? e.target.value
-                            : 0,
-                        }))
+                        dispatch(
+                          updateRegion({
+                            ...region,
+                            population: /^[0-9]+$/.test(e.target.value)
+                              ? e.target.value
+                              : 0,
+                          }),
+                        )
                       }
                       type="number"
                     />
                     <SpecialInput
                       title="Fill Color"
-                      value={regionState.fillColor}
+                      value={region.fillColor}
                       onchange={(e) =>
-                        setRegionState((prev) => ({
-                          ...prev,
-                          fillColor: e.target.value,
-                        }))
+                        dispatch(
+                          updateRegion({
+                            ...region,
+                            fillColor: e.target.value,
+                          }),
+                        )
                       }
                       type="color"
                     />
                     <SpecialInput
                       title="Stroke Color"
-                      value={regionState.strokeColor}
+                      value={region.strokeColor}
                       onchange={(e) =>
-                        setRegionState((prev) => ({
-                          ...prev,
-                          strokeColor: e.target.value,
-                        }))
+                        dispatch(
+                          updateRegion({
+                            ...region,
+                            strokeColor: e.target.value,
+                          }),
+                        )
                       }
                       type="color"
                     />
@@ -155,7 +127,7 @@ const MappingDrawer = () => {
           </Content>
           <SubTitle text="Pin Properties" />
           <Content emptyText="No properties to show.">
-            {Object.keys(pinState).length > 0
+            {Object.keys(pin).length > 0
               ? [
                   <form
                     className="drawer__form"
@@ -164,44 +136,50 @@ const MappingDrawer = () => {
                   >
                     <SpecialInput
                       title="Title"
-                      value={pinState.title}
+                      value={pin.title}
                       onchange={(e) =>
-                        setPinState((prev) => ({
-                          ...prev,
-                          title: e.target.value,
-                        }))
+                        dispatch(
+                          updatePin({
+                            ...pin,
+                            title: e.target.value,
+                          }),
+                        )
                       }
                       type="text"
                     />
                     <SpecialInput
                       title="Longitude"
-                      value={pinState.loc?.lng}
+                      value={pin.loc?.lng}
                       onchange={(e) =>
-                        setPinState((prev) => ({
-                          ...prev,
-                          loc: {
-                            ...prev.loc,
-                            lng: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                              ? e.target.value
-                              : 0,
-                          },
-                        }))
+                        dispatch(
+                          updatePin({
+                            ...pin,
+                            loc: {
+                              ...pin.loc,
+                              lng: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                                ? e.target.value
+                                : 0,
+                            },
+                          }),
+                        )
                       }
                       type="number"
                     />
                     <SpecialInput
                       title="Latitude"
-                      value={pinState.loc?.lat}
+                      value={pin.loc?.lat}
                       onchange={(e) =>
-                        setPinState((prev) => ({
-                          ...prev,
-                          loc: {
-                            ...prev.loc,
-                            lat: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                              ? e.target.value
-                              : 0,
-                          },
-                        }))
+                        dispatch(
+                          updatePin({
+                            ...pin,
+                            loc: {
+                              ...pin.loc,
+                              lat: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                                ? e.target.value
+                                : 0,
+                            },
+                          }),
+                        )
                       }
                       type="number"
                     />
@@ -223,14 +201,16 @@ const MappingDrawer = () => {
               >
                 <SpecialInput
                   title="Resolution"
-                  value={configurationState.resolution}
+                  value={configuration.resolution}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      resolution: /^[0-9]*$/.test(e.target.value)
-                        ? e.target.value
-                        : 0,
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        resolution: /^[0-9]*$/.test(e.target.value)
+                          ? e.target.value
+                          : 0,
+                      }),
+                    )
                   }
                   type="number"
                 />
@@ -248,255 +228,291 @@ const MappingDrawer = () => {
                 <SubTitle text="Number of Masts" />
                 <SpecialInput
                   title="Specific"
-                  value={configurationState.numberOfMasts.specific}
+                  value={configuration.numberOfMasts.specific}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      numberOfMasts: {
-                        ...prev.numberOfMasts,
-                        specific: /^[0-9]+$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        numberOfMasts: {
+                          ...configuration.numberOfMasts,
+                          specific: /^[0-9]+$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
-                  checked={configurationCheckState.numberOfMasts.specific}
+                  checked={configurationCheck.numberOfMasts.specific}
                   onCheck={(e) =>
-                    setConfigurationCheckState((prev) => ({
-                      ...prev,
-                      numberOfMasts: {
-                        specific: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setConfigurationCheck({
+                        ...configurationCheck,
+                        numberOfMasts: {
+                          specific: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Minimum"
-                  value={configurationState.numberOfMasts.min}
+                  value={configuration.numberOfMasts.min}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      numberOfMasts: {
-                        ...prev.numberOfMasts,
-                        min: /^[0-9]+$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        numberOfMasts: {
+                          ...configuration.numberOfMasts,
+                          min: /^[0-9]+$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
-                  checked={!configurationCheckState.numberOfMasts.specific}
+                  checked={!configurationCheck.numberOfMasts.specific}
                   hideCheckbox={true}
                 />
                 <SpecialInput
                   title="Maximum"
-                  value={configurationState.numberOfMasts.max}
+                  value={configuration.numberOfMasts.max}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      numberOfMasts: {
-                        ...prev.numberOfMasts,
-                        max: /^[0-9]+$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        numberOfMasts: {
+                          ...configuration.numberOfMasts,
+                          max: /^[0-9]+$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
-                  checked={!configurationCheckState.numberOfMasts.specific}
+                  checked={!configurationCheck.numberOfMasts.specific}
                   hideCheckbox={true}
                 />
                 <SubTitle text="Threshold" />
                 <SpecialInput
                   title="Coverage"
-                  value={configurationState.threshold.coverage}
+                  value={configuration.threshold.coverage}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      threshold: {
-                        ...prev.threshold,
-                        coverage: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        threshold: {
+                          ...configuration.threshold,
+                          coverage: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
-                  checked={configurationCheckState.threshold.coverage}
+                  checked={configurationCheck.threshold.coverage}
                   onCheck={(e) =>
-                    setConfigurationCheckState((prev) => ({
-                      ...prev,
-                      threshold: {
-                        ...prev.threshold,
-                        coverage: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setConfigurationCheck({
+                        ...configurationCheck,
+                        threshold: {
+                          ...configurationCheck.threshold,
+                          coverage: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Signal Strength"
-                  value={configurationState.threshold.signalStrength}
+                  value={configuration.threshold.signalStrength}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      threshold: {
-                        ...prev.threshold,
-                        signalStrength: /^-*[0-9]+$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        threshold: {
+                          ...configuration.threshold,
+                          signalStrength: /^-*[0-9]+$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
-                  checked={configurationCheckState.threshold.signalStrength}
+                  checked={configurationCheck.threshold.signalStrength}
                   onCheck={(e) =>
-                    setConfigurationCheckState((prev) => ({
-                      ...prev,
-                      threshold: {
-                        ...prev.threshold,
-                        signalStrength: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setConfigurationCheck({
+                        ...configurationCheck,
+                        threshold: {
+                          ...configurationCheck.threshold,
+                          signalStrength: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <label className="drawer__form__label drawer__special__input load__variance__label">
                   <input
                     className="drawer__form__checkbox"
                     checked={
-                      !configurationCheckState.numberOfMasts.specific &&
-                      configurationState.threshold.loadVariance
+                      !configurationCheck.numberOfMasts.specific &&
+                      configuration.threshold.loadVariance
                     }
                     onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        threshold: {
-                          ...prev.threshold,
-                          loadVariance: e.target.checked,
-                        },
-                      }))
+                      dispatch(
+                        setConfiguration({
+                          ...configuration,
+                          threshold: {
+                            ...configuration.threshold,
+                            loadVariance: e.target.checked,
+                          },
+                        }),
+                      )
                     }
                     type="checkbox"
-                    disabled={configurationCheckState.numberOfMasts.specific}
+                    disabled={configurationCheck.numberOfMasts.specific}
                   />
                   Load Variance
                 </label>
                 <SubTitle text="Hata Parameters" />
                 <SpecialInput
                   title="Mast Range (km)"
-                  value={configurationState.hataParameters.mastRange}
+                  value={configuration.hataParameters.mastRange}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      hataParameters: {
-                        ...prev.hataParameters,
-                        mastRange: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        hataParameters: {
+                          ...configuration.hataParameters,
+                          mastRange: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
                 />
                 <SpecialInput
                   title="Mast Height"
-                  value={configurationState.hataParameters.mastHeight}
+                  value={configuration.hataParameters.mastHeight}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      hataParameters: {
-                        ...prev.hataParameters,
-                        mastHeight: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        hataParameters: {
+                          ...configuration.hataParameters,
+                          mastHeight: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
                 />
                 <SpecialInput
                   title="Mast Frequency"
-                  value={configurationState.hataParameters.mastFrequency}
+                  value={configuration.hataParameters.mastFrequency}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      hataParameters: {
-                        ...prev.hataParameters,
-                        mastFrequency: /^[0-9]*\.{0,1}[0-9]*$/.test(
-                          e.target.value,
-                        )
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        hataParameters: {
+                          ...configuration.hataParameters,
+                          mastFrequency: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
                 />
                 <SpecialInput
                   title="Mast EIRP"
-                  value={configurationState.hataParameters.mastEirp}
+                  value={configuration.hataParameters.mastEirp}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      hataParameters: {
-                        ...prev.hataParameters,
-                        mastEirp: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        hataParameters: {
+                          ...configuration.hataParameters,
+                          mastEirp: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
                 />
                 <SpecialInput
                   title="Receiver Height"
-                  value={configurationState.hataParameters.receiverHeight}
+                  value={configuration.hataParameters.receiverHeight}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      hataParameters: {
-                        ...prev.hataParameters,
-                        receiverHeight: /^[0-9]*\.{0,1}[0-9]*$/.test(
-                          e.target.value,
-                        )
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        hataParameters: {
+                          ...configuration.hataParameters,
+                          receiverHeight: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
                 />
                 <SpecialInput
                   title="SS Cap"
-                  value={configurationState.hataParameters.ssCap}
+                  value={configuration.hataParameters.ssCap}
                   onchange={(e) =>
-                    setConfigurationState((prev) => ({
-                      ...prev,
-                      hataParameters: {
-                        ...prev.hataParameters,
-                        ssCap: /^-*[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setConfiguration({
+                        ...configuration,
+                        hataParameters: {
+                          ...configuration.hataParameters,
+                          ssCap: /^-*[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   type="number"
                 />
                 <label className="drawer__form__label">
                   City Size
                   <select
-                    value={configurationState.hataParameters.citySize}
+                    value={configuration.hataParameters.citySize}
                     onChange={(e) =>
-                      setConfigurationState((prev) => ({
-                        ...prev,
-                        hataParameters: {
-                          ...prev.hataParameters,
-                          citySize: e.target.value as
-                            | "small"
-                            | "medium"
-                            | "large",
-                        },
-                      }))
+                      dispatch(
+                        setConfiguration({
+                          ...configuration,
+                          hataParameters: {
+                            ...configuration.hataParameters,
+                            citySize: e.target.value as
+                              | "small"
+                              | "medium"
+                              | "large",
+                          },
+                        }),
+                      )
                     }
                   >
                     <option value="small">Small</option>

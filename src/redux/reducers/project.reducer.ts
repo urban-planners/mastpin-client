@@ -5,9 +5,11 @@ import {
   OptimizationCheckInterface,
   OptimizationInterface,
   ProjectDetailsInterface,
+  ShareInterface,
 } from "../../types";
 
 const initialState: {
+  allProjects: Object[];
   details: ProjectDetailsInterface;
   displayMode: "mapping" | "technical";
   theme: "light" | "dark";
@@ -15,7 +17,15 @@ const initialState: {
   optimization: OptimizationInterface;
   configurationCheck?: ConfigurationCheckInterface;
   optimizationCheck?: OptimizationCheckInterface;
+  showShareDialog: boolean;
+  shareDetails: ShareInterface;
 } = {
+  allProjects: [],
+  showShareDialog: false,
+  shareDetails: {
+    isPublic: false,
+    link: "",
+  },
   details: {
     projectName: "Untitled Project",
     createdAt: new Date().toISOString(),
@@ -107,6 +117,24 @@ const initialState: {
 
 export function projectReducer(state = initialState, action: ActionInterface) {
   switch (action.type) {
+    case "SET_ALL_PROJECTS":
+      return {
+        ...state,
+        allProjects: action.payload,
+      };
+
+    case "SET_TO_ALL_PROJECTS":
+      return {
+        ...state,
+        allProjects: [action.payload, ...state.allProjects],
+      };
+
+    case "SET_PROJECT_DETAILS":
+      return {
+        ...state,
+        details: action.payload,
+      };
+
     case "TOGGLE_DISPLAY_MODE":
       return {
         ...state,
@@ -141,6 +169,30 @@ export function projectReducer(state = initialState, action: ActionInterface) {
       return {
         ...state,
         optimizationCheck: action.payload,
+      };
+
+    case "SHOW_SHARE_DISPLAY":
+      return {
+        ...state,
+        showShareDialog: action.payload,
+      };
+
+    case "SET_MAP_VISIBILITY":
+      return {
+        ...state,
+        shareDetails: {
+          ...state.shareDetails,
+          isPublic: action.payload,
+        },
+      };
+
+    case "SET_MAP_LINK":
+      return {
+        ...state,
+        shareDetails: {
+          ...state.shareDetails,
+          link: action.payload,
+        },
       };
 
     default:

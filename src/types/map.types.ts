@@ -39,4 +39,16 @@ export interface GenerateMapInterface {
   optimization: OptimizationInterface;
 }
 
+export interface EvaluateMapInterface {
+  pins: GeneratePinInterface[];
+  regions: RegionInterface[];
+  configuration: ConfigurationInterface;
+  optimization: OptimizationInterface;
+}
+
+export interface MastLocInterface {
+  x: number;
+  y: number;
+}
+
 export type MapActionType = "hand" | "pin" | "mast" | "doc";

@@ -12,7 +12,6 @@ import {
   setOptimization,
   setOptimizationCheck,
 } from "../../../../../../redux/actions";
-import { useEffect, useState } from "react";
 import SpecialInput from "../components/SpecialInput";
 
 const TechnicalDrawer = () => {
@@ -23,18 +22,6 @@ const TechnicalDrawer = () => {
   const optimizationCheck = useSelector(
     (state: any) => state.project.optimizationCheck,
   ) as OptimizationCheckInterface;
-
-  const [optimizationState, setOptimizationState] = useState(optimization);
-  const [optimizationCheckState, setOptimizationCheckState] =
-    useState(optimizationCheck);
-
-  useEffect(() => {
-    dispatch(setOptimization(optimizationState));
-  }, [optimizationState]);
-
-  useEffect(() => {
-    dispatch(setOptimizationCheck(optimizationCheckState));
-  }, [optimizationCheckState]);
 
   return (
     <Fragment>
@@ -50,12 +37,14 @@ const TechnicalDrawer = () => {
             <label className="drawer__form__label">
               Algorithm
               <select
-                value={optimizationState.algorithm}
+                value={optimization.algorithm}
                 onChange={(e) =>
-                  setOptimizationState((prev) => ({
-                    ...prev,
-                    algorithm: e.target.value as "pso" | "ga",
-                  }))
+                  dispatch(
+                    setOptimization({
+                      ...optimization,
+                      algorithm: e.target.value as "pso" | "ga",
+                    }),
+                  )
                 }
               >
                 <option value="pso">Particle Swarm Optimization</option>
@@ -63,228 +52,260 @@ const TechnicalDrawer = () => {
               </select>
             </label>
             <SubTitle text="Initial Parameters" />
-            {optimizationState.algorithm === "pso" && (
+            {optimization.algorithm === "pso" && (
               <Fragment>
                 <SpecialInput
                   title="Swarm Size"
                   type="number"
-                  value={optimizationState.initParameters.swarmSize}
+                  value={optimization.initParameters.swarmSize}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        swarmSize: /^[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          swarmSize: /^[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.initParameters.swarmSize}
+                  checked={optimizationCheck.initParameters.swarmSize}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        swarmSize: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        initParameters: {
+                          ...optimizationCheck.initParameters,
+                          swarmSize: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Inertia"
                   type="number"
-                  value={optimizationState.initParameters.inertia}
+                  value={optimization.initParameters.inertia}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        inertia: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          inertia: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.initParameters.inertia}
+                  checked={optimizationCheck.initParameters.inertia}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        inertia: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        initParameters: {
+                          ...optimizationCheck.initParameters,
+                          inertia: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Cognitive Coefficient"
                   type="number"
-                  value={optimizationState.initParameters.cognCoeff}
+                  value={optimization.initParameters.cognCoeff}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        cognCoeff: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          cognCoeff: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.initParameters.cognCoeff}
+                  checked={optimizationCheck.initParameters.cognCoeff}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        cognCoeff: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        initParameters: {
+                          ...optimizationCheck.initParameters,
+                          cognCoeff: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Social Coefficient"
                   type="number"
-                  value={optimizationState.initParameters.socCoeff}
+                  value={optimization.initParameters.socCoeff}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        socCoeff: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          socCoeff: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.initParameters.socCoeff}
+                  checked={optimizationCheck.initParameters.socCoeff}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        socCoeff: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        initParameters: {
+                          ...optimizationCheck.initParameters,
+                          socCoeff: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Velocity Magnitude"
                   type="number"
-                  value={optimizationState.initParameters.velocityMagnitude}
+                  value={optimization.initParameters.velocityMagnitude}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        velocityMagnitude: /^[0-9]*\.{0,1}[0-9]*$/.test(
-                          e.target.value,
-                        )
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          velocityMagnitude: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={
-                    optimizationCheckState.initParameters.velocityMagnitude
-                  }
+                  checked={optimizationCheck.initParameters.velocityMagnitude}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        velocityMagnitude: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        initParameters: {
+                          ...optimizationCheck.initParameters,
+                          velocityMagnitude: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
               </Fragment>
             )}
-            {optimizationState.algorithm === "ga" && (
+            {optimization.algorithm === "ga" && (
               <Fragment>
                 <SpecialInput
                   title="Population Size"
                   type="number"
-                  value={optimizationState.initParameters.popSize}
+                  value={optimization.initParameters.popSize}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        popSize: /^[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          popSize: /^[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.initParameters.popSize}
+                  checked={optimizationCheck.initParameters.popSize}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        popSize: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        initParameters: {
+                          ...optimizationCheck.initParameters,
+                          popSize: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="K Best Individuals"
                   type="number"
-                  value={optimizationState.initParameters.kBestIndividuals}
+                  value={optimization.initParameters.kBestIndividuals}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        kBestIndividuals: /^[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          kBestIndividuals: /^[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Number of Parents"
                   type="number"
-                  value={optimizationState.initParameters.nParents}
+                  value={optimization.initParameters.nParents}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        nParents: /^[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          nParents: /^[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.initParameters.nParents}
+                  checked={optimizationCheck.initParameters.nParents}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        nParents: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        initParameters: {
+                          ...optimizationCheck.initParameters,
+                          nParents: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <label className="drawer__form__label">
                   Breeding Method
                   <select
-                    value={optimizationState.initParameters.breedingMethod}
+                    value={optimization.initParameters.breedingMethod}
                     onChange={(e) =>
-                      setOptimizationState((prev) => ({
-                        ...prev,
-                        initParameters: {
-                          ...prev.initParameters,
-                          breedingMethod: e.target.value as
-                            | "average"
-                            | "random",
-                        },
-                      }))
+                      dispatch(
+                        setOptimization({
+                          ...optimization,
+                          initParameters: {
+                            ...optimization.initParameters,
+                            breedingMethod: e.target.value as
+                              | "average"
+                              | "random",
+                          },
+                        }),
+                      )
                     }
                   >
                     <option value="average">Average</option>
@@ -294,314 +315,356 @@ const TechnicalDrawer = () => {
                 <SpecialInput
                   title="Individual Mutation Rate"
                   type="number"
-                  value={
-                    optimizationState.initParameters.individualMutationRate
-                  }
+                  value={optimization.initParameters.individualMutationRate}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        individualMutationRate: /^[0-9]*\.{0,1}[0-9]*$/.test(
-                          e.target.value,
-                        )
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          individualMutationRate: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
                   checked={
-                    optimizationCheckState.initParameters.individualMutationRate
+                    optimizationCheck.initParameters.individualMutationRate
                   }
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        individualMutationRate: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        initParameters: {
+                          ...optimizationCheck.initParameters,
+                          individualMutationRate: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Gene Mutation Rate"
                   type="number"
-                  value={optimizationState.initParameters.geneMutationRate}
+                  value={optimization.initParameters.geneMutationRate}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        geneMutationRate: /^[0-9]*\.{0,1}[0-9]*$/.test(
-                          e.target.value,
-                        )
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          geneMutationRate: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={
-                    optimizationCheckState.initParameters.geneMutationRate
-                  }
+                  checked={optimizationCheck.initParameters.geneMutationRate}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        geneMutationRate: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        initParameters: {
+                          ...optimizationCheck.initParameters,
+                          geneMutationRate: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Mutation Intensity"
                   type="number"
-                  value={optimizationState.initParameters.mutationIntensity}
+                  value={optimization.initParameters.mutationIntensity}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        mutationIntensity: /^[0-9]*\.{0,1}[0-9]*$/.test(
-                          e.target.value,
-                        )
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        initParameters: {
+                          ...optimization.initParameters,
+                          mutationIntensity: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={
-                    optimizationCheckState.initParameters.mutationIntensity
-                  }
+                  checked={optimizationCheck.initParameters.mutationIntensity}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      initParameters: {
-                        ...prev.initParameters,
-                        mutationIntensity: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        initParameters: {
+                          ...optimizationCheck.initParameters,
+                          mutationIntensity: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
               </Fragment>
             )}
             <SubTitle text="Run Parameters" />
-            {optimizationState.algorithm === "pso" && (
+            {optimization.algorithm === "pso" && (
               <Fragment>
                 <SpecialInput
                   title="Maximum Iterations"
                   type="number"
-                  value={optimizationState.runParameters.maxIter}
+                  value={optimization.runParameters.maxIter}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        maxIter: /^[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        runParameters: {
+                          ...optimization.runParameters,
+                          maxIter: /^[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.runParameters.maxIter}
+                  checked={optimizationCheck.runParameters.maxIter}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        maxIter: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        runParameters: {
+                          ...optimizationCheck.runParameters,
+                          maxIter: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Score Threshold"
                   type="number"
-                  value={optimizationState.runParameters.scoreThreshold}
+                  value={optimization.runParameters.scoreThreshold}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        scoreThreshold: /^[0-9]*\.{0,1}[0-9]*$/.test(
-                          e.target.value,
-                        )
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        runParameters: {
+                          ...optimization.runParameters,
+                          scoreThreshold: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.runParameters.scoreThreshold}
+                  checked={optimizationCheck.runParameters.scoreThreshold}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        scoreThreshold: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        runParameters: {
+                          ...optimizationCheck.runParameters,
+                          scoreThreshold: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Patience"
                   type="number"
-                  value={optimizationState.runParameters.patience}
+                  value={optimization.runParameters.patience}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        patience: /^[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        runParameters: {
+                          ...optimization.runParameters,
+                          patience: /^[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.runParameters.patience}
+                  checked={optimizationCheck.runParameters.patience}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        patience: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        runParameters: {
+                          ...optimizationCheck.runParameters,
+                          patience: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Tolerance"
                   type="number"
-                  value={optimizationState.runParameters.tolerance}
+                  value={optimization.runParameters.tolerance}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        tolerance: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        runParameters: {
+                          ...optimization.runParameters,
+                          tolerance: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.runParameters.tolerance}
+                  checked={optimizationCheck.runParameters.tolerance}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        tolerance: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        runParameters: {
+                          ...optimizationCheck.runParameters,
+                          tolerance: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
               </Fragment>
             )}
-            {optimizationState.algorithm === "ga" && (
+            {optimization.algorithm === "ga" && (
               <Fragment>
                 <SpecialInput
                   title="Maximum Generations"
                   type="number"
-                  value={optimizationState.runParameters.maxGenerations}
+                  value={optimization.runParameters.maxGenerations}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        maxGenerations: /^[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        runParameters: {
+                          ...optimization.runParameters,
+                          maxGenerations: /^[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.runParameters.maxGenerations}
+                  checked={optimizationCheck.runParameters.maxGenerations}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        maxGenerations: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        runParameters: {
+                          ...optimizationCheck.runParameters,
+                          maxGenerations: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Score Threshold"
                   type="number"
-                  value={optimizationState.runParameters.scoreThreshold}
+                  value={optimization.runParameters.scoreThreshold}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        scoreThreshold: /^[0-9]*\.{0,1}[0-9]*$/.test(
-                          e.target.value,
-                        )
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        runParameters: {
+                          ...optimization.runParameters,
+                          scoreThreshold: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.runParameters.scoreThreshold}
+                  checked={optimizationCheck.runParameters.scoreThreshold}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        scoreThreshold: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        runParameters: {
+                          ...optimizationCheck.runParameters,
+                          scoreThreshold: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Patience"
                   type="number"
-                  value={optimizationState.runParameters.patience}
+                  value={optimization.runParameters.patience}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        patience: /^[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        runParameters: {
+                          ...optimization.runParameters,
+                          patience: /^[0-9]*$/.test(e.target.value)
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.runParameters.patience}
+                  checked={optimizationCheck.runParameters.patience}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        patience: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        runParameters: {
+                          ...optimizationCheck.runParameters,
+                          patience: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
                 <SpecialInput
                   title="Tolerance"
                   type="number"
-                  value={optimizationState.runParameters.tolerance}
+                  value={optimization.runParameters.tolerance}
                   onchange={(e) =>
-                    setOptimizationState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        tolerance: /^[0-9]*\.{0,1}[0-9]*$/.test(e.target.value)
-                          ? e.target.value
-                          : 0,
-                      },
-                    }))
+                    dispatch(
+                      setOptimization({
+                        ...optimization,
+                        runParameters: {
+                          ...optimization.runParameters,
+                          tolerance: /^[0-9]*\.{0,1}[0-9]*$/.test(
+                            e.target.value,
+                          )
+                            ? e.target.value
+                            : 0,
+                        },
+                      }),
+                    )
                   }
-                  checked={optimizationCheckState.runParameters.tolerance}
+                  checked={optimizationCheck.runParameters.tolerance}
                   onCheck={(e) =>
-                    setOptimizationCheckState((prev) => ({
-                      ...prev,
-                      runParameters: {
-                        ...prev.runParameters,
-                        tolerance: e.target.checked,
-                      },
-                    }))
+                    dispatch(
+                      setOptimizationCheck({
+                        ...optimizationCheck,
+                        runParameters: {
+                          ...optimizationCheck.runParameters,
+                          tolerance: e.target.checked,
+                        },
+                      }),
+                    )
                   }
                 />
               </Fragment>
