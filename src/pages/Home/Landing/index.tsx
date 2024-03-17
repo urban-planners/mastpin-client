@@ -1,9 +1,7 @@
-import "./Landing.css"
+import "./Landing.css";
 
 const Landing = () => {
-  return (
-    <div>Landing</div>
-  )
-}
+  return <div>Landing</div>;
+};
 
-export default Landing
+export default Landing;

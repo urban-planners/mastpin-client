@@ -24,7 +24,11 @@ import { IoMdSunny } from "react-icons/io";
 import { WiMoonAltWaningCrescent4 } from "react-icons/wi";
 import { IoShareSocial } from "react-icons/io5";
 import { IoSyncOutline } from "react-icons/io5";
-import { assignRegionsToPins, sortConfiguration, sortOptimization } from "./utils";
+import {
+  assignRegionsToPins,
+  sortConfiguration,
+  sortOptimization,
+} from "./utils";
 import {
   setHasSimulation,
   setSimulation,
