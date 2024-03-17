@@ -6,10 +6,15 @@ const MapOverlay = ({
   title = "",
   onClickX,
   children,
+  actions,
 }: {
   title?: string | ReactNode;
   onClickX: () => void;
   children?: ReactNode;
+  actions?: {
+    onClick: () => void;
+    children: ReactNode;
+  };
 }) => {
   return (
     <div className="map__overlay" onClick={onClickX}>
@@ -19,6 +24,12 @@ const MapOverlay = ({
       >
         <div className="map__overlay__actions__container">
           <h4 className="map__overlay__actions__title">{title}</h4>
+          <div
+            className="map__overlay__actions__item"
+            onClick={actions?.onClick}
+          >
+            {actions?.children}
+          </div>
           <div className="map__overlay__actions__item" onClick={onClickX}>
             <IoCloseOutline />
           </div>

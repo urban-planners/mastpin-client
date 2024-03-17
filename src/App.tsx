@@ -8,6 +8,7 @@ import { Login, Signup } from "./pages/Home/Auth";
 import Home from "./pages/Home";
 import Landing from "./pages/Home/Landing";
 import { Projects } from "./pages/Projects";
+import { PublicMap } from "./pages/PublicMap";
 
 function App() {
   return (
@@ -39,6 +40,9 @@ function App() {
             <Route path=":id" element={<Dashboard />}>
               <Route index element={<DrawerRight />} />
             </Route>
+          </Route>
+          <Route path="/maps">
+            <Route path=":publicId" element={<PublicMap />} />
           </Route>
         </Routes>
       </Router>

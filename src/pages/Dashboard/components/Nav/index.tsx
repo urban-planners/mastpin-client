@@ -121,7 +121,6 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
         );
         return (presentationData.coverage / totalPopulation) * 100;
       })();
-      console.log(presentationData);
       dispatch(setSimulation(presentationData));
       dispatch(setHasSimulation(true));
     } catch (error: any) {
@@ -167,7 +166,6 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
         );
         return (presentationData.coverage / totalPopulation) * 100;
       })();
-      console.log(presentationData);
       dispatch(setEvaluation(presentationData));
       dispatch(setHasEvaluation(true));
     } catch (error: any) {

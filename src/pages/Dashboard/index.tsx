@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setConfiguration,
   setConfigurationCheck,
+  setMapLink,
   setMapVisibility,
   setOptimization,
   setOptimizationCheck,
@@ -28,7 +29,9 @@ const SERVER = process.env.REACT_APP_SERVER_URL;
 const MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
 
 const Dashboard = () => {
-  const { id } = useParams();
+  let { id, publicId } = useParams();
+  if (publicId) id = publicId;
+
   const mapInfo = useSelector(
     (state: any) => state.map.mapInfo,
   ) as MapInfoInterface;
@@ -38,6 +41,9 @@ const Dashboard = () => {
     (state: any) => state.map.mapInfo.showLabels,
   ) as boolean;
   const navigate = useNavigate();
+  const location = new URL(window.location.href);
+  const clientUrl = location.origin;
+
   const [gettingProject, setGettingProject] = useState(false);
 
   const { isLoaded } = useLoadScript({
@@ -71,7 +77,12 @@ const Dashboard = () => {
     (async () => {
       try {
         setGettingProject(true);
-        await getProject({ id: id as string, dispatch });
+        await getProject({
+          id: id as string,
+          publicId,
+          dispatch,
+          clientUrl,
+        });
         setGettingProject(false);
       } catch (error: any) {
         toast.error(error.message, {
@@ -103,13 +114,20 @@ export default Dashboard;
 
 const getProject = async ({
   id,
+  publicId,
   dispatch,
+  clientUrl,
 }: {
   id: string;
+  publicId: string | undefined;
   dispatch: Dispatch;
+  clientUrl: string;
 }): Promise<Error | void> => {
   if (!id) throw new Error("ID is required");
-  const response = await fetch(`${SERVER}/projects/one/${id}`, {
+  const privateUrl = `${SERVER}/projects/one/${id}`;
+  const publicUrl = `${SERVER}/public/map/${id}`;
+  const url = publicId ? publicUrl : privateUrl;
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -135,7 +153,8 @@ const getProject = async ({
   );
   dispatch(setRegions(regions));
   dispatch(setPins(pins));
-  dispatch(setMapVisibility(visibility));
+  dispatch(setMapLink(`${clientUrl}/maps/${id}`));
+  dispatch(setMapVisibility(visibility === "public"));
   dispatch(setConfiguration(configuration));
   dispatch(setConfigurationCheck(configurationCheck));
   dispatch(setOptimization(optimization));

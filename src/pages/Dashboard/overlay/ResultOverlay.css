@@ -22,3 +22,7 @@
   font-weight: 500;
   color: rgba(0, 0, 0, 0.75);
 }
+
+.map__result__chart__container {
+  position: relative;
+}
