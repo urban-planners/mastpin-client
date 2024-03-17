@@ -30,13 +30,13 @@ const CompareResultsChart = ({
               label: "Optimization",
               data: [simulationValue],
               borderColor: "rgb(75, 192, 192)",
-              backgroundColor: "rgb(75, 192, 192)"
+              backgroundColor: "rgb(75, 192, 192)",
             },
             {
               label: "Evaluation",
               data: [evaluationValue],
               borderColor: "rgb(255, 99, 132)",
-              backgroundColor: "rgb(255, 99, 132)"
+              backgroundColor: "rgb(255, 99, 132)",
             },
           ],
         },
