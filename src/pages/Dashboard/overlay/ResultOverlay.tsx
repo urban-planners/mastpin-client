@@ -61,8 +61,19 @@ const ResultOverlay = () => {
         {hasSimulation && hasEvaluation && (
           <div className="map__result__chart__container">
             <CompareResultsChart
-              simulationData={simulation}
-              evaluationData={evaluation}
+              label="Coverage"
+              simulationValue={simulation.coverage}
+              evaluationValue={evaluation.coverage}
+            />
+            <CompareResultsChart
+              label="Signal Strength"
+              simulationValue={simulation.signal_strength}
+              evaluationValue={evaluation.signal_strength}
+            />
+            <CompareResultsChart
+              label="Load Disparity"
+              simulationValue={simulation.load_std}
+              evaluationValue={evaluation.load_std}
             />
           </div>
         )}

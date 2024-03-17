@@ -3,11 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { PresentationInterface } from "../../../../types";
 
 const CompareResultsChart = ({
-  simulationData,
-  evaluationData,
+  label,
+  simulationValue,
+  evaluationValue,
 }: {
-  simulationData: PresentationInterface;
-  evaluationData: PresentationInterface;
+  label: string;
+  simulationValue: number;
+  evaluationValue: number;
 }) => {
   const [chart, setChart] = useState<Chart | null>(null);
   const chartRef = useRef<HTMLCanvasElement>(null);
@@ -20,23 +22,21 @@ const CompareResultsChart = ({
     if (chartRef.current) {
       const ctx = chartRef.current.getContext("2d") as CanvasRenderingContext2D;
       const newChartInstance = new Chart(ctx, {
-        type: "line",
+        type: "bar",
         data: {
-          labels: Object.keys(simulationData),
+          labels: [label],
           datasets: [
             {
-              label: "Simulation",
-              data: Object.values(simulationData),
+              label: "Optimization",
+              data: [simulationValue],
               borderColor: "rgb(75, 192, 192)",
-              tension: 0.1,
-              fill: false,
+              backgroundColor: "rgb(75, 192, 192)"
             },
             {
               label: "Evaluation",
-              data: Object.values(evaluationData),
+              data: [evaluationValue],
               borderColor: "rgb(255, 99, 132)",
-              tension: 0.1,
-              fill: false,
+              backgroundColor: "rgb(255, 99, 132)"
             },
           ],
         },
@@ -50,7 +50,7 @@ const CompareResultsChart = ({
       });
       setChart(newChartInstance);
     }
-  }, [simulationData, evaluationData]);
+  }, [label, simulationValue, evaluationValue]);
 
   return <canvas ref={chartRef} />;
 };
