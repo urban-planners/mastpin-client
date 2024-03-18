@@ -49,7 +49,7 @@ const ResultOverlay = () => {
                 activeTab === "simulation" ? (
                   <button>Show Evaluation</button>
                 ) : (
-                  <button>Show Simulation</button>
+                  <button>Show Optimization</button>
                 ),
             }
           : undefined

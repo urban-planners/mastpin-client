@@ -19,6 +19,7 @@ const initialState: {
   optimizationCheck?: OptimizationCheckInterface;
   showShareDialog: boolean;
   shareDetails: ShareInterface;
+  saved: boolean;
 } = {
   allProjects: [],
   showShareDialog: false,
@@ -27,8 +28,8 @@ const initialState: {
     link: "",
   },
   details: {
-    projectName: "Untitled Project",
-    createdAt: new Date().toISOString(),
+    title: "Untitled Project",
+    updatedAt: new Date().toISOString(),
   },
   displayMode: "mapping",
   theme: "light",
@@ -114,6 +115,7 @@ const initialState: {
       maxGenerations: true,
     },
   },
+  saved: true,
 };
 
 export function projectReducer(state = initialState, action: ActionInterface) {
@@ -134,6 +136,15 @@ export function projectReducer(state = initialState, action: ActionInterface) {
       return {
         ...state,
         details: action.payload,
+      };
+
+    case "SET_PROJECT_NAME":
+      return {
+        ...state,
+        details: {
+          ...state.details,
+          title: action.payload,
+        },
       };
 
     case "TOGGLE_DISPLAY_MODE":
@@ -194,6 +205,12 @@ export function projectReducer(state = initialState, action: ActionInterface) {
           ...state.shareDetails,
           link: action.payload,
         },
+      };
+
+    case "SET_SAVED":
+      return {
+        ...state,
+        saved: action.payload,
       };
 
     default:

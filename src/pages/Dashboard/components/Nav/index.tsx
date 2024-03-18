@@ -13,9 +13,10 @@ import {
   OptimizationCheckInterface,
   EvaluateMapInterface,
 } from "../../../../types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IoPlayOutline } from "react-icons/io5";
 import {
+  setProjectName,
   showShareDisplay,
   switchTheme,
   toggleDisplayMode,
@@ -36,6 +37,8 @@ import {
   setEvaluation,
 } from "../../../../redux/actions/result.action";
 import { ToastContainer, toast } from "react-toastify";
+import { IoIosCheckmark } from "react-icons/io";
+import { BsDot } from "react-icons/bs";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
@@ -43,7 +46,6 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
   const projectDetails = useSelector(
     (state: any) => state.project.details,
   ) as ProjectDetailsInterface;
-  const [title, setTitle] = useState(projectDetails.projectName);
   const dispatch = useDispatch();
   const displayMode = useSelector((state: any) => state.project.displayMode);
   const theme = useSelector((state: any) => state.project.theme);
@@ -73,12 +75,9 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
   const optimization = useSelector(
     (state: any) => state.project.optimization,
   ) as OptimizationInterface;
+  const saved = useSelector((state: any) => state.project.saved);
   const [simulating, setSimulating] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
-
-  useEffect(() => {
-    setTitle(projectDetails.projectName);
-  }, [projectDetails.projectName]);
 
   const startGeneration = async () => {
     if (simulating) return;
@@ -117,7 +116,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       const presentationData = data.data as PresentationInterface;
       presentationData.coverage = (() => {
         const totalPopulation = regions.reduce(
-          (acc, curr: RegionInterface) => acc + curr.population,
+          (acc, curr: RegionInterface) => acc + Number(curr.population),
           0,
         );
         return (presentationData.coverage / totalPopulation) * 100;
@@ -134,6 +133,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
 
   const startEvaluation = async () => {
     if (evaluating) return;
+    if (regions.length === 0) return toast.error("Add regions to the map");
     if (!currentMasts.length) return toast.error("Add masts to the map");
 
     const map: EvaluateMapInterface = {
@@ -163,7 +163,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       const presentationData = data.data as PresentationInterface;
       presentationData.coverage = (() => {
         const totalPopulation = regions.reduce(
-          (acc, curr: RegionInterface) => acc + curr.population,
+          (acc, curr: RegionInterface) => acc + Number(curr.population),
           0,
         );
         return (presentationData.coverage / totalPopulation) * 100;
@@ -195,7 +195,18 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       <form className="drawer project-name__container">
         <label>
           <small>Project Name</small>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} />
+          <input
+            value={projectDetails.title}
+            onChange={(e) => dispatch(setProjectName(e.target.value))}
+          />
+          <div
+            className={`project-name__container__status ${
+              saved ? "saved" : ""
+            }`}
+          >
+            {saved && <IoIosCheckmark />}
+            {!saved && <BsDot />}
+          </div>
         </label>
       </form>
       <div className="search__container">

@@ -55,15 +55,17 @@ const DrawerLeft = () => {
       </Content>
       <Title title="Targets" />
       <Content emptyText="No targets to show.">
-        {pins.map((pin) => (
-          <li
-            key={nanoid()}
-            onClick={() => dispatch(selectPin(pin.id))}
-            className={`${selectedPin === pin.id ? "selected" : ""}`}
-          >
-            <p>{pin.title}</p>
-          </li>
-        ))}
+        {pins
+          .filter((pin) => pin.regionId === selectedRegion)
+          .map((pin) => (
+            <li
+              key={nanoid()}
+              onClick={() => dispatch(selectPin(pin.id))}
+              className={`${selectedPin === pin.id ? "selected" : ""}`}
+            >
+              <p>{pin.title}</p>
+            </li>
+          ))}
       </Content>
     </div>
   );

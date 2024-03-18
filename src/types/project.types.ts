@@ -1,8 +1,8 @@
 import { MastLocInterface } from "./map.types";
 
 export interface ProjectDetailsInterface {
-  projectName: string;
-  createdAt: string;
+  title: string;
+  updatedAt: string;
 }
 
 export interface ConfigurationInterface {

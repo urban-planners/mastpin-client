@@ -1,0 +1,120 @@
+.projects {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.projects__header__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.projects__header {
+  margin: 0;
+}
+
+.projects__header h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+.projects__header__actions {
+  display: flex;
+  align-items: center;
+}
+
+.projects__search {
+  margin-right: 10px;
+}
+
+.projects__search input[type="text"] {
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.projects__create {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.projects__create:hover {
+  background-color: #0056b3;
+}
+
+.projects__list__container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.projects__list__item {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  max-width: 300px;
+}
+
+.projects__list__item:hover {
+  transform: translateY(-5px);
+}
+
+.projects__list__item__image img {
+  width: 100%;
+  height: auto;
+}
+
+.projects__list__item__info {
+  padding: 10px;
+}
+
+.projects__list__item__info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.projects__list__item__info p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.projects__list__item__info p span {
+  font-weight: bold;
+}
+
+.projects__list__item__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.projects__list__item__actions svg {
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+  padding: 5px;
+  box-sizing: content-box;
+}
+
+.projects__list__item__actions svg:hover {
+  color: #333;
+}

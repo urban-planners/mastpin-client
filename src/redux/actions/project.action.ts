@@ -16,11 +16,16 @@ export const addToAllProjects = (project: Object) => ({
 });
 
 export const setProjectDetails = (details: {
-  projectName: string;
-  createdAt: Date;
+  title: string;
+  updatedAt: Date;
 }) => ({
   type: "SET_PROJECT_DETAILS",
   payload: details,
+});
+
+export const setProjectName = (name: string) => ({
+  type: "SET_PROJECT_NAME",
+  payload: name,
 });
 
 export const toggleDisplayMode = () => ({
@@ -68,4 +73,9 @@ export const setMapVisibility = (visibility: boolean) => ({
 export const setMapLink = (link: string) => ({
   type: "SET_MAP_LINK",
   payload: link,
+});
+
+export const setSaved = (saved: boolean) => ({
+  type: "SET_SAVED",
+  payload: saved,
 });

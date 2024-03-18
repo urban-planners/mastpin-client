@@ -69,6 +69,11 @@ export const setMapAction = (action: MapActionType) => ({
   payload: action,
 });
 
+export const setCurrentMasts = (masts: PinInfoInterface[]) => ({
+  type: "SET_CURRENT_MASTS",
+  payload: masts,
+});
+
 export const addMast = (mast: PinInfoInterface) => ({
   type: "ADD_MAST",
   payload: mast,

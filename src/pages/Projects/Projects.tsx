@@ -1,10 +1,14 @@
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import "./Projects.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { addToAllProjects, setAllProjects } from "../../redux/actions";
 import { useEffect, useState } from "react";
+import defaultMapImage from "../../assets/images/map-preview.webp";
+import { GridLoader } from "react-spinners";
+import { IoSettingsOutline } from "react-icons/io5";
+import { BsTrash } from "react-icons/bs";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
@@ -17,6 +21,7 @@ export const Projects = () => {
     title: string;
     [props: string]: any;
   }[];
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -32,18 +37,72 @@ export const Projects = () => {
 
   return (
     <div className="projects">
-      <button onClick={() => createNewProject({ navigate, dispatch })}>
-        Create New Project
-      </button>
-      <div>
+      <div className="projects__header__container">
+        <div className="projects__header">
+          <h2>Projects</h2>
+        </div>
+        <div className="projects__header__actions">
+          <div className="projects__search">
+            <input
+              type="text"
+              placeholder="Search Projects"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <button
+            onClick={() => createNewProject({ navigate, dispatch })}
+            className="projects__create"
+          >
+            Create New Project
+          </button>
+        </div>
+      </div>
+      <div className="projects__list__container">
         {gettingProjects ? (
-          <p>Retrieving projects...</p>
+          <div className="projects__loading">
+            <GridLoader color="var(--primary-color)" />
+          </div>
         ) : (
-          projects.map((project) => (
-            <div key={project._id}>
-              <p>{project.title}</p>
-            </div>
-          ))
+          projects
+            .filter((project) =>
+              project.title.toLowerCase().includes(search.toLowerCase()),
+            )
+            .map((project) => (
+              <Link
+                key={project._id}
+                to={project._id}
+                className="projects__list__item"
+              >
+                <div className="projects__list__item__image">
+                  <img
+                    src={project.image || defaultMapImage}
+                    alt={project.title}
+                  />
+                </div>
+                <div>
+                  <div className="projects__list__item__info">
+                    <h3>{project.title}</h3>
+                    <p>
+                      <span>Last Modified:</span>{" "}
+                      {new Date(
+                        project.updatedAt || project.createdAt,
+                      ).toLocaleDateString("en-GB")}
+                    </p>
+                  </div>
+                  <div
+                    className="projects__list__item__actions"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }}
+                  >
+                    <IoSettingsOutline onClick={(e) => {}} />
+                    <BsTrash onClick={(e) => {}} />
+                  </div>
+                </div>
+              </Link>
+            ))
         )}
       </div>
     </div>

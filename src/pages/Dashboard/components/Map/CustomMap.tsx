@@ -268,6 +268,7 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
               options={{
                 clickable: false,
                 draggable: false,
+                optimized: true,
               }}
             />
           ))}

@@ -82,7 +82,9 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
 
     case "ADD_REGION":
       const title = getRegionTitle(state.regions);
-      const { strokeColor, fillColor } = generateRegionColors(title);
+      const { strokeColor, fillColor } = generateRegionColors(
+        state.regions.length,
+      );
       const newRegion: RegionInterface = {
         id: nanoid(),
         title,
@@ -225,6 +227,12 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
       return {
         ...state,
         selectedMapAction: action.payload,
+      };
+
+    case "SET_CURRENT_MASTS":
+      return {
+        ...state,
+        currentMasts: action.payload,
       };
 
     case "ADD_MAST":

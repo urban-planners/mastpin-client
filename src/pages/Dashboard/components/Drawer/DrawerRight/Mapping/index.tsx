@@ -17,37 +17,62 @@ import {
   updateRegion,
 } from "../../../../../../redux/actions";
 import SpecialInput from "../components/SpecialInput";
+import { createSelector } from "@reduxjs/toolkit";
+
+const selectMapState = (state: any) => state.map;
+const selectProjectState = (state: any) => state.project;
+
+// Memoized selectors using createSelector
+const selectSelectedPin = createSelector(
+  selectMapState,
+  (mapState) => mapState.selectedPin,
+);
+const selectSelectedRegion = createSelector(
+  selectMapState,
+  (mapState) => mapState.selectedRegion,
+);
+const selectRegions = createSelector(
+  selectMapState,
+  (mapState) => mapState.regions,
+);
+const selectPins = createSelector(selectMapState, (mapState) => mapState.pins);
+const selectConfiguration = createSelector(
+  selectProjectState,
+  (projectState) => projectState.configuration,
+);
+const selectConfigurationCheck = createSelector(
+  selectProjectState,
+  (projectState) => projectState.configurationCheck,
+);
+const selectRegion = createSelector(
+  selectRegions,
+  selectSelectedRegion,
+  (regions, selectedRegion) =>
+    regions.find((region: RegionInterface) => region.id === selectedRegion) ||
+    ({} as RegionInterface),
+);
+
+const selectPin = createSelector(
+  selectPins,
+  selectSelectedPin,
+  (pins, selectedPin) =>
+    pins.find((pin: PinInfoInterface) => pin.id === selectedPin) ||
+    ({} as PinInfoInterface),
+);
 
 const MappingDrawer = () => {
   const dispatch = useDispatch();
 
-  const selectedPin = useSelector(
-    (state: any) => state.map.selectedPin,
-  ) as string;
-  const selectedRegion = useSelector(
-    (state: any) => state.map.selectedRegion,
-  ) as string;
-
-  const regions = useSelector(
-    (state: any) => state.map.regions,
-  ) as RegionInterface[];
-  const pins = useSelector(
-    (state: any) => state.map.pins,
-  ) as PinInfoInterface[];
-
-  const region =
-    regions.find((region) => region.id === selectedRegion) ||
-    ({} as RegionInterface);
-
-  const pin =
-    pins.find((pin) => pin.id === selectedPin) || ({} as PinInfoInterface);
+  const selectedPin = useSelector(selectSelectedPin) as string;
+  const selectedRegion = useSelector(selectSelectedRegion) as string;
+  const region = useSelector(selectRegion);
+  const pin = useSelector(selectPin);
 
   const configuration = useSelector(
-    (state: any) => state.project.configuration,
+    selectConfiguration,
   ) as ConfigurationInterface;
-
   const configurationCheck = useSelector(
-    (state: any) => state.project.configurationCheck,
+    selectConfigurationCheck,
   ) as ConfigurationCheckInterface;
 
   return (
@@ -75,6 +100,7 @@ const MappingDrawer = () => {
                           }),
                         )
                       }
+                      onFocus={(e) => e.target.select()}
                       type="text"
                     />
                     <SpecialInput
@@ -84,7 +110,7 @@ const MappingDrawer = () => {
                         dispatch(
                           updateRegion({
                             ...region,
-                            population: /^[0-9]+$/.test(e.target.value)
+                            population: /^[0-9]*$/.test(e.target.value)
                               ? e.target.value
                               : 0,
                           }),
@@ -254,7 +280,7 @@ const MappingDrawer = () => {
                         ...configuration,
                         numberOfMasts: {
                           ...configuration.numberOfMasts,
-                          specific: /^[0-9]+$/.test(e.target.value)
+                          specific: /^[0-9]*$/.test(e.target.value)
                             ? e.target.value
                             : 0,
                         },
@@ -283,7 +309,7 @@ const MappingDrawer = () => {
                         ...configuration,
                         numberOfMasts: {
                           ...configuration.numberOfMasts,
-                          min: /^[0-9]+$/.test(e.target.value)
+                          min: /^[0-9]*$/.test(e.target.value)
                             ? e.target.value
                             : 0,
                         },
@@ -303,7 +329,7 @@ const MappingDrawer = () => {
                         ...configuration,
                         numberOfMasts: {
                           ...configuration.numberOfMasts,
-                          max: /^[0-9]+$/.test(e.target.value)
+                          max: /^[0-9]*$/.test(e.target.value)
                             ? e.target.value
                             : 0,
                         },
@@ -354,7 +380,7 @@ const MappingDrawer = () => {
                         ...configuration,
                         threshold: {
                           ...configuration.threshold,
-                          signalStrength: /^-*[0-9]+$/.test(e.target.value)
+                          signalStrength: /^-*[0-9]*$/.test(e.target.value)
                             ? e.target.value
                             : 0,
                         },

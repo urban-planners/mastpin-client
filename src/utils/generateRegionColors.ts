@@ -11,34 +11,16 @@ const predefinedColors = [
   "#17becf",
 ];
 
-const usedColors: Set<string> = new Set();
-
-export const generateRegionColors = (
-  regionId: string,
-): {
+export const generateRegionColors = (nRegions: number): {
   strokeColor: string;
   fillColor: string;
 } => {
   let strokeColor: string;
   let fillColor: string;
 
-  // If there are available colors in the predefined palette
-  if (!usedColors.has(regionId) && usedColors.size < predefinedColors.length) {
-    strokeColor = predefinedColors[usedColors.size];
-    fillColor = lightenDarkenColor(strokeColor, 20);
-  } else {
-    // Use already used colors or cycle through used colors if palette is exhausted
-    if (usedColors.has(regionId)) strokeColor = regionId;
-    else {
-      const usedColorIndex = usedColors.size % predefinedColors.length;
-      const usedColorArray = Array.from(usedColors);
-      strokeColor = usedColorArray[usedColorIndex];
-    }
-    fillColor = lightenDarkenColor(strokeColor, 20);
-  }
+  strokeColor = predefinedColors[nRegions % predefinedColors.length];
 
-  // Add used colors to the set
-  usedColors.add(regionId);
+  fillColor = lightenDarkenColor(strokeColor, 20);
 
   return { strokeColor, fillColor };
 };

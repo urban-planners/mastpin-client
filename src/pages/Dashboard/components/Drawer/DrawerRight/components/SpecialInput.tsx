@@ -10,6 +10,7 @@ const SpecialInput = ({
   hideCheckbox = false,
   inputProps,
   labelProps,
+  onFocus,
 }: {
   value: string | number | undefined;
   onchange: (e: any) => void;
@@ -20,6 +21,7 @@ const SpecialInput = ({
   hideCheckbox?: boolean;
   inputProps?: {};
   labelProps?: {};
+  onFocus?: (e: any) => void;
 }) => {
   return (
     <label
@@ -41,6 +43,7 @@ const SpecialInput = ({
           type={type}
           onChange={onchange}
           disabled={checked !== undefined && !checked}
+          onFocus={onFocus}
           {...inputProps}
         />
       </div>

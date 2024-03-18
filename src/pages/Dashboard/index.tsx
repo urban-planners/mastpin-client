@@ -1,5 +1,5 @@
 import "./Dashboard.css";
-import { useLoadScript } from "@react-google-maps/api";
+import { Libraries, useLoadScript } from "@react-google-maps/api";
 import CustomMap from "./components/Map/CustomMap";
 import Loading from "../Loading";
 import { useEffect, useState } from "react";
@@ -9,8 +9,11 @@ import Nav from "./components/Nav";
 import { MapInfoInterface } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  selectPin,
+  selectRegion,
   setConfiguration,
   setConfigurationCheck,
+  setCurrentMasts,
   setMapLink,
   setMapVisibility,
   setOptimization,
@@ -18,15 +21,18 @@ import {
   setPins,
   setProjectDetails,
   setRegions,
-  showMapLabels,
+  setSaved,
 } from "../../redux/actions";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Dispatch } from "@reduxjs/toolkit";
+import { Dispatch, createSelector } from "@reduxjs/toolkit";
 import { SyncLoader } from "react-spinners";
+import { useAutosave, useShortkeys } from "../../hooks";
+import { saveProject } from "../../utils";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 const MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
+const libraries = ["places"] as Libraries;
 
 const Dashboard = () => {
   let { id, publicId } = useParams();
@@ -43,35 +49,12 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const location = new URL(window.location.href);
   const clientUrl = location.origin;
-
   const [gettingProject, setGettingProject] = useState(false);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: MAPS_API_KEY as string,
-    libraries: ["places"],
+    libraries,
   });
-
-  useEffect(() => {
-    const keyBindingsFtn = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-      }
-      if (e.ctrlKey && e.key === "/") {
-        e.preventDefault();
-        return setFullScreen((prev) => !prev);
-      }
-      if (e.ctrlKey && e.key === "l") {
-        e.preventDefault();
-        dispatch(showMapLabels(!showLabels));
-      }
-    };
-    document.querySelector("body")?.addEventListener("keydown", keyBindingsFtn);
-
-    return () => {
-      document
-        .querySelector("body")
-        ?.removeEventListener("keydown", keyBindingsFtn);
-    };
-  }, [showLabels]);
 
   useEffect(() => {
     (async () => {
@@ -91,6 +74,9 @@ const Dashboard = () => {
       }
     })();
   }, [id]);
+
+  useShortkeys({ showLabels, setFullScreen });
+  useAutosave();
 
   return (
     <div className="dashboard-page">
@@ -135,10 +121,11 @@ const getProject = async ({
   });
   const data = await response.json();
   if (data.error) throw new Error(data.message);
-  const projectName = data.data.title;
-  const createdAt = data.data.createdAt;
+  const title = data.data.title;
+  const updatedAt = data.data.updatedAt;
   const regions = data.data.regions;
   const pins = data.data.pins;
+  const currentMasts = data.data.currentMasts;
   const visibility = data.data.visibility;
   const configuration = data.data.configuration.configuration;
   const configurationCheck = data.data.configuration.configurationOptions;
@@ -147,12 +134,19 @@ const getProject = async ({
 
   dispatch(
     setProjectDetails({
-      projectName,
-      createdAt,
+      title,
+      updatedAt,
     }),
   );
   dispatch(setRegions(regions));
   dispatch(setPins(pins));
+  if (regions.length > 0) {
+    const regionId = regions[0].id;
+    dispatch(selectRegion(regionId));
+    const pinId = pins.find((pin: any) => pin.regionId === regionId)?.id;
+    if (pinId) dispatch(selectPin(pinId));
+  }
+  dispatch(setCurrentMasts(currentMasts));
   dispatch(setMapLink(`${clientUrl}/maps/${id}`));
   dispatch(setMapVisibility(visibility === "public"));
   dispatch(setConfiguration(configuration));

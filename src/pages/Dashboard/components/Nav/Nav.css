@@ -24,6 +24,35 @@
   white-space: nowrap;
 }
 
+/* 
+<div
+            className={`project-name__container__status ${
+              saved ? "saved" : ""
+            }`}
+          >
+            {saved && <IoIosCheckmark />}
+            {!saved && <BsDot />}
+          </div>
+*/
+
+.project-name__container__status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 12px;
+  transition: background-color 0.3s;
+}
+
+.project-name__container__status svg {
+  font-size: 24px;
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.project-name__container__status.saved svg {
+  color: var(--primary-color);
+}
+
 .search__container {
   flex: 1;
   display: flex;
