@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addRegion, setMapAction, showMapLabels } from "../redux/actions";
+import { MapActionType } from "../types";
 
 export const useShortkeys = ({
   showLabels,
@@ -16,6 +17,9 @@ export const useShortkeys = ({
   const hasEvaluation = useSelector(
     (state: any) => state.result.hasEvaluation,
   ) as boolean;
+  const selectedMapAction = useSelector(
+    (state: any) => state.map.selectedMapAction,
+  ) as MapActionType;
 
   useEffect(() => {
     const keyBindingsFtn = (e: KeyboardEvent) => {
@@ -59,7 +63,10 @@ export const useShortkeys = ({
       }
       if (e.key === "o") {
         e.preventDefault();
-        if (hasSimulation || hasEvaluation) dispatch(setMapAction("doc"));
+        if (hasSimulation || hasEvaluation) {
+          if (selectedMapAction !== "doc") dispatch(setMapAction("doc"));
+          else dispatch(setMapAction("hand"));
+        }
       }
 
       //   Drawer Shortkeys
@@ -76,5 +83,12 @@ export const useShortkeys = ({
         .querySelector("body")
         ?.removeEventListener("keydown", keyBindingsFtn);
     };
-  }, [showLabels]);
+  }, [
+    showLabels,
+    setFullScreen,
+    dispatch,
+    hasSimulation,
+    hasEvaluation,
+    selectedMapAction,
+  ]);
 };
