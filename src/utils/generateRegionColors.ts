@@ -11,7 +11,9 @@ const predefinedColors = [
   "#17becf",
 ];
 
-export const generateRegionColors = (nRegions: number): {
+export const generateRegionColors = (
+  nRegions: number,
+): {
   strokeColor: string;
   fillColor: string;
 } => {
