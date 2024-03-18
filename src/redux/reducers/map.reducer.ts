@@ -118,7 +118,6 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
           region.id === action.payload.id
             ? {
                 ...action.payload,
-                bounds: [...region.bounds, ...action.payload.bounds],
                 title: regionExists(state.regions, action.payload.title)
                   ? region.title
                   : action.payload.title,

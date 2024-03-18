@@ -17,8 +17,8 @@ const ShareOverlay = () => {
   const shareDetails = useSelector(
     (state: any) => state.project.shareDetails,
   ) as ShareInterface;
-  const projectName = useSelector(
-    (state: any) => state.project.details.projectName,
+  const title = useSelector(
+    (state: any) => state.project.details.title,
   ) as string;
   const [visibilityState, setVisibilityState] = useState(shareDetails.isPublic);
 
@@ -60,7 +60,7 @@ const ShareOverlay = () => {
     <MapOverlay
       title={
         <>
-          Share "<span>{projectName}</span>"
+          Share "<span>{title}</span>"
         </>
       }
       onClickX={() => dispatch(showShareDisplay(false))}

@@ -29,6 +29,12 @@ import { Dispatch, createSelector } from "@reduxjs/toolkit";
 import { SyncLoader } from "react-spinners";
 import { useAutosave, useShortkeys } from "../../hooks";
 import { saveProject } from "../../utils";
+import {
+  setEvaluation,
+  setHasEvaluation,
+  setHasSimulation,
+  setSimulation,
+} from "../../redux/actions/result.action";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 const MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
@@ -122,7 +128,7 @@ const getProject = async ({
   const data = await response.json();
   if (data.error) throw new Error(data.message);
   const title = data.data.title;
-  const updatedAt = data.data.updatedAt;
+  const updatedAt = data.data.updatedAt.toString();
   const regions = data.data.regions;
   const pins = data.data.pins;
   const currentMasts = data.data.currentMasts;
@@ -131,6 +137,27 @@ const getProject = async ({
   const configurationCheck = data.data.configuration.configurationOptions;
   const optimization = data.data.optimization.optimization;
   const optimizationCheck = data.data.optimization.optimizationOptions;
+  const presentation = data.data.presentation?.map((item: any) => ({
+    ...item,
+    data: {
+      coverage: item.data.coverage,
+      load_max: item.data.loadMax,
+      load_min: item.data.loadMin,
+      load_std: item.data.loadStd,
+      load_values: item.data.loadValues,
+      mast_loc: item.data.mastLocations,
+      mast_loc_coord: item.data.mastLocationCoordinates,
+      region_signal_strength: item.data.regionSignalStrength,
+      signal_strength: item.data.signalStrength,
+    },
+  }));
+
+  const simulation = presentation.filter(
+    (item: any) => item.type === "optimization",
+  );
+  const evaluation = presentation.filter(
+    (item: any) => item.type === "evaluation",
+  );
 
   dispatch(
     setProjectDetails({
@@ -153,4 +180,12 @@ const getProject = async ({
   dispatch(setConfigurationCheck(configurationCheck));
   dispatch(setOptimization(optimization));
   dispatch(setOptimizationCheck(optimizationCheck));
+  if (simulation.length > 0) {
+    dispatch(setSimulation(simulation[0].data));
+    dispatch(setHasSimulation(true));
+  }
+  if (evaluation.length > 0) {
+    dispatch(setEvaluation(evaluation[0].data));
+    dispatch(setHasEvaluation(true));
+  }
 };

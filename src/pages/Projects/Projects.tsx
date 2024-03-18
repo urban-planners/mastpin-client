@@ -85,9 +85,7 @@ export const Projects = () => {
                     <h3>{project.title}</h3>
                     <p>
                       <span>Last Modified:</span>{" "}
-                      {new Date(
-                        project.updatedAt || project.createdAt,
-                      ).toLocaleDateString("en-GB")}
+                      {new Date(project.updatedAt).toLocaleDateString("en-GB")}
                     </p>
                   </div>
                   <div

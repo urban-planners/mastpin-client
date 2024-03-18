@@ -11,7 +11,6 @@ import {
   PresentationInterface,
   ConfigurationCheckInterface,
   OptimizationCheckInterface,
-  EvaluateMapInterface,
 } from "../../../../types";
 import { useState } from "react";
 import { IoPlayOutline } from "react-icons/io5";
@@ -39,10 +38,12 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import { IoIosCheckmark } from "react-icons/io";
 import { BsDot } from "react-icons/bs";
+import { useParams } from "react-router-dom";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
 const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
+  const { id } = useParams();
   const projectDetails = useSelector(
     (state: any) => state.project.details,
   ) as ProjectDetailsInterface;
@@ -103,7 +104,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
 
     try {
       setSimulating(true);
-      const response = await fetch(`${SERVER}/api/simulate`, {
+      const response = await fetch(`${SERVER}/api/simulate/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,7 +137,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     if (regions.length === 0) return toast.error("Add regions to the map");
     if (!currentMasts.length) return toast.error("Add masts to the map");
 
-    const map: EvaluateMapInterface = {
+    const map: GenerateMapInterface = {
       regions,
       pins: assignRegionsToPins(pins, regions),
       configuration: sortConfiguration(
@@ -150,7 +151,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
 
     try {
       setEvaluating(true);
-      const response = await fetch(`${SERVER}/api/evaluate`, {
+      const response = await fetch(`${SERVER}/api/evaluate/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

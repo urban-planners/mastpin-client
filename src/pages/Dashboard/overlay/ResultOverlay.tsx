@@ -47,9 +47,13 @@ const ResultOverlay = () => {
                 ),
               children:
                 activeTab === "simulation" ? (
-                  <button>Show Evaluation</button>
+                  <button className="result__overlay__button">
+                    Show Evaluation
+                  </button>
                 ) : (
-                  <button>Show Optimization</button>
+                  <button className="result__overlay__button">
+                    Show Optimization
+                  </button>
                 ),
             }
           : undefined
