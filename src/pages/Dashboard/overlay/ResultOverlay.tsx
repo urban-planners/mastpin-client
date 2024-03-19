@@ -16,7 +16,9 @@ const ResultOverlay = () => {
   ) as PresentationInterface;
   const hasSimulation = useSelector((state: any) => state.result.hasSimulation);
   const hasEvaluation = useSelector((state: any) => state.result.hasEvaluation);
-  const currentMasts = useSelector((state: any) => state.map.present.currentMasts);
+  const currentMasts = useSelector(
+    (state: any) => state.map.present.currentMasts,
+  );
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState<"simulation" | "evaluation">(
     hasSimulation ? "simulation" : "evaluation",
