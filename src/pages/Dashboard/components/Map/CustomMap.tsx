@@ -35,28 +35,28 @@ const CustomMap = ({ mapInfo }: { mapInfo: MapInfoInterface }) => {
   const [map, setMap] = useState<google.maps.Map>();
   const dispatch = useDispatch();
   const pins = useSelector(
-    (state: any) => state.map.pins,
+    (state: any) => state.map.present.pins,
   ) as PinInfoInterface[];
   const currentMasts = useSelector(
-    (state: any) => state.map.currentMasts,
+    (state: any) => state.map.present.currentMasts,
   ) as PinInfoInterface[];
   const selectedRegion = useSelector(
-    (state: any) => state.map.selectedRegion,
+    (state: any) => state.map.present.selectedRegion,
   ) as string;
   const regions = useSelector(
-    (state: any) => state.map.regions,
+    (state: any) => state.map.present.regions,
   ) as RegionInterface[];
   const mapOptions = useSelector(
-    (state: any) => state.map.mapInfo.options,
+    (state: any) => state.map.present.mapInfo.options,
   ) as google.maps.MapOptions;
   const showLabels = useSelector(
-    (state: any) => state.map.mapInfo.showLabels,
+    (state: any) => state.map.present.mapInfo.showLabels,
   ) as boolean;
   const simulation = useSelector(
     (state: any) => state.result.simulation,
   ) as PresentationInterface;
   const selectedMapAction = useSelector(
-    (state: any) => state.map.selectedMapAction,
+    (state: any) => state.map.present.selectedMapAction,
   ) as MapActionType;
   const hasSimulation = useSelector(
     (state: any) => state.result.hasSimulation,

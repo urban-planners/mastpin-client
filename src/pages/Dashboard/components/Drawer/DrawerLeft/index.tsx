@@ -17,16 +17,16 @@ import {
 const DrawerLeft = () => {
   const dispatch = useDispatch();
   const regions = useSelector(
-    (state: any) => state.map.regions,
+    (state: any) => state.map.present.regions,
   ) as RegionInterface[];
   const selectedRegion = useSelector(
-    (state: any) => state.map.selectedRegion,
+    (state: any) => state.map.present.selectedRegion,
   ) as string;
   const pins = useSelector(
-    (state: any) => state.map.pins,
+    (state: any) => state.map.present.pins,
   ) as PinInfoInterface[];
   const selectedPin = useSelector(
-    (state: any) => state.map.selectedPin,
+    (state: any) => state.map.present.selectedPin,
   ) as string;
 
   return (

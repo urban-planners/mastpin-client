@@ -25,6 +25,7 @@
     "react-scripts": "5.0.1",
     "react-spinners": "^0.13.8",
     "react-toastify": "^10.0.4",
+    "redux-undo": "^1.1.0",
     "typescript": "^5.3.3",
     "use-places-autocomplete": "^4.0.1",
     "web-vitals": "^3.5.2"

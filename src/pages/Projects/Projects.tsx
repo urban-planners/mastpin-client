@@ -37,25 +37,27 @@ export const Projects = () => {
 
   return (
     <div className="projects">
-      <div className="projects__header__container">
-        <div className="projects__header">
-          <h2>Projects</h2>
-        </div>
-        <div className="projects__header__actions">
-          <div className="projects__search">
-            <input
-              type="text"
-              placeholder="Search Projects"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+      <div className="projects__header__wrapper">
+        <div className="projects__header__container">
+          <div className="projects__header">
+            <h2>Projects</h2>
           </div>
-          <button
-            onClick={() => createNewProject({ navigate, dispatch })}
-            className="projects__create"
-          >
-            Create New Project
-          </button>
+          <div className="projects__header__actions">
+            <div className="projects__search">
+              <input
+                type="text"
+                placeholder="Search Projects"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <button
+              onClick={() => createNewProject({ navigate, dispatch })}
+              className="projects__create"
+            >
+              Create New Project
+            </button>
+          </div>
         </div>
       </div>
       <div className="projects__list__container">

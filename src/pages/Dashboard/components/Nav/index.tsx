@@ -51,13 +51,13 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
   const displayMode = useSelector((state: any) => state.project.displayMode);
   const theme = useSelector((state: any) => state.project.theme);
   const currentMasts = useSelector(
-    (state: any) => state.map.currentMasts,
+    (state: any) => state.map.present.currentMasts,
   ) as PinInfoInterface[];
   const pins = useSelector(
-    (state: any) => state.map.pins,
+    (state: any) => state.map.present.pins,
   ) as PinInfoInterface[];
   const regions = useSelector(
-    (state: any) => state.map.regions,
+    (state: any) => state.map.present.regions,
   ) as RegionInterface[];
 
   const configurationCheck = useSelector(

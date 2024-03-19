@@ -45,12 +45,12 @@ const Dashboard = () => {
   if (publicId) id = publicId;
 
   const mapInfo = useSelector(
-    (state: any) => state.map.mapInfo,
+    (state: any) => state.map.present.mapInfo,
   ) as MapInfoInterface;
   const [fullScreen, setFullScreen] = useState(false);
   const dispatch = useDispatch();
   const showLabels = useSelector(
-    (state: any) => state.map.mapInfo.showLabels,
+    (state: any) => state.map.present.mapInfo.showLabels,
   ) as boolean;
   const navigate = useNavigate();
   const location = new URL(window.location.href);

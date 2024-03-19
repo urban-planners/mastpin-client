@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addRegion, setMapAction, showMapLabels } from "../redux/actions";
 import { MapActionType } from "../types";
+import { ActionCreators } from "redux-undo";
 
 export const useShortkeys = ({
   showLabels,
@@ -38,14 +39,11 @@ export const useShortkeys = ({
       //   State Management
       if (e.ctrlKey && e.key === "z") {
         e.preventDefault();
-        console.log("Undo");
+        dispatch(ActionCreators.undo());
       }
-      if (
-        (e.ctrlKey && e.key === "y") ||
-        (e.ctrlKey && e.shiftKey && e.key === "z")
-      ) {
+      if (e.ctrlKey && e.key === "y") {
         e.preventDefault();
-        console.log("Redo");
+        dispatch(ActionCreators.redo());
       }
 
       //   Map Actions

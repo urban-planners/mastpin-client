@@ -30,9 +30,9 @@ export function useAutosave<T>(time = 2000) {
   const title = useSelector((state: any) => state.project.details.title);
   const configuration = useSelector(configurationSelector);
   const optimization = useSelector(optimizationSelector);
-  const pins = useSelector((state: any) => state.map.pins);
-  const regions = useSelector((state: any) => state.map.regions);
-  const currentMasts = useSelector((state: any) => state.map.currentMasts);
+  const pins = useSelector((state: any) => state.map.present.pins);
+  const regions = useSelector((state: any) => state.map.present.regions);
+  const currentMasts = useSelector((state: any) => state.map.present.currentMasts);
   const simulation = useSelector((state: any) => state.result.simulation);
   const evaluation = useSelector((state: any) => state.result.evaluation);
 

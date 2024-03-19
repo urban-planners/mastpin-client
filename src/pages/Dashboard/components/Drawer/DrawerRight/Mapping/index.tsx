@@ -19,7 +19,7 @@ import {
 import SpecialInput from "../components/SpecialInput";
 import { createSelector } from "@reduxjs/toolkit";
 
-const selectMapState = (state: any) => state.map;
+const selectMapState = (state: any) => state.map.present;
 const selectProjectState = (state: any) => state.project;
 
 // Memoized selectors using createSelector
