@@ -21,6 +21,31 @@
   user-select: none;
 }
 
+.drawer.left .content li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer.left .content li .drawer__item__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+}
+
+.drawer__item__actions__icon {
+  box-sizing: content-box;
+  padding: 4px;
+  filter: invert(0.5);
+  transition: all 200ms;
+}
+
+.drawer__item__actions__icon:hover {
+  cursor: pointer;
+  filter: invert(0.25);
+}
+
 .drawer.left .content li:nth-child(even) {
   background-color: var(--offwhite);
 }

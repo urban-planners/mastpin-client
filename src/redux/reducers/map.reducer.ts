@@ -103,6 +103,7 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
       return {
         ...state,
         regions: state.regions.filter((region) => region.id !== action.payload),
+        pins: state.pins.filter((pin) => pin.regionId !== action.payload),
       };
 
     case "SELECT_REGION":

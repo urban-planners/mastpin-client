@@ -4,11 +4,13 @@ import { nanoid } from "nanoid";
 import { PinInfoInterface, RegionInterface } from "../../../../../types";
 import Title from "../components/Title";
 import Content from "../components/Content";
-import { FiPlus } from "react-icons/fi";
+import { FiMinusCircle, FiPlus } from "react-icons/fi";
 import SmartIcon from "../../../../../components/SmartIcon";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addRegion,
+  removePin,
+  removeRegion,
   selectPin,
   selectRegion,
   setMapAction,
@@ -50,6 +52,19 @@ const DrawerLeft = () => {
             className={`${selectedRegion === region.id ? "selected" : ""}`}
           >
             <p>{region.title}</p>
+            <div
+              className="drawer__item__actions"
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <FiMinusCircle
+                className="drawer__item__actions__icon"
+                onClick={() => {
+                  dispatch(removeRegion(region.id));
+                }}
+              />
+            </div>
           </li>
         ))}
       </Content>
@@ -64,6 +79,19 @@ const DrawerLeft = () => {
               className={`${selectedPin === pin.id ? "selected" : ""}`}
             >
               <p>{pin.title}</p>
+              <div
+                className="drawer__item__actions"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <FiMinusCircle
+                  className="drawer__item__actions__icon"
+                  onClick={() => {
+                    dispatch(removePin(pin.id));
+                  }}
+                />
+              </div>
             </li>
           ))}
       </Content>
