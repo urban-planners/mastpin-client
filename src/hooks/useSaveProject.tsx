@@ -107,6 +107,26 @@ export function useAutosave<T>(time = 2000) {
     simulation,
     evaluation,
   ]);
+
+  const manualSave = () => {
+    saveProject({
+      publicId: publicId as string,
+      id: id as string,
+      dispatch,
+      dependencies: {
+        title,
+        configuration,
+        optimization,
+        pins,
+        regions,
+        currentMasts,
+        simulation,
+        evaluation,
+      },
+    });
+  };
+
+  return manualSave;
 }
 
 const stateChanged = (oldState: any) => {

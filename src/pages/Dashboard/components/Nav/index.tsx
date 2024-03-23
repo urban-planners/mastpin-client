@@ -15,6 +15,7 @@ import {
 import { useState } from "react";
 import { IoPlayOutline } from "react-icons/io5";
 import {
+  setMapAction,
   setProjectName,
   showShareDisplay,
   switchTheme,
@@ -104,6 +105,8 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
 
     try {
       setSimulating(true);
+      dispatch(setMapAction("hand"));
+      dispatch(setHasSimulation(false));
       const response = await fetch(`${SERVER}/api/simulate/${id}`, {
         method: "POST",
         headers: {
@@ -151,6 +154,8 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
 
     try {
       setEvaluating(true);
+      dispatch(setMapAction("hand"));
+      dispatch(setHasEvaluation(false));
       const response = await fetch(`${SERVER}/api/evaluate/${id}`, {
         method: "POST",
         headers: {

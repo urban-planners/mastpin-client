@@ -15,6 +15,11 @@ export const addToAllProjects = (project: Object) => ({
   payload: project,
 });
 
+export const deleteProject = (id: string) => ({
+  type: "DELETE_PROJECT",
+  payload: id,
+});
+
 export const setProjectDetails = (details: {
   title: string;
   updatedAt: Date;

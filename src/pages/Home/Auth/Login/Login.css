@@ -1,0 +1,10 @@
+.auth__forgot-password {
+  color: #fff;
+  font-size: 0.9rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.auth__login .auth__button {
+  margin-top: 1rem;
+}

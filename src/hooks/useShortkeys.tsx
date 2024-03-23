@@ -7,7 +7,9 @@ import { ActionCreators } from "redux-undo";
 export const useShortkeys = ({
   showLabels,
   setFullScreen,
+  manualSave,
 }: {
+  manualSave: () => void;
   showLabels: boolean;
   setFullScreen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
@@ -34,6 +36,10 @@ export const useShortkeys = ({
       if (e.ctrlKey && e.key === "l") {
         e.preventDefault();
         dispatch(showMapLabels(!showLabels));
+      }
+      if (e.ctrlKey && e.key === "s") {
+        e.preventDefault();
+        manualSave();
       }
 
       //   State Management

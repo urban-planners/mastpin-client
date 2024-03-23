@@ -132,6 +132,14 @@ export function projectReducer(state = initialState, action: ActionInterface) {
         allProjects: [action.payload, ...state.allProjects],
       };
 
+    case "DELETE_PROJECT":
+      return {
+        ...state,
+        allProjects: state.allProjects.filter(
+          (project: any) => project._id !== action.payload,
+        ),
+      };
+
     case "SET_PROJECT_DETAILS":
       return {
         ...state,

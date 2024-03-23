@@ -28,7 +28,6 @@ import { toast } from "react-toastify";
 import { Dispatch, createSelector } from "@reduxjs/toolkit";
 import { SyncLoader } from "react-spinners";
 import { useAutosave, useShortkeys } from "../../hooks";
-import { saveProject } from "../../utils";
 import {
   setEvaluation,
   setHasEvaluation,
@@ -44,6 +43,7 @@ const Dashboard = () => {
   let { id, publicId } = useParams();
   if (publicId) id = publicId;
 
+  const saved = useSelector((state: any) => state.project.saved);
   const mapInfo = useSelector(
     (state: any) => state.map.present.mapInfo,
   ) as MapInfoInterface;
@@ -61,6 +61,19 @@ const Dashboard = () => {
     googleMapsApiKey: MAPS_API_KEY as string,
     libraries,
   });
+
+  useEffect(() => {
+    window.onbeforeunload = (e: BeforeUnloadEvent) => {
+      if (!saved) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    return () => {
+      window.onbeforeunload = null;
+    };
+  }, [saved]);
 
   useEffect(() => {
     (async () => {
@@ -81,8 +94,8 @@ const Dashboard = () => {
     })();
   }, [id]);
 
-  useShortkeys({ showLabels, setFullScreen });
-  useAutosave();
+  const manualSave = useAutosave();
+  useShortkeys({ manualSave, showLabels, setFullScreen });
 
   return (
     <div className="dashboard-page">

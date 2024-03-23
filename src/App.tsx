@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DrawerRight from "./pages/Dashboard/components/Drawer/DrawerRight";
-import { Login, Signup } from "./pages/Home/Auth";
+import { Login, Register } from "./pages/Home/Auth";
 import Home from "./pages/Home";
 import Landing from "./pages/Home/Landing";
 import { Projects } from "./pages/Projects";
@@ -32,7 +32,7 @@ function App() {
             <Route path="auth">
               <Route index element={<Login />} />
               <Route path="login" element={<Login />} />
-              <Route path="signup" element={<Signup />} />
+              <Route path="register" element={<Register />} />
             </Route>
           </Route>
           <Route path="/dashboard">

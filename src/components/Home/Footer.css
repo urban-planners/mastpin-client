@@ -1,7 +1,7 @@
 .home__footer {
   margin-top: auto;
-  background-color: #333333;
-  color: #ffffff;
+  background-color: var(--secondary-color);
+  color: var(--text-color-alt);
   padding: 40px 20px;
   padding-bottom: 10px;
 }
@@ -19,6 +19,7 @@
 .home__footer__content h4 {
   font-size: 20px;
   margin-bottom: 15px;
+  color: var(--primary-color);
 }
 
 .home__footer__content p {
@@ -30,9 +31,14 @@
 }
 
 .home__footer__content a {
-  color: #ffffff;
+  color: var(--text-color-alt);
   margin-right: 10px;
   font-size: 20px;
+  transition: color 0.3s ease;
+}
+
+.home__footer__content a:hover {
+  color: var(--primary-color);
 }
 
 .home__footer__socials a:last-child {
@@ -46,6 +52,7 @@
 .home__footer__links h4 {
   font-size: 20px;
   margin-bottom: 15px;
+  color: var(--primary-color);
 }
 
 .home__footer__links ul {
@@ -58,20 +65,28 @@
 }
 
 .home__footer__links ul li a {
-  color: #ffffff;
+  color: var(--text-color-alt);
   text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.home__footer__links ul li a:hover {
+  color: var(--primary-color);
 }
 
 .home__footer__bottom {
   margin-top: 30px;
   text-align: center;
   padding: 20px 0;
+  border-top: 1px solid var(--gray-light);
 }
 
 .home__footer__bottom h1 {
   font-size: 24px;
+  color: var(--primary-color);
 }
 
 .home__footer__bottom small {
   font-size: 14px;
+  color: var(--text-color-alt);
 }

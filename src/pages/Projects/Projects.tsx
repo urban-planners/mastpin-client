@@ -1,9 +1,13 @@
-import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import "./Projects.css";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { addToAllProjects, setAllProjects } from "../../redux/actions";
+import {
+  addToAllProjects,
+  setAllProjects,
+  deleteProject as deleteProjectAction,
+} from "../../redux/actions";
 import { useEffect, useState } from "react";
 import defaultMapImage from "../../assets/images/map-preview.webp";
 import { GridLoader } from "react-spinners";
@@ -34,6 +38,23 @@ export const Projects = () => {
       }
     })();
   }, []);
+
+  const deleteProject = async (id: string) => {
+    try {
+      const response = await fetch(`${SERVER}/projects/delete/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const data = await response.json();
+      if (data.error) throw new Error(data.message);
+      dispatch(deleteProjectAction(id));
+      toast.success(data.message);
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className="projects">
@@ -98,7 +119,7 @@ export const Projects = () => {
                     }}
                   >
                     <IoSettingsOutline onClick={(e) => {}} />
-                    <BsTrash onClick={(e) => {}} />
+                    <BsTrash onClick={() => deleteProject(project._id)} />
                   </div>
                 </div>
               </Link>

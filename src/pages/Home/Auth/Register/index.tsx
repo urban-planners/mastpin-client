@@ -1,24 +1,27 @@
+import "./Register.css";
 import { FormEvent, useState } from "react";
 import AuthTemplate, { AuthButton, AuthInput } from "../Template/AuthTemplate";
-import "./Signup.css";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
-export const Signup = () => {
+export const Register = () => {
   const navigate = useNavigate();
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [agree, setAgree] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const [error, message] = verifyInput();
     try {
       if (error) throw new Error(message as string);
+      setLoading(true);
       const response = await fetch(`${SERVER}/auth/signup`, {
         method: "POST",
         headers: {
@@ -33,9 +36,11 @@ export const Signup = () => {
       });
       const data = await response.json();
       if (data.error) throw new Error(data.message);
+      setLoading(false);
       toast.success(data.message);
       navigate("/auth/login");
     } catch (err: any) {
+      setLoading(false);
       if (/failed to fetch|network *error/i.test(err.message))
         return toast.error(
           "Please check your internet connection and try again",
@@ -51,11 +56,20 @@ export const Signup = () => {
     if (!email) return [true, "Email is required"];
     if (!password) return [true, "Password is required"];
     if (password !== confirmPassword) return [true, "Passwords do not match"];
+    if (!agree) return [true, "You must agree to the terms of service"];
     return error;
   };
 
   return (
-    <AuthTemplate title="Signup" onSubmit={handleSubmit}>
+    <AuthTemplate
+      className="auth__register"
+      description="Create an account"
+      title="Register"
+      footerText="Already have an account?"
+      footerLink="/auth/login"
+      footerLinkText="Login"
+      onSubmit={handleSubmit}
+    >
       <AuthInput
         label="First Name"
         name="firstname"
@@ -94,7 +108,15 @@ export const Signup = () => {
         type="password"
         onChange={(e) => setConfirmPassword(e.target.value)}
       />
-      <AuthButton>Create Account</AuthButton>
+      <label className="auth__input__label terms__label">
+        <input
+          type="checkbox"
+          checked={agree}
+          onChange={(e) => setAgree(e.target.checked)}
+        />
+        I agree to the terms of service
+      </label>
+      <AuthButton disabled={!agree || loading}>Create Account</AuthButton>
     </AuthTemplate>
   );
 };
