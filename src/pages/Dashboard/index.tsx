@@ -44,9 +44,6 @@ const Dashboard = () => {
   if (publicId) id = publicId;
 
   const saved = useSelector((state: any) => state.project.saved);
-  const mapInfo = useSelector(
-    (state: any) => state.map.present.mapInfo,
-  ) as MapInfoInterface;
   const [fullScreen, setFullScreen] = useState(false);
   const dispatch = useDispatch();
   const showLabels = useSelector(
@@ -108,7 +105,7 @@ const Dashboard = () => {
       {!fullScreen && <Nav isLoaded={isLoaded} />}
       <main className="dashboard__main">
         {!fullScreen && <DrawerLeft />}
-        {!isLoaded ? <Loading /> : <CustomMap mapInfo={mapInfo} />}
+        {!isLoaded ? <Loading /> : <CustomMap />}
         {!fullScreen && <DrawerRight />}
       </main>
     </div>
