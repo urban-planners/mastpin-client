@@ -1,6 +1,6 @@
 import "./AuthTemplate.css";
 import { FormEvent, ReactNode, useEffect } from "react";
-import previewImage from "../../../../assets/images/preview3.webp";
+import previewImage from "../../../../assets/images/preview5.webp";
 import { Link } from "react-router-dom";
 
 const AuthTemplate = ({
