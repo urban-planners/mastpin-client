@@ -30,7 +30,8 @@ const ResultOverlay = () => {
         <>
           {activeTab === "simulation" ? (
             <>
-              Optimization for <span>{simulation.mast_loc_coord.length}</span> Masts
+              Optimization for <span>{simulation.mast_loc_coord.length}</span>{" "}
+              Masts
             </>
           ) : (
             <>
