@@ -70,6 +70,11 @@ export const showShareDisplay = (shareDisplay: boolean) => ({
   payload: shareDisplay,
 });
 
+export const showExportDisplay = (exportDisplay: boolean) => ({
+  type: "SHOW_EXPORT_DISPLAY",
+  payload: exportDisplay,
+});
+
 export const setMapVisibility = (visibility: boolean) => ({
   type: "SET_MAP_VISIBILITY",
   payload: visibility,

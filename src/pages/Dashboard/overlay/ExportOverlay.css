@@ -1,0 +1,13 @@
+.map__export__content__item {
+  width: 100%;
+}
+
+.map__export__content__item label {
+  display: flex;
+  flex-direction: row;
+}
+
+.map__export__content__item input[type="text"] {
+  max-width: unset;
+  height: 48px;
+}

@@ -18,11 +18,13 @@ const initialState: {
   configurationCheck?: ConfigurationCheckInterface;
   optimizationCheck?: OptimizationCheckInterface;
   showShareDialog: boolean;
+  showExportDialog: boolean;
   shareDetails: ShareInterface;
   saved: boolean;
 } = {
   allProjects: [],
   showShareDialog: false,
+  showExportDialog: false,
   shareDetails: {
     isPublic: false,
     link: "",
@@ -126,7 +128,7 @@ export function projectReducer(state = initialState, action: ActionInterface) {
         allProjects: action.payload,
       };
 
-    case "SET_TO_ALL_PROJECTS":
+    case "ADD_TO_ALL_PROJECTS":
       return {
         ...state,
         allProjects: [action.payload, ...state.allProjects],
@@ -195,6 +197,12 @@ export function projectReducer(state = initialState, action: ActionInterface) {
       return {
         ...state,
         showShareDialog: action.payload,
+      };
+
+    case "SHOW_EXPORT_DISPLAY":
+      return {
+        ...state,
+        showExportDialog: action.payload,
       };
 
     case "SET_MAP_VISIBILITY":

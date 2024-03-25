@@ -2,7 +2,7 @@ import "./Projects.css";
 import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import {
   addToAllProjects,
   setAllProjects,
@@ -58,6 +58,18 @@ export const Projects = () => {
 
   return (
     <div className="projects">
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <div className="projects__header__wrapper">
         <div className="projects__header__container">
           <div className="projects__header">
@@ -147,7 +159,6 @@ const createNewProject = async ({
     if (data.error) throw new Error(data.message);
     dispatch(addToAllProjects(data.data));
     toast.success(data.message, {
-      autoClose: 1500,
       onClose: () => navigate(`/dashboard/${data.data._id}`),
     });
   } catch (error: any) {

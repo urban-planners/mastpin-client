@@ -17,12 +17,10 @@ import { IoPlayOutline } from "react-icons/io5";
 import {
   setMapAction,
   setProjectName,
+  showExportDisplay,
   showShareDisplay,
-  switchTheme,
   toggleDisplayMode,
 } from "../../../../redux/actions";
-import { IoMdSunny } from "react-icons/io";
-import { WiMoonAltWaningCrescent4 } from "react-icons/wi";
 import { IoShareSocial } from "react-icons/io5";
 import { IoSyncOutline } from "react-icons/io5";
 import {
@@ -39,18 +37,25 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import { IoIosCheckmark } from "react-icons/io";
 import { BsDot } from "react-icons/bs";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { FiHome } from "react-icons/fi";
+import { AiOutlineMenu } from "react-icons/ai";
+import { PiExport } from "react-icons/pi";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
 const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
   const { id } = useParams();
+
+  const isPublic = useSelector(
+    (state: any) => state.project.shareDetails.isPublic,
+  ) as boolean;
+
   const projectDetails = useSelector(
     (state: any) => state.project.details,
   ) as ProjectDetailsInterface;
   const dispatch = useDispatch();
   const displayMode = useSelector((state: any) => state.project.displayMode);
-  const theme = useSelector((state: any) => state.project.theme);
   const currentMasts = useSelector(
     (state: any) => state.map.present.currentMasts,
   ) as PinInfoInterface[];
@@ -199,21 +204,35 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
         theme="light"
       />
       <form className="drawer project-name__container">
-        <label>
-          <small>Project Name</small>
+        <Link
+          to="/dashboard"
+          className="project-name__container__icon__container"
+        >
+          <FiHome className="project-name__container__icon" />
+        </Link>
+        <Link
+          to={""}
+          className="project-name__container__icon__container"
+          onClick={(e) => e.preventDefault()}
+        >
+          <AiOutlineMenu className="project-name__container__icon" />
+        </Link>
+        <div className="project-name__content">
           <input
             value={projectDetails.title}
             onChange={(e) => dispatch(setProjectName(e.target.value))}
+            onFocus={(e) => e.target.select()}
           />
-          <div
-            className={`project-name__container__status ${
-              saved ? "saved" : ""
-            }`}
-          >
-            {saved && <IoIosCheckmark />}
-            {!saved && <BsDot />}
-          </div>
-        </label>
+          <p onClick={() => dispatch(showShareDisplay(true))}>
+            {isPublic ? "Public" : "Private"}
+          </p>
+        </div>
+        <div
+          className={`project-name__container__status ${saved ? "saved" : ""}`}
+        >
+          {saved && <IoIosCheckmark />}
+          {!saved && <BsDot />}
+        </div>
       </form>
       <div className="search__container">
         {isLoaded && <PlacesAutocomplete />}
@@ -248,23 +267,18 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
           {displayMode === "technical" && <span>Switch to mapping mode</span>}
         </div>
         <div
+          className="nav__actions__item"
+          onClick={() => dispatch(showExportDisplay(true))}
+        >
+          <PiExport className="nav__actions__icon" />
+          <span>Export analysis</span>
+        </div>
+        <div
           className="nav__actions__item nav__actions__share"
           onClick={() => dispatch(showShareDisplay(true))}
         >
           <p>Share</p>
           <IoShareSocial className="nav__actions__icon" />
-        </div>
-        <div
-          className="nav__actions__item"
-          onClick={() => dispatch(switchTheme())}
-        >
-          {theme === "light" ? (
-            <IoMdSunny className="nav__actions__icon" />
-          ) : (
-            <WiMoonAltWaningCrescent4 className="nav__actions__icon" />
-          )}
-          {theme === "light" && <span>Switch to dark theme</span>}
-          {theme === "dark" && <span>Switch to light theme</span>}
         </div>
       </div>
     </nav>

@@ -12,28 +12,42 @@
   align-items: center;
   padding-left: 8px;
   margin-right: 4px;
+  flex-direction: row;
+  gap: 8px;
 }
 
-.project-name__container label {
+.project-name__container__icon__container {
   display: flex;
-  gap: 4px;
+  justify-content: center;
   align-items: center;
+  padding: 2px;
+  width: 1.5rem;
+  color: var(--text-color);
 }
 
-.project-name__container label small {
-  white-space: nowrap;
+.project-name__container__icon {
+  font-size: 1.2rem;
 }
 
-/* 
-<div
-            className={`project-name__container__status ${
-              saved ? "saved" : ""
-            }`}
-          >
-            {saved && <IoIosCheckmark />}
-            {!saved && <BsDot />}
-          </div>
-*/
+.project-name__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.project-name__content input {
+  border: none;
+  padding-inline: 0;
+  height: fit-content;
+  font-size: 1rem;
+  border-radius: 0;
+}
+
+.project-name__content p {
+  color: var(--gray-light);
+  font-size: small;
+  cursor: pointer;
+}
 
 .project-name__container__status {
   display: flex;

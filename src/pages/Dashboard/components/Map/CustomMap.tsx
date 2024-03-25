@@ -31,6 +31,7 @@ import { FaHand, FaMapPin } from "react-icons/fa6";
 import { MdCellTower, MdOutlineDocumentScanner } from "react-icons/md";
 import ResultOverlay from "../../overlay/ResultOverlay";
 import ShareOverlay from "../../overlay/ShareOverlay";
+import ExportOverlay from "../../overlay/ExportOverlay";
 
 const CustomMap = () => {
   const mapZoom = useSelector(
@@ -74,8 +75,9 @@ const CustomMap = () => {
   const showShareDialog = useSelector(
     (state: any) => state.project.showShareDialog,
   ) as boolean;
-  // const [pinCenter] =
-  //   useState<google.maps.LatLngLiteral>(mapCenter);
+  const showExportDialog = useSelector(
+    (state: any) => state.project.showExportDialog,
+  ) as boolean;
 
   const onClick = (e: google.maps.MapMouseEvent | undefined) => {
     if (!e) return;
@@ -109,16 +111,16 @@ const CustomMap = () => {
     zoom: () => {
       map && dispatch(updateMapZoom(map.getZoom() as number));
     },
-    // center: () => {
-    //   map &&
-    //     map.getCenter() &&
-    //     dispatch(
-    //       updateMapCenter(
-    //         map.getCenter()?.toJSON() as google.maps.LatLngLiteral,
-    //       ),
-    //     );
-    // console.log(map.getCenter()?.toJSON() as google.maps.LatLngLiteral);
-    // },
+    center: () => {
+      // map &&
+      //   map.getCenter() &&
+        // dispatch(
+        //   updateMapCenter(
+        //     map.getCenter()?.toJSON() as google.maps.LatLngLiteral,
+        //   ),
+        // );
+        // console.log(map.getCenter()?.toJSON() as google.maps.LatLngLiteral);
+    },
   };
 
   return (
@@ -138,15 +140,18 @@ const CustomMap = () => {
       </label>
       {selectedMapAction === "doc" && <ResultOverlay />}
       {showShareDialog && <ShareOverlay />}
+      {showExportDialog && <ExportOverlay />}
+      {}
       <GoogleMap
         zoom={mapZoom}
         center={mapCenter}
         mapContainerClassName="map__container"
+        id="map"
         mapTypeId={window.google.maps.MapTypeId.HYBRID}
         onLoad={(map: google.maps.Map) => setMap(map)}
         onClick={onClick}
         onZoomChanged={mapChanged.zoom}
-        // onCenterChanged={mapChanged.center}
+        onCenterChanged={mapChanged.center}
         clickableIcons={false}
         options={{
           ...mapOptions,
@@ -167,14 +172,6 @@ const CustomMap = () => {
             : undefined,
         }}
       >
-        {/* <Marker
-          position={pinCenter}
-          icon={{
-            url: pin,
-            scaledSize: new window.google.maps.Size(showLabels ? 60 : 0, 60),
-          }}
-          animation={window.google.maps.Animation.DROP}
-        /> */}
         {pins.map((pin, index) => {
           return (
             <Marker

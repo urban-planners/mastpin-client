@@ -3,3 +3,4 @@ export * from "./generateRegionColors";
 export * from "./getTitile";
 export * from "./exists";
 export * from "./saveProject";
+export * from "./generateMapImage";

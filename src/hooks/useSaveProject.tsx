@@ -23,7 +23,7 @@ const optimizationSelector = createSelector(
   }),
 );
 
-export function useAutosave<T>(time = 2000) {
+export function useAutosave<T>(time = 500) {
   const dispatch = useDispatch();
   const { id, publicId } = useParams();
 
