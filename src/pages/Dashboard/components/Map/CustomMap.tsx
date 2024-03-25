@@ -114,12 +114,12 @@ const CustomMap = () => {
     center: () => {
       // map &&
       //   map.getCenter() &&
-        // dispatch(
-        //   updateMapCenter(
-        //     map.getCenter()?.toJSON() as google.maps.LatLngLiteral,
-        //   ),
-        // );
-        // console.log(map.getCenter()?.toJSON() as google.maps.LatLngLiteral);
+      // dispatch(
+      //   updateMapCenter(
+      //     map.getCenter()?.toJSON() as google.maps.LatLngLiteral,
+      //   ),
+      // );
+      // console.log(map.getCenter()?.toJSON() as google.maps.LatLngLiteral);
     },
   };
 
