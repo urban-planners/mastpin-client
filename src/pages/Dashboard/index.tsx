@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import DrawerLeft from "./components/Drawer/DrawerLeft";
 import DrawerRight from "./components/Drawer/DrawerRight";
 import Nav from "./components/Nav";
-import { MapInfoInterface } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectPin,
@@ -21,11 +20,10 @@ import {
   setPins,
   setProjectDetails,
   setRegions,
-  setSaved,
 } from "../../redux/actions";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Dispatch, createSelector } from "@reduxjs/toolkit";
+import { Dispatch } from "@reduxjs/toolkit";
 import { SyncLoader } from "react-spinners";
 import { useAutosave, useShortkeys } from "../../hooks";
 import {
@@ -34,6 +32,7 @@ import {
   setHasSimulation,
   setSimulation,
 } from "../../redux/actions/result.action";
+import ScreenSizeWarning from "../../components/ScreenSizeWarning";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 const MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
@@ -96,6 +95,7 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page">
+      <ScreenSizeWarning />
       {gettingProject && (
         <div className="dashboard__loading">
           <div />

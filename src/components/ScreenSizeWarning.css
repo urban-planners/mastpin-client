@@ -1,0 +1,22 @@
+.screen__size__warning {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  background-color: #f44336;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.screen__size__warning > svg {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+}

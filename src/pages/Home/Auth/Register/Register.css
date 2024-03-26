@@ -13,3 +13,12 @@
 .auth__input__label.terms__label input[type="checkbox"]:checked {
   background-color: var(--primary-color);
 }
+
+.terms__label a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.terms__label a:hover {
+  text-decoration: underline;
+}

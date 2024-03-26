@@ -99,7 +99,13 @@ export const Projects = () => {
             <GridLoader color="var(--primary-color)" />
           </div>
         ) : (
-          projects
+          <>
+          {projects.length === 0 && (
+            <div className="projects__empty">
+              <h3>No Projects Found</h3>
+            </div>
+          )}
+          {projects
             .filter((project) =>
               project.title.toLowerCase().includes(search.toLowerCase()),
             )
@@ -135,7 +141,8 @@ export const Projects = () => {
                   </div>
                 </div>
               </Link>
-            ))
+            ))}
+          </>
         )}
       </div>
     </div>

@@ -2,7 +2,7 @@ import "./Register.css";
 import { FormEvent, useState } from "react";
 import AuthTemplate, { AuthButton, AuthInput } from "../Template/AuthTemplate";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
@@ -114,7 +114,8 @@ export const Register = () => {
           checked={agree}
           onChange={(e) => setAgree(e.target.checked)}
         />
-        I agree to the terms of service
+        I agree to the <Link to={"/legal/terms"}>Terms of Service</Link> and{" "}
+        <Link to={"/legal/privacy"}>Privacy Policy</Link>
       </label>
       <AuthButton disabled={!agree || loading}>Create Account</AuthButton>
     </AuthTemplate>

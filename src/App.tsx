@@ -9,6 +9,8 @@ import Home from "./pages/Home";
 import Landing from "./pages/Home/Landing";
 import { Projects } from "./pages/Projects";
 import { PublicMap } from "./pages/PublicMap";
+import Privacy from "./pages/Legal/Privacy";
+import Terms from "./pages/Legal/Terms";
 
 function App() {
   return (
@@ -33,6 +35,10 @@ function App() {
               <Route index element={<Login />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
+            </Route>
+            <Route path="legal">
+              <Route path="privacy" element={<Privacy />} />
+              <Route path="terms" element={<Terms />} />
             </Route>
           </Route>
           <Route path="/dashboard">

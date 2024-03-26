@@ -83,6 +83,12 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     (state: any) => state.project.optimization,
   ) as OptimizationInterface;
   const saved = useSelector((state: any) => state.project.saved);
+  const hasSimulation = useSelector(
+    (state: any) => state.result.hasSimulation,
+  ) as boolean;
+  const hasEvaluation = useSelector(
+    (state: any) => state.result.hasEvaluation,
+  ) as boolean;
   const [simulating, setSimulating] = useState(false);
   const [evaluating, setEvaluating] = useState(false);
 
@@ -122,6 +128,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       setSimulating(false);
       const data = await response.json();
       if (data.error) throw new Error(data.message);
+      toast.success("Optimization completed successfully");
       const presentationData = data.data as PresentationInterface;
       presentationData.coverage = (() => {
         const totalPopulation = regions.reduce(
@@ -171,6 +178,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       setEvaluating(false);
       const data = await response.json();
       if (data.error) throw new Error(data.message);
+      toast.success("Evaluation completed successfully");
       const presentationData = data.data as PresentationInterface;
       presentationData.coverage = (() => {
         const totalPopulation = regions.reduce(
@@ -193,7 +201,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
     <nav className="dashboard__nav">
       <ToastContainer
         position="top-center"
-        autoClose={4000}
+        autoClose={1500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -203,7 +211,10 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
         pauseOnHover
         theme="light"
       />
-      <form className="drawer project-name__container">
+      <form
+        className="drawer project-name__container"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <Link
           to="/dashboard"
           className="project-name__container__icon__container"
@@ -267,7 +278,9 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
           {displayMode === "technical" && <span>Switch to mapping mode</span>}
         </div>
         <div
-          className="nav__actions__item"
+          className={`nav__actions__item nav__actions__export ${
+            !isLoaded || (!hasSimulation && !hasEvaluation) ? "disabled" : ""
+          }`}
           onClick={() => dispatch(showExportDisplay(true))}
         >
           <PiExport className="nav__actions__icon" />
