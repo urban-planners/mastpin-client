@@ -100,48 +100,50 @@ export const Projects = () => {
           </div>
         ) : (
           <>
-          {projects.length === 0 && (
-            <div className="projects__empty">
-              <h3>No Projects Found</h3>
-            </div>
-          )}
-          {projects
-            .filter((project) =>
-              project.title.toLowerCase().includes(search.toLowerCase()),
-            )
-            .map((project) => (
-              <Link
-                key={project._id}
-                to={project._id}
-                className="projects__list__item"
-              >
-                <div className="projects__list__item__image">
-                  <img
-                    src={project.image || defaultMapImage}
-                    alt={project.title}
-                  />
-                </div>
-                <div>
-                  <div className="projects__list__item__info">
-                    <h3>{project.title}</h3>
-                    <p>
-                      <span>Last Modified:</span>{" "}
-                      {new Date(project.updatedAt).toLocaleDateString("en-GB")}
-                    </p>
+            {projects.length === 0 && (
+              <div className="projects__empty">
+                <h3>No Projects Found</h3>
+              </div>
+            )}
+            {projects
+              .filter((project) =>
+                project.title.toLowerCase().includes(search.toLowerCase()),
+              )
+              .map((project) => (
+                <Link
+                  key={project._id}
+                  to={project._id}
+                  className="projects__list__item"
+                >
+                  <div className="projects__list__item__image">
+                    <img
+                      src={project.image || defaultMapImage}
+                      alt={project.title}
+                    />
                   </div>
-                  <div
-                    className="projects__list__item__actions"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                    }}
-                  >
-                    <IoSettingsOutline onClick={(e) => {}} />
-                    <BsTrash onClick={() => deleteProject(project._id)} />
+                  <div>
+                    <div className="projects__list__item__info">
+                      <h3>{project.title}</h3>
+                      <p>
+                        <span>Last Modified:</span>{" "}
+                        {new Date(project.updatedAt).toLocaleDateString(
+                          "en-GB",
+                        )}
+                      </p>
+                    </div>
+                    <div
+                      className="projects__list__item__actions"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                      }}
+                    >
+                      <IoSettingsOutline onClick={(e) => {}} />
+                      <BsTrash onClick={() => deleteProject(project._id)} />
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
           </>
         )}
       </div>
