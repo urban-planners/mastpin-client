@@ -16,7 +16,8 @@ export const ResetPassword = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!password) return toast.error("Password is required");
-    if (password !== confirmPassword) return toast.error("Passwords do not match");
+    if (password !== confirmPassword)
+      return toast.error("Passwords do not match");
 
     try {
       setLoading(true);
@@ -29,7 +30,7 @@ export const ResetPassword = () => {
       });
       const data = await response.json();
       if (data.error) throw new Error(data.message);
-      
+
       setLoading(false);
       toast.success(data.message);
       navigate("/auth/login");
