@@ -1,24 +1,52 @@
+.auth__row {
+  display: flex;
+  gap: 16px;
+}
+
+.auth__row > * {
+  flex: 1;
+}
+
 .auth__input__label.terms__label {
+  display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 12px;
   cursor: pointer;
   user-select: none;
+  margin-top: 8px;
+  font-weight: 400;
+  color: #64748b;
 }
 
 .auth__input__label.terms__label input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e2e8f0;
+  border-radius: 4px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
 }
 
-.auth__input__label.terms__label input[type="checkbox"]:checked {
-  background-color: var(--primary-color);
+.terms__label span {
+  font-size: 0.9rem;
 }
 
 .terms__label a {
   color: var(--primary-color);
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
 }
 
 .terms__label a:hover {
+  color: var(--secondary-color);
   text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+  .auth__row {
+    flex-direction: column;
+    gap: 20px;
+  }
 }

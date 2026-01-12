@@ -3,6 +3,7 @@ import { FormEvent, useState } from "react";
 import AuthTemplate, { AuthButton, AuthInput } from "../Template/AuthTemplate";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
@@ -54,32 +55,36 @@ export const Login = () => {
   return (
     <AuthTemplate
       className="auth__login"
-      title="Login"
-      description="Login to your account"
+      title="Welcome Back"
+      description="Enter your credentials to access your account"
       onSubmit={handleSubmit}
       footerText="Don't have an account?"
       footerLink="/auth/register"
-      footerLinkText="Register"
+      footerLinkText="Sign Up"
     >
       <AuthInput
-        label="E-mail"
+        label="Email Address"
         name="email"
         value={email}
-        placeholder="E-mail"
+        placeholder="name@example.com"
+        icon={<FaEnvelope />}
         onChange={(e) => setEmail(e.target.value)}
       />
       <AuthInput
         label="Password"
         name="password"
         value={password}
-        placeholder="Password"
+        placeholder="Enter your password"
         type="password"
+        icon={<FaLock />}
         onChange={(e) => setPassword(e.target.value)}
       />
+      <div className="auth__forgot-password-wrapper">
+        <Link className="auth__forgot-password" to="/auth/forgot-password">
+          Forgot password?
+        </Link>
+      </div>
       <AuthButton disabled={loading}>Login</AuthButton>
-      <Link className="auth__forgot-password" to="/auth/forgot-password">
-        Forgot password?
-      </Link>
     </AuthTemplate>
   );
 };

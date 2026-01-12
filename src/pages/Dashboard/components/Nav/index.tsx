@@ -34,7 +34,7 @@ import {
   setHasEvaluation,
   setEvaluation,
 } from "../../../../redux/actions/result.action";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { IoIosCheckmark } from "react-icons/io";
 import { BsDot } from "react-icons/bs";
 import { Link, useParams } from "react-router-dom";
@@ -199,18 +199,6 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
 
   return (
     <nav className="dashboard__nav">
-      <ToastContainer
-        position="top-center"
-        autoClose={1500}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
       <form
         className="drawer project-name__container"
         onSubmit={(e) => e.preventDefault()}

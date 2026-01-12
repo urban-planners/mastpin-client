@@ -3,6 +3,7 @@ import { FormEvent, useState } from "react";
 import AuthTemplate, { AuthButton, AuthInput } from "../Template/AuthTemplate";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
+import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 
@@ -63,49 +64,56 @@ export const Register = () => {
   return (
     <AuthTemplate
       className="auth__register"
-      description="Create an account"
-      title="Register"
+      description="Start your journey with us"
+      title="Create Account"
       footerText="Already have an account?"
       footerLink="/auth/login"
-      footerLinkText="Login"
+      footerLinkText="Sign In"
       onSubmit={handleSubmit}
     >
+      <div className="auth__row">
+        <AuthInput
+          label="First Name"
+          name="firstname"
+          value={firstname}
+          placeholder="John"
+          icon={<FaUser />}
+          onChange={(e) => setFirstname(e.target.value)}
+        />
+        <AuthInput
+          label="Last Name"
+          name="lastname"
+          value={lastname}
+          placeholder="Doe"
+          icon={<FaUser />}
+          onChange={(e) => setLastname(e.target.value)}
+        />
+      </div>
       <AuthInput
-        label="First Name"
-        name="firstname"
-        value={firstname}
-        placeholder="John"
-        onChange={(e) => setFirstname(e.target.value)}
-      />
-      <AuthInput
-        label="Last Name"
-        name="lastname"
-        value={lastname}
-        placeholder="Doe"
-        onChange={(e) => setLastname(e.target.value)}
-      />
-      <AuthInput
-        label="E-mail"
+        label="Email Address"
         name="email"
         value={email}
         type="email"
-        placeholder="info@mastpin.com"
+        placeholder="name@example.com"
+        icon={<FaEnvelope />}
         onChange={(e) => setEmail(e.target.value)}
       />
       <AuthInput
         label="Password"
         name="password"
         value={password}
-        placeholder="*********"
+        placeholder="Create a password"
         type="password"
+        icon={<FaLock />}
         onChange={(e) => setPassword(e.target.value)}
       />
       <AuthInput
         label="Confirm Password"
         name="confirm_password"
         value={confirmPassword}
-        placeholder="*********"
+        placeholder="Confirm your password"
         type="password"
+        icon={<FaLock />}
         onChange={(e) => setConfirmPassword(e.target.value)}
       />
       <label className="auth__input__label terms__label">
@@ -114,8 +122,10 @@ export const Register = () => {
           checked={agree}
           onChange={(e) => setAgree(e.target.checked)}
         />
-        I agree to the <Link to={"/legal/terms"}>Terms of Service</Link> and{" "}
-        <Link to={"/legal/privacy"}>Privacy Policy</Link>
+        <span>
+          I agree to the <Link to={"/legal/terms"}>Terms of Service</Link> and{" "}
+          <Link to={"/legal/privacy"}>Privacy Policy</Link>
+        </span>
       </label>
       <AuthButton disabled={!agree || loading}>Create Account</AuthButton>
     </AuthTemplate>

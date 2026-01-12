@@ -1,10 +1,20 @@
-/* Navigation Styles */
 .home__nav {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 100;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: transparent;
+  transition: all 0.3s ease;
+  padding: 1rem 0;
+}
+
+.home__nav.scrolled {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 0.8rem 0;
 }
 
 .home__nav__content {
@@ -13,63 +23,166 @@
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 10px 20px;
+  padding: 0 2rem;
 }
 
 .home__nav__content__logo img {
   height: 40px;
+  width: auto;
+  transition: transform 0.3s ease;
 }
 
-.home__nav__content__links,
-.home__nav__content__auth-links {
+.home__nav__content__logo:hover img {
+  transform: scale(1.05);
+}
+
+.home__nav__menu {
   display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.home__nav__content__links {
+  display: flex;
+  gap: 2rem;
   align-items: center;
 }
 
-.home__nav__content__links a,
-.home__nav__content__auth-links a {
-  color: #333;
+.home__nav__link {
   text-decoration: none;
+  color: var(--text-color);
   font-weight: 500;
-  font-size: 1.1rem;
-  margin: 0 10px;
-  padding: 8px 12px;
-  border-radius: 5px;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+  position: relative;
+}
+
+/* Adjust link color for transparent header on dark background if needed, 
+   but currently hero has dark bg, so links might need to be white initially 
+   if they are over the hero. 
+   However, the hero design has a white content area? No, the hero is dark gradient.
+   So links should be white initially, then dark when scrolled?
+   Let's check the previous Hero design. It was dark blue gradient.
+   So initially links should be white.
+*/
+.home__nav:not(.scrolled) .home__nav__link {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.home__nav:not(.scrolled) .home__nav__link:hover {
+  color: #fff;
+}
+
+.home__nav.scrolled .home__nav__link {
+  color: var(--text-color);
+}
+
+.home__nav.scrolled .home__nav__link:hover {
+  color: var(--primary-color);
+}
+
+.home__nav__link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+}
+
+.home__nav:not(.scrolled) .home__nav__link::after {
+  background-color: #fff;
+}
+
+.home__nav__link:hover::after {
+  width: 100%;
+}
+
+.home__nav__content__auth-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.home__nav__cta {
+  text-decoration: none;
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(75, 108, 183, 0.3);
 }
 
-.home__nav__content__links a:hover,
-.home__nav__content__auth-links a:hover {
-  background-color: #4b6cb7;
+.home__nav__cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(75, 108, 183, 0.4);
+  background-color: #5e81d6;
+}
+
+/* Mobile Toggle */
+.home__nav__mobile-toggle {
+  display: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-color);
+  z-index: 1001;
+}
+
+.home__nav:not(.scrolled) .home__nav__mobile-toggle {
   color: #fff;
 }
 
-.home__nav__content__auth-links a {
-  background-color: #4b6cb7;
-  color: #fff;
-}
-
-.home__nav__content__auth-links a:hover {
-  background-color: #182848;
+.home__nav.scrolled .home__nav__mobile-toggle {
+  color: var(--text-color);
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  .home__nav__content {
+  .home__nav__mobile-toggle {
+    display: block;
+  }
+
+  .home__nav__menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 70%;
+    height: 100vh;
+    background-color: #fff;
     flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .home__nav__content__links,
-  .home__nav__content__auth-links {
-    margin-top: 10px;
-    width: 100%;
     justify-content: center;
+    padding: 2rem;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
   }
 
-  .home__nav__content__links a,
-  .home__nav__content__auth-links a {
-    margin: 5px;
-    padding: 6px 10px;
+  .home__nav__menu.active {
+    right: 0;
+  }
+
+  .home__nav__content__links {
+    flex-direction: column;
+    margin-bottom: 2rem;
+  }
+
+  .home__nav__content__auth-links {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  /* Force dark text in mobile menu regardless of scroll state */
+  .home__nav__link,
+  .home__nav:not(.scrolled) .home__nav__link {
+    color: var(--text-color);
+    font-size: 1.2rem;
+  }
+
+  .home__nav__link:hover,
+  .home__nav:not(.scrolled) .home__nav__link:hover {
+    color: var(--primary-color);
   }
 }

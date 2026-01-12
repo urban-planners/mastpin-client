@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY . .
 
-RUN yarn install
+RUN npm install --legacy-peer-deps
 
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
