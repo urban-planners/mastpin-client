@@ -1,11 +1,6 @@
 import "./Footer.css";
 import { Link } from "react-router-dom";
-import {
-  FiFacebook,
-  FiTwitter,
-  FiLinkedin,
-  FiGithub,
-} from "react-icons/fi";
+import { FiFacebook, FiTwitter, FiLinkedin, FiGithub } from "react-icons/fi";
 
 export const Footer = () => {
   return (
