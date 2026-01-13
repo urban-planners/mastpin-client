@@ -30,7 +30,8 @@
 }
 
 body {
-  font-family: "Inter", "Montserrat", sans-serif; /* Inter is very modern if available, falling back */
+  font-family:
+    "Inter", "Montserrat", sans-serif; /* Inter is very modern if available, falling back */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--offwhite);
