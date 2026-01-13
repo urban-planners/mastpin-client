@@ -47,7 +47,7 @@ const ShareOverlay = () => {
         }
       })();
     }
-  }, [shareDetails.isPublic]);
+  }, [shareDetails.isPublic, id, visibilityState]);
 
   const copyShareLink = async () => {
     try {

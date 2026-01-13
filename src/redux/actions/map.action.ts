@@ -97,3 +97,7 @@ export const updateMast = (mast: PinInfoInterface) => ({
 export const clearMasts = () => ({
   type: "CLEAR_MASTS",
 });
+
+export const resetMap = () => ({
+  type: "RESET_MAP",
+});

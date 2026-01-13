@@ -11,7 +11,6 @@ import {
   ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
-import { MapInfoInterface } from "../types";
 import { useDispatch } from "react-redux";
 import { updateMapCenter } from "../redux/actions";
 

@@ -36,7 +36,6 @@ import {
 } from "../../../../redux/actions/result.action";
 import { toast } from "react-toastify";
 import { IoIosCheckmark } from "react-icons/io";
-import { BsDot } from "react-icons/bs";
 import { Link, useParams } from "react-router-dom";
 import { FiHome } from "react-icons/fi";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -227,10 +226,19 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
           </p>
         </div>
         <div
-          className={`project-name__container__status ${saved ? "saved" : ""}`}
+          className={`project-name__container__status ${saved ? "saved" : "saving"}`}
         >
-          {saved && <IoIosCheckmark />}
-          {!saved && <BsDot />}
+          {saved ? (
+            <>
+              <IoIosCheckmark />
+              <span>Saved</span>
+            </>
+          ) : (
+            <>
+              <IoSyncOutline className="spinning" />
+              <span>Saving...</span>
+            </>
+          )}
         </div>
       </form>
       <div className="search__container">

@@ -27,3 +27,9 @@ export const setHasEvaluation = (hasEvaluation: boolean) => {
     payload: hasEvaluation,
   };
 };
+
+export const resetResults = () => {
+  return {
+    type: "RESET_RESULTS",
+  };
+};

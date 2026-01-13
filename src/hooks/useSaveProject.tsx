@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { saveProject } from "../utils";
 import { useParams } from "react-router-dom";
@@ -23,7 +23,7 @@ const optimizationSelector = createSelector(
   }),
 );
 
-export function useAutosave<T>(time = 500) {
+export function useAutosave(time = 500) {
   const dispatch = useDispatch();
   const { id, publicId } = useParams();
 
@@ -38,66 +38,7 @@ export function useAutosave<T>(time = 500) {
   const simulation = useSelector((state: any) => state.result.simulation);
   const evaluation = useSelector((state: any) => state.result.evaluation);
 
-  const [stateChangedFtn] = useState(() =>
-    stateChanged({
-      title,
-      configuration,
-      optimization,
-      pins,
-      regions,
-      currentMasts,
-      simulation,
-      evaluation,
-    }),
-  );
-
-  const [autoSaveFtn] = useState(() => {
-    let timespent = 0;
-    return (dependencies: {
-      title: string;
-      configuration: any;
-      optimization: any;
-      pins: any;
-      regions: any;
-      currentMasts: any;
-      simulation: any;
-      evaluation: any;
-    }) => {
-      timespent += time;
-      if (timespent >= time) {
-        if (stateChangedFtn(dependencies)) {
-          saveProject({
-            publicId: publicId as string,
-            id: id as string,
-            dispatch,
-            dependencies,
-          });
-          timespent = 0;
-        }
-      }
-    };
-  });
-
-  useEffect(() => {
-    dispatch(setSaved(false));
-    const interval = setInterval(
-      () =>
-        autoSaveFtn({
-          title,
-          configuration,
-          optimization,
-          pins,
-          regions,
-          currentMasts,
-          simulation,
-          evaluation,
-        }),
-      time,
-    );
-    return () => clearInterval(interval);
-  }, [
-    autoSaveFtn,
-    time,
+  const dependencies = {
     title,
     configuration,
     optimization,
@@ -106,23 +47,71 @@ export function useAutosave<T>(time = 500) {
     currentMasts,
     simulation,
     evaluation,
+  };
+
+  const dependenciesRef = useRef(dependencies);
+  const firstRender = useRef(true);
+
+  useEffect(() => {
+    const newDependencies = {
+      title,
+      configuration,
+      optimization,
+      pins,
+      regions,
+      currentMasts,
+      simulation,
+      evaluation,
+    };
+
+    if (firstRender.current) {
+      dependenciesRef.current = newDependencies;
+      firstRender.current = false;
+      return;
+    }
+
+    if (
+      JSON.stringify(newDependencies) !==
+      JSON.stringify(dependenciesRef.current)
+    ) {
+      dependenciesRef.current = newDependencies;
+      dispatch(setSaved(false));
+    }
+  }, [
+    title,
+    configuration,
+    optimization,
+    pins,
+    regions,
+    currentMasts,
+    simulation,
+    evaluation,
+    dispatch,
   ]);
+
+  const [stateChangedFtn] = useState(() => stateChanged(dependencies));
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const currentDependencies = dependenciesRef.current;
+      if (stateChangedFtn(currentDependencies)) {
+        saveProject({
+          publicId: publicId as string,
+          id: id as string,
+          dispatch,
+          dependencies: currentDependencies,
+        });
+      }
+    }, time);
+    return () => clearInterval(interval);
+  }, [stateChangedFtn, time, dispatch, publicId, id]);
 
   const manualSave = () => {
     saveProject({
       publicId: publicId as string,
       id: id as string,
       dispatch,
-      dependencies: {
-        title,
-        configuration,
-        optimization,
-        pins,
-        regions,
-        currentMasts,
-        simulation,
-        evaluation,
-      },
+      dependencies: dependenciesRef.current,
     });
   };
 

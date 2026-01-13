@@ -18,6 +18,7 @@ const initialState: {
     mast_loc_coord: [[0, 0]],
     region_signal_strength: [],
     signal_strength: 0,
+    heatmap_data: [],
   },
   evaluation: {
     coverage: 0,
@@ -29,6 +30,7 @@ const initialState: {
     mast_loc_coord: [[0, 0]],
     region_signal_strength: [],
     signal_strength: 0,
+    heatmap_data: [],
   },
 };
 
@@ -60,6 +62,9 @@ export const resultReducer = (
         ...state,
         hasEvaluation: action.payload,
       };
+
+    case "RESET_RESULTS":
+      return initialState;
 
     default:
       return state;

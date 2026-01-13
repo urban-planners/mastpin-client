@@ -96,11 +96,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
+  border-radius: 4px;
   font-size: 12px;
-  transition: background-color 0.3s;
-  width: 24px;
-  height: 24px;
+  transition: all 0.3s;
+  padding: 2px 6px;
+  gap: 4px;
+  color: var(--gray-light);
+  font-weight: 500;
+}
+
+.project-name__container__status.saved {
+  color: var(--success-color, #28a745);
+}
+
+.project-name__container__status.saving {
+  color: var(--warning-color, #ffc107);
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .project-name__container__status svg {

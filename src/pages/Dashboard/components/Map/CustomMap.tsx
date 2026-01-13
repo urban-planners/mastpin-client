@@ -1,13 +1,16 @@
 import "./CustomMap.css";
-import { GoogleMap, Marker, Polygon } from "@react-google-maps/api";
-import pin from "../../../../assets/svgs/pin.svg";
+import {
+  GoogleMap,
+  Marker,
+  Polygon,
+  HeatmapLayer,
+} from "@react-google-maps/api";
 import modalPin from "../../../../assets/svgs/modal-pin.svg";
 import mastPin from "../../../../assets/svgs/mast.svg";
 import currentMastPin from "../../../../assets/svgs/CellTower2.svg";
 import { Fragment, useState } from "react";
 import {
   MapActionType,
-  MapInfoInterface,
   PinInfoInterface,
   PresentationInterface,
   RegionInterface,
@@ -21,7 +24,6 @@ import {
   selectRegion,
   setMapAction,
   showMapLabels,
-  updateMapCenter,
   updateMapZoom,
   updateMast,
   updatePin,
@@ -78,6 +80,10 @@ const CustomMap = () => {
   const showExportDialog = useSelector(
     (state: any) => state.project.showExportDialog,
   ) as boolean;
+  const [showHeatmap, setShowHeatmap] = useState(false);
+  const [showRegions, setShowRegions] = useState(true);
+  const [showGeneratedMasts, setShowGeneratedMasts] = useState(true);
+  const [showExistingMasts, setShowExistingMasts] = useState(true);
 
   const onClick = (e: google.maps.MapMouseEvent | undefined) => {
     if (!e) return;
@@ -138,6 +144,38 @@ const CustomMap = () => {
           onChange={() => dispatch(showMapLabels(!showLabels))}
         />
       </label>
+      <label className="show__heatmap-label">
+        Show Heatmap
+        <input
+          type="checkbox"
+          checked={showHeatmap}
+          onChange={() => setShowHeatmap(!showHeatmap)}
+        />
+      </label>
+      <label className="show__heatmap-label" style={{ top: "140px" }}>
+        Show Regions
+        <input
+          type="checkbox"
+          checked={showRegions}
+          onChange={() => setShowRegions(!showRegions)}
+        />
+      </label>
+      <label className="show__heatmap-label" style={{ top: "170px" }}>
+        Show Generated Masts
+        <input
+          type="checkbox"
+          checked={showGeneratedMasts}
+          onChange={() => setShowGeneratedMasts(!showGeneratedMasts)}
+        />
+      </label>
+      <label className="show__heatmap-label" style={{ top: "200px" }}>
+        Show Existing Masts
+        <input
+          type="checkbox"
+          checked={showExistingMasts}
+          onChange={() => setShowExistingMasts(!showExistingMasts)}
+        />
+      </label>
       {selectedMapAction === "doc" && <ResultOverlay />}
       {showShareDialog && <ShareOverlay />}
       {showExportDialog && <ExportOverlay />}
@@ -172,79 +210,81 @@ const CustomMap = () => {
             : undefined,
         }}
       >
-        {pins.map((pin, index) => {
-          return (
-            <Marker
-              key={index}
-              position={pin.loc}
-              icon={{
-                url: modalPin,
-                scaledSize: new window.google.maps.Size(25, 25),
-              }}
-              onClick={() => dispatch(removePin(pin.id))}
-              draggable={true}
-              onDrag={(e) => {
-                dispatch(
-                  updatePin({
-                    ...pin,
-                    loc: {
-                      lat: e.latLng?.lat() as number,
-                      lng: e.latLng?.lng() as number,
-                    },
-                  }),
-                );
-              }}
-              onDragEnd={(e) => {
-                dispatch(
-                  updatePin({
-                    ...pin,
-                    loc: {
-                      lat: e.latLng?.lat() as number,
-                      lng: e.latLng?.lng() as number,
-                    },
-                  }),
-                );
-              }}
-            />
-          );
-        })}
-        {currentMasts.map((mast, index) => {
-          return (
-            <Marker
-              key={index}
-              position={mast.loc}
-              icon={{
-                url: currentMastPin,
-                scaledSize: new window.google.maps.Size(40, 40),
-              }}
-              onClick={() => dispatch(removeMast(mast.id))}
-              draggable={true}
-              onDrag={(e) => {
-                dispatch(
-                  updateMast({
-                    ...mast,
-                    loc: {
-                      lat: e.latLng?.lat() as number,
-                      lng: e.latLng?.lng() as number,
-                    },
-                  }),
-                );
-              }}
-              onDragEnd={(e) => {
-                dispatch(
-                  updateMast({
-                    ...mast,
-                    loc: {
-                      lat: e.latLng?.lat() as number,
-                      lng: e.latLng?.lng() as number,
-                    },
-                  }),
-                );
-              }}
-            />
-          );
-        })}
-        {pins.length > 0 && regions.length > 0 && (
+        {showRegions &&
+          pins.map((pin, index) => {
+            return (
+              <Marker
+                key={index}
+                position={pin.loc}
+                icon={{
+                  url: modalPin,
+                  scaledSize: new window.google.maps.Size(25, 25),
+                }}
+                onClick={() => dispatch(removePin(pin.id))}
+                draggable={true}
+                onDrag={(e) => {
+                  dispatch(
+                    updatePin({
+                      ...pin,
+                      loc: {
+                        lat: e.latLng?.lat() as number,
+                        lng: e.latLng?.lng() as number,
+                      },
+                    }),
+                  );
+                }}
+                onDragEnd={(e) => {
+                  dispatch(
+                    updatePin({
+                      ...pin,
+                      loc: {
+                        lat: e.latLng?.lat() as number,
+                        lng: e.latLng?.lng() as number,
+                      },
+                    }),
+                  );
+                }}
+              />
+            );
+          })}
+        {showExistingMasts &&
+          currentMasts.map((mast, index) => {
+            return (
+              <Marker
+                key={index}
+                position={mast.loc}
+                icon={{
+                  url: currentMastPin,
+                  scaledSize: new window.google.maps.Size(40, 40),
+                }}
+                onClick={() => dispatch(removeMast(mast.id))}
+                draggable={true}
+                onDrag={(e) => {
+                  dispatch(
+                    updateMast({
+                      ...mast,
+                      loc: {
+                        lat: e.latLng?.lat() as number,
+                        lng: e.latLng?.lng() as number,
+                      },
+                    }),
+                  );
+                }}
+                onDragEnd={(e) => {
+                  dispatch(
+                    updateMast({
+                      ...mast,
+                      loc: {
+                        lat: e.latLng?.lat() as number,
+                        lng: e.latLng?.lng() as number,
+                      },
+                    }),
+                  );
+                }}
+              />
+            );
+          })}
+        {showRegions && pins.length > 0 && regions.length > 0 && (
           <Fragment>
             {regions.map((region, index) => {
               return (
@@ -269,7 +309,38 @@ const CustomMap = () => {
             })}
           </Fragment>
         )}
-        {simulation &&
+        {showHeatmap && simulation && simulation.heatmap_data && (
+          <HeatmapLayer
+            data={simulation.heatmap_data.map((point) => ({
+              location: new window.google.maps.LatLng(point.lat, point.lng),
+              weight: Math.max(0, point.weight + 120),
+            }))}
+            options={{
+              radius: 10,
+              opacity: 0.8,
+              maxIntensity: 60,
+              dissipating: true,
+              gradient: [
+                "rgba(0, 255, 255, 0)",
+                "rgba(0, 255, 255, 1)",
+                "rgba(0, 191, 255, 1)",
+                "rgba(0, 127, 255, 1)",
+                "rgba(0, 63, 255, 1)",
+                "rgba(0, 0, 255, 1)",
+                "rgba(0, 0, 223, 1)",
+                "rgba(0, 0, 191, 1)",
+                "rgba(0, 0, 159, 1)",
+                "rgba(0, 0, 127, 1)",
+                "rgba(63, 0, 91, 1)",
+                "rgba(127, 0, 63, 1)",
+                "rgba(191, 0, 31, 1)",
+                "rgba(255, 0, 0, 1)",
+              ],
+            }}
+          />
+        )}
+        {showGeneratedMasts &&
+          simulation &&
           simulation.mast_loc_coord &&
           simulation.mast_loc_coord.map((mast, index) => (
             <Marker

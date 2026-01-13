@@ -34,7 +34,7 @@ const MapOverlay = ({
             <IoCloseOutline />
           </div>
         </div>
-        <div className="scrollable">{children}</div>
+        <div className="overlay__scrollable">{children}</div>
       </div>
     </div>
   );

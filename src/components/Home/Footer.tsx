@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 import {
   FiFacebook,
   FiTwitter,
-  FiInstagram,
   FiLinkedin,
-  FiMail,
   FiGithub,
 } from "react-icons/fi";
 

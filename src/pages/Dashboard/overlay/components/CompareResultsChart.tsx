@@ -1,6 +1,5 @@
 import { Chart, registerables } from "chart.js";
-import { useEffect, useRef, useState } from "react";
-import { PresentationInterface } from "../../../../types";
+import { useEffect, useRef } from "react";
 
 const CompareResultsChart = ({
   label,
@@ -11,7 +10,6 @@ const CompareResultsChart = ({
   simulationValue: number;
   evaluationValue: number;
 }) => {
-  const [chart, setChart] = useState<Chart | null>(null);
   const chartRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -19,9 +17,10 @@ const CompareResultsChart = ({
   }, []);
 
   useEffect(() => {
+    let newChartInstance: Chart | null = null;
     if (chartRef.current) {
       const ctx = chartRef.current.getContext("2d") as CanvasRenderingContext2D;
-      const newChartInstance = new Chart(ctx, {
+      newChartInstance = new Chart(ctx, {
         type: "bar",
         data: {
           labels: [label],
@@ -48,8 +47,12 @@ const CompareResultsChart = ({
           },
         },
       });
-      setChart(newChartInstance);
     }
+    return () => {
+      if (newChartInstance) {
+        newChartInstance.destroy();
+      }
+    };
   }, [label, simulationValue, evaluationValue]);
 
   return <canvas ref={chartRef} />;

@@ -8,4 +8,5 @@ export interface PresentationInterface {
   mast_loc_coord: [[number, number]];
   region_signal_strength: [];
   signal_strength: number;
+  heatmap_data: { lat: number; lng: number; weight: number }[];
 }

@@ -20,6 +20,7 @@ import {
   setPins,
   setProjectDetails,
   setRegions,
+  resetMap,
 } from "../../redux/actions";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -31,12 +32,13 @@ import {
   setHasEvaluation,
   setHasSimulation,
   setSimulation,
+  resetResults,
 } from "../../redux/actions/result.action";
 import ScreenSizeWarning from "../../components/ScreenSizeWarning";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
 const MAPS_API_KEY = process.env.REACT_APP_MAPS_API_KEY;
-const libraries = ["places"] as Libraries;
+const libraries = ["places", "visualization"] as Libraries;
 
 const Dashboard = () => {
   let { id, publicId } = useParams();
@@ -75,6 +77,8 @@ const Dashboard = () => {
     (async () => {
       try {
         setGettingProject(true);
+        dispatch(resetMap());
+        dispatch(resetResults());
         await getProject({
           id: id as string,
           publicId,
@@ -88,7 +92,7 @@ const Dashboard = () => {
         });
       }
     })();
-  }, [id]);
+  }, [id, clientUrl, dispatch, navigate, publicId]);
 
   const manualSave = useAutosave();
   useShortkeys({ manualSave, showLabels, setFullScreen });
@@ -159,6 +163,7 @@ const getProject = async ({
       mast_loc_coord: item.data.mastLocationCoordinates,
       region_signal_strength: item.data.regionSignalStrength,
       signal_strength: item.data.signalStrength,
+      heatmap_data: item.data.heatmapData,
     },
   }));
 

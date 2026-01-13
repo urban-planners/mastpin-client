@@ -94,5 +94,6 @@ export const useShortkeys = ({
     hasSimulation,
     hasEvaluation,
     selectedMapAction,
+    manualSave,
   ]);
 };

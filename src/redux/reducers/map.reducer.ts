@@ -269,6 +269,9 @@ export const mapReducer = (state = initialState, action: ActionInterface) => {
         ),
       };
 
+    case "RESET_MAP":
+      return initialState;
+
     default:
       return state;
   }
