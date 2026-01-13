@@ -1,23 +1,35 @@
 .drawer .title {
-  padding: 16px 8px;
-  padding-bottom: 0;
+  padding: 16px 16px 8px 16px;
   display: flex;
   flex-flow: column;
-  gap: 8px;
+  gap: 4px;
   user-select: none;
   position: sticky;
   top: 0;
-  z-index: 1;
-  background-color: white;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+  margin-bottom: 8px;
 }
 
 .drawer .title__content {
   display: flex;
-  margin-right: 8px;
-  gap: 4px;
+  margin-right: 0;
+  gap: 8px;
   align-items: center;
+  justify-content: space-between;
+}
+
+.drawer .title__content > h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
 }
 
 .drawer .title__content > small {
   margin-right: auto;
+  font-size: 0.75rem;
+  color: var(--gray-light);
 }

@@ -11,10 +11,28 @@ import {
 import { useEffect, useState } from "react";
 import defaultMapImage from "../../assets/images/map-preview.webp";
 import { GridLoader } from "react-spinners";
-import { IoSettingsOutline } from "react-icons/io5";
-import { BsTrash } from "react-icons/bs";
+import {
+  FiGrid,
+  FiSettings,
+  FiLogOut,
+  FiSearch,
+  FiPlus,
+  FiMoreVertical,
+  FiClock,
+  FiMap,
+  FiUser,
+  FiTrash2,
+} from "react-icons/fi";
+import { BsMap } from "react-icons/bs";
+import { Settings } from "./Settings";
 
 const SERVER = process.env.REACT_APP_SERVER_URL;
+
+interface UserInterface {
+  firstname: string;
+  lastname: string;
+  email: string;
+}
 
 export const Projects = () => {
   const navigate = useNavigate();
@@ -26,20 +44,30 @@ export const Projects = () => {
     [props: string]: any;
   }[];
   const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState("overview");
+  const [user, setUser] = useState<UserInterface | null>(null);
 
   useEffect(() => {
     (async () => {
       try {
         setGettingProjects(true);
-        await getAllProjects({ dispatch });
+        await Promise.all([
+          getAllProjects({ dispatch }),
+          getUserDetails({ setUser }),
+        ]);
         setGettingProjects(false);
       } catch (error) {
         setGettingProjects(false);
       }
     })();
-  }, []);
+  }, [dispatch]);
 
-  const deleteProject = async (id: string) => {
+  const deleteProject = async (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!window.confirm("Are you sure you want to delete this project?"))
+      return;
+
     try {
       const response = await fetch(`${SERVER}/projects/delete/${id}`, {
         method: "DELETE",
@@ -56,85 +84,178 @@ export const Projects = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+    toast.success("Logged out successfully");
+  };
+
+  const filteredProjects = projects.filter((project) =>
+    project.title.toLowerCase().includes(search.toLowerCase()),
+  );
+
   return (
-    <div className="projects">
-      <div className="projects__header__wrapper">
-        <div className="projects__header__container">
-          <div className="projects__header">
-            <h2>Projects</h2>
-          </div>
-          <div className="projects__header__actions">
-            <div className="projects__search">
-              <input
-                type="text"
-                placeholder="Search Projects"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <button
-              onClick={() => createNewProject({ navigate, dispatch })}
-              className="projects__create"
-            >
-              Create New Project
-            </button>
-          </div>
+    <div className="dashboard-layout">
+      {/* Sidebar */}
+      <aside className="dashboard-sidebar">
+        <div className="sidebar-brand">
+          <BsMap className="brand-icon" />
+          <span>Mastpin</span>
         </div>
-      </div>
-      <div className="projects__list__container">
-        {gettingProjects ? (
-          <div className="projects__loading">
-            <GridLoader color="var(--primary-color)" />
+
+        <nav className="sidebar-nav">
+          <div
+            className={`nav-item ${activeTab === "overview" ? "active" : ""}`}
+            onClick={() => setActiveTab("overview")}
+          >
+            <FiGrid />
+            <span>Overview</span>
           </div>
-        ) : (
+          <div
+            className={`nav-item ${activeTab === "settings" ? "active" : ""}`}
+            onClick={() => setActiveTab("settings")}
+          >
+            <FiSettings />
+            <span>Settings</span>
+          </div>
+        </nav>
+
+        <div className="sidebar-footer">
+          <div className="user-profile">
+            <div className="avatar">
+              <FiUser />
+            </div>
+            <div className="user-info">
+              <span className="user-name">
+                {user ? `${user.firstname} ${user.lastname}` : "User"}
+              </span>
+            </div>
+          </div>
+          <button className="logout-btn" onClick={handleLogout}>
+            <FiLogOut />
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="dashboard-main">
+        {activeTab === "overview" ? (
           <>
-            {projects.length === 0 && (
-              <div className="projects__empty">
-                <h3>No Projects Found</h3>
+            {/* Header */}
+            <header className="dashboard-header">
+              <div className="header-content">
+                <h1>My Projects</h1>
+                <p className="subtitle">
+                  Manage and monitor your mapping projects
+                </p>
               </div>
-            )}
-            {projects
-              .filter((project) =>
-                project.title.toLowerCase().includes(search.toLowerCase()),
-              )
-              .map((project) => (
-                <Link
-                  key={project._id}
-                  to={project._id}
-                  className="projects__list__item"
+              <div className="header-actions">
+                <div className="search-bar">
+                  <FiSearch className="search-icon" />
+                  <input
+                    type="text"
+                    placeholder="Search projects..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+                <button
+                  className="create-btn"
+                  onClick={() => createNewProject({ navigate, dispatch })}
                 >
-                  <div className="projects__list__item__image">
-                    <img
-                      src={project.image || defaultMapImage}
-                      alt={project.title}
-                    />
-                  </div>
-                  <div>
-                    <div className="projects__list__item__info">
-                      <h3>{project.title}</h3>
+                  <FiPlus />
+                  <span>New Project</span>
+                </button>
+              </div>
+            </header>
+
+            {/* Projects Grid */}
+            <div className="projects-content">
+              {gettingProjects ? (
+                <div className="loading-state">
+                  <GridLoader color="var(--primary-color)" size={15} />
+                  <p>Loading your projects...</p>
+                </div>
+              ) : (
+                <>
+                  {projects.length === 0 ? (
+                    <div className="empty-state">
+                      <div className="empty-icon">
+                        <FiMap />
+                      </div>
+                      <h3>No Projects Yet</h3>
                       <p>
-                        <span>Last Modified:</span>{" "}
-                        {new Date(project.updatedAt).toLocaleDateString(
-                          "en-GB",
-                        )}
+                        Start by creating your first mapping project to
+                        visualize and optimize mast placements.
                       </p>
+                      <button
+                        className="create-btn large"
+                        onClick={() => createNewProject({ navigate, dispatch })}
+                      >
+                        <FiPlus />
+                        Create Your First Project
+                      </button>
                     </div>
-                    <div
-                      className="projects__list__item__actions"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                      }}
-                    >
-                      <IoSettingsOutline onClick={(e) => {}} />
-                      <BsTrash onClick={() => deleteProject(project._id)} />
+                  ) : (
+                    <div className="projects-grid">
+                      {filteredProjects.map((project) => (
+                        <Link
+                          key={project._id}
+                          to={project._id}
+                          className="project-card"
+                        >
+                          <div className="card-image">
+                            <img
+                              src={project.image || defaultMapImage}
+                              alt={project.title}
+                            />
+                            <div className="card-overlay">
+                              <button className="open-btn">Open Project</button>
+                            </div>
+                          </div>
+                          <div className="card-content">
+                            <div className="card-header">
+                              <h3>{project.title}</h3>
+                              <div className="card-menu">
+                                <FiMoreVertical />
+                              </div>
+                            </div>
+                            <div className="card-meta">
+                              <div className="meta-item">
+                                <FiClock />
+                                <span>
+                                  {new Date(
+                                    project.updatedAt,
+                                  ).toLocaleDateString("en-GB", {
+                                    day: "numeric",
+                                    month: "short",
+                                    year: "numeric",
+                                  })}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="card-actions">
+                              <button
+                                className="action-btn delete"
+                                onClick={(e) => deleteProject(project._id, e)}
+                                title="Delete Project"
+                              >
+                                <FiTrash2 />
+                              </button>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  )}
+                </>
+              )}
+            </div>
           </>
+        ) : (
+          <Settings user={user} onUpdate={setUser} />
         )}
-      </div>
+      </main>
     </div>
   );
 };
@@ -179,5 +300,25 @@ const getAllProjects = async ({
     dispatch(setAllProjects(data.data));
   } catch (error: any) {
     toast.error(error.message);
+  }
+};
+
+const getUserDetails = async ({
+  setUser,
+}: {
+  setUser: (user: UserInterface) => void;
+}): Promise<void> => {
+  try {
+    const response = await fetch(`${SERVER}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    const data = await response.json();
+    if (data.error) throw new Error(data.message);
+    setUser(data.data);
+  } catch (error: any) {
+    // Silent fail for user details, or maybe toast error
+    console.error("Failed to fetch user details:", error);
   }
 };

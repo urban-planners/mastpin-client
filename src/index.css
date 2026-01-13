@@ -5,8 +5,8 @@
   --asset-selected: var(--primary-color);
   --gray-dark: #2b2b2b;
   --gray-light: #6b6b6b;
-  --offwhite: #f5f5f5;
-  --text-color: #333;
+  --offwhite: #f8fafc; /* Cooler white */
+  --text-color: #1e293b; /* Slate 800 */
   --text-color-alt: #fff;
 
   /* DARK THEME */
@@ -19,8 +19,8 @@
   --dark-text-color-alt: #fff;
 
   /* STYLES */
-  --border-radius: 5px;
-  --nav-height: 60px;
+  --border-radius: 8px;
+  --nav-height: 64px;
 }
 
 * {
@@ -30,9 +30,11 @@
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Inter", "Montserrat", sans-serif; /* Inter is very modern if available, falling back */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--offwhite);
+  color: var(--text-color);
 }
 
 code {
@@ -43,31 +45,59 @@ code {
 input:not(:is([type="checkbox"], [type="radio"])) {
   width: 100%;
   max-width: 400px;
-  height: 32px;
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  height: 40px; /* Taller inputs */
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: var(--border-radius);
   outline: none;
-  padding-inline: 8px;
+  padding-inline: 12px;
+  background-color: white;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  color: var(--text-color);
+}
+
+input:not(:is([type="checkbox"], [type="radio"])):focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(75, 108, 183, 0.1);
 }
 
 select {
   width: 100%;
   max-width: 400px;
-  height: 32px;
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  height: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: var(--border-radius);
   outline: none;
-  padding-inline: 8px;
+  padding-inline: 12px;
+  background-color: white;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(75, 108, 183, 0.1);
 }
 
 button:not(.Toastify*) {
   width: 100%;
   max-width: 300px;
-  height: 32px;
+  height: 40px;
   border-radius: var(--border-radius);
   border: none;
   background-color: var(--primary-color);
   color: white;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(75, 108, 183, 0.2);
+}
+
+button:not(.Toastify*):active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(75, 108, 183, 0.2);
 }
 
 small {
@@ -92,16 +122,14 @@ small {
 @media (hover: hover) {
   button:hover {
     cursor: pointer;
+    background-color: var(--secondary-color);
+    box-shadow: 0 4px 8px rgba(75, 108, 183, 0.3);
   }
 }
 
 /* Dark theme */
 body.dark {
   --primary-color: var(--dark-primary-color);
-  --secondary-color: var(--dark-secondary-color);
-  --gray-dark: var(--dark-gray-dark);
-  --gray-light: var(--dark-gray-light);
-  --offwhite: var(--dark-offwhite);
-  --text-color: var(--dark-text-color);
-  --text-color-alt: var(--dark-text-color-alt);
+  background-color: var(--dark-gray-dark);
+  color: var(--dark-text-color);
 }

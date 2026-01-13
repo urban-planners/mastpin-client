@@ -3,9 +3,23 @@
   overflow-y: auto;
   position: relative;
   min-height: 200px;
+  padding: 0; /* Remove default padding, handled by children */
 }
 
+.drawer .content ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+
 .drawer .content .na {
-  padding: 8px;
+  padding: 16px;
   user-select: none;
+  color: var(--gray-light);
+  font-style: italic;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 20px;
 }

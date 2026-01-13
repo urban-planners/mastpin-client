@@ -1,5 +1,5 @@
 .drawer.left {
-  border-right: 1px solid rgba(0, 0, 0, 0.25);
+  /* Border handled in Drawer.css */
 }
 
 .drawer.left .content ul {
@@ -8,23 +8,26 @@
   width: 100%;
   height: auto;
   list-style: none;
-  position: absolute;
+  position: relative; /* Changed from absolute */
   top: 0;
   left: 0;
+  padding: 8px 0;
 }
 
 .drawer.left .content li {
-  padding: 8px;
+  padding: 10px 16px;
   width: 100%;
-  height: 40px;
-  transition: all 100ms;
+  height: auto;
+  min-height: 44px;
+  transition: all 0.2s ease;
   user-select: none;
-}
-
-.drawer.left .content li {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  color: var(--text-color);
+  font-size: 0.9rem;
 }
 
 .drawer.left .content li .drawer__item__actions {
@@ -32,32 +35,50 @@
   justify-content: space-between;
   align-items: center;
   z-index: 1;
+  opacity: 0; /* Hide actions by default */
+  transition: opacity 0.2s;
+}
+
+.drawer.left .content li:hover .drawer__item__actions {
+  opacity: 1; /* Show on hover */
 }
 
 .drawer__item__actions__icon {
   box-sizing: content-box;
   padding: 4px;
-  filter: invert(0.5);
-  transition: all 200ms;
+  color: var(--gray-light);
+  transition: all 0.2s;
+  border-radius: 4px;
 }
 
 .drawer__item__actions__icon:hover {
   cursor: pointer;
-  filter: invert(0.25);
+  color: #ef4444; /* Red for delete */
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
-.drawer.left .content li:nth-child(even) {
-  background-color: var(--offwhite);
+.drawer.left .content li:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  cursor: pointer;
 }
 
 .drawer.left .content li.selected {
-  background-color: var(--asset-selected);
-  border-color: var(--asset-selected);
-  color: white;
+  background-color: rgba(75, 108, 183, 0.1); /* Primary color light */
+  color: var(--primary-color);
+  font-weight: 500;
 }
 
-@media (hover: hover) {
-  .drawer.left .content li:hover {
-    cursor: pointer;
-  }
+.drawer.left .content li.selected::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 3px;
+  height: 24px;
+  background-color: var(--primary-color);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Ensure relative positioning for the pseudo-element */
+.drawer.left .content li {
+  position: relative;
 }

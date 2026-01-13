@@ -236,7 +236,7 @@ const Nav = ({ isLoaded }: { isLoaded: boolean }) => {
       <div className="search__container">
         {isLoaded && <PlacesAutocomplete />}
       </div>
-      <div className="drawer nav__actions__container">
+      <div className="nav__actions__container">
         <div
           className={`nav__actions__item ${simulating ? "disabled" : ""}`}
           onClick={startGeneration}

@@ -10,7 +10,7 @@ const Title = ({
   return (
     <div className="title">
       <div className="title__content">
-        <small>{title}</small>
+        <h3>{title}</h3>
         {children}
       </div>
       <div className="line" />
