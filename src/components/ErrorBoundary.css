@@ -1,0 +1,72 @@
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+.error-boundary__content {
+  text-align: center;
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.error-boundary__content h1 {
+  font-size: 2rem;
+  color: #1a2f4e;
+  margin-bottom: 16px;
+}
+
+.error-boundary__content p {
+  color: #64748b;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.error-boundary__button {
+  background-color: #4b6cb7;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.error-boundary__button:hover {
+  background-color: #3b5cb8;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(75, 108, 183, 0.3);
+}
+
+.error-boundary__details {
+  margin-top: 30px;
+  text-align: left;
+  background: #f1f5f9;
+  padding: 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.error-boundary__details summary {
+  cursor: pointer;
+  color: #475569;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.error-boundary__details pre {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #ef4444;
+  white-space: pre-wrap;
+}

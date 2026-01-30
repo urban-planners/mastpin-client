@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import mapPreview from "../../../assets/images/map-preview.webp";
 import preview1 from "../../../assets/images/preview1.webp";
-import preview2 from "../../../assets/images/preview2.webp";
+import preview2 from "../../../assets/images/heatmap-preview.webp";
 
 const Landing = () => {
   const location = useLocation();
